@@ -42,7 +42,7 @@ public class Laplacian implements Statistics, LongTask {
     private ProgressTicket progress;
     private boolean isCanceled;
     private boolean isDirected;
-    public double scale = 1;
+    public double scale = 1; //needs poly treatment, graph as a field
 
     public Laplacian() {
         GraphController graphController = Lookup.getDefault().lookup(GraphController.class);
