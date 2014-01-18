@@ -42,7 +42,7 @@ public class Replicator implements Statistics, LongTask {
     private ProgressTicket progress;
     private boolean isCanceled;
     private boolean isDirected;
-    public double scale;
+    public double scale = 1;
 
     public Replicator() {
         GraphController graphController = Lookup.getDefault().lookup(GraphController.class);

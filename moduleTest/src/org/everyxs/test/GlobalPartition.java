@@ -73,7 +73,7 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
         graph.readLock();
         
         AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
-        AttributeColumn order = attributeModel.getNodeTable().getColumn("eigenRatioOrder(R)");
+        AttributeColumn order = attributeModel.getNodeTable().getColumn("eigenRatioOrder");
         AttributeColumn eigenVmax = attributeModel.getNodeTable().getColumn("eigenVector");
         AttributeTable nodeTable = attributeModel.getNodeTable();
         AttributeColumn part = nodeTable.getColumn("partition");
@@ -127,15 +127,15 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
                     Integer id = invIndicies.get(v);
                     if (partitions[i]<1)
                         volumes[0] += e.getWeight() 
-                                * Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
+                                //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
                                 ;
                     else 
                         volumes[1] += e.getWeight()
-                                * Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
+                                //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
                                 ;
                     if (partitions[i] != partitions[id])
                         cut += e.getWeight()
-                                * Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
+                                //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
                                 ;
                 }
             }
