@@ -32,11 +32,11 @@ import org.openide.util.Lookup;
  *
  * @author everyan
  */
-class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.utils.longtask.spi.LongTask {
+class Centrality implements org.gephi.statistics.spi.Statistics, org.gephi.utils.longtask.spi.LongTask {
     private ProgressTicket progress;
     private boolean isCanceled;
     private boolean isDirected;
-    public LocalPartition() {
+    public Centrality() {
         GraphController graphController = Lookup.getDefault().lookup(GraphController.class);
         if (graphController != null && graphController.getModel() != null) {
             isDirected = graphController.getModel().isDirected();
@@ -107,9 +107,9 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
             order = nodeTable.addColumn("localOrder", "LocalOrder", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
         }
 
-        Laplacian operator0 = new Laplacian(graph); //L operator
-        Replicator operator = new Replicator(graph); //R operator
-        operator0.execute(gm, am);
+        DynamicOperator operator = new Replicator(graph); //L operator
+        //Replicator operator = new Replicator(graph); //R operator
+        operator.execute(gm, am);
         LinearTransforms transform = new LinearTransforms(adjMatrix);
         //DoubleMatrix A = new DoubleMatrix(transform.laplacianNorm());
         DoubleMatrix A = null;
@@ -120,7 +120,8 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
         }
 
         double[] central = new double[N];
-        central[0] = 1; //seed node at index 1 (needs a better GUI for seed selection)
+        for (int i=0; i<N; i++)
+            central[0] = 1.0/N; //uniform seed
         DoubleMatrix centralVector = new DoubleMatrix(central);
         double t = Double.MAX_VALUE; //find minimum t with given beta and quality bound
         for (int i=0; i<N; i++) {
@@ -138,94 +139,6 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
             //Test code
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
             row.setValue(centrality, centralVector.get(i)/Math.sqrt(operator.scale[0]));
-            if (isCanceled) {
-                return;
-            }
-        }
-        Arrays.sort(list);
-        for (int i = 0; i < N; i++) {
-            Node s = indicies.get(list[N-i-1].getID()); //picking from a descending order
-            AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
-            row.setValue(order, i);
-            if (isCanceled) {
-                return;
-            }
-        }
-
-        // The sweep
-        AttributeColumn part = nodeTable.getColumn("partition");
-        if (part == null) {
-            part = nodeTable.addColumn("partition", "LocalPartition", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
-        }
-        AttributeColumn eigenCol0 = nodeTable.getColumn("sweepQuality");
-        if (eigenCol0 == null) {
-            eigenCol0 = nodeTable.addColumn("sweepQuality", "SweepQuality", AttributeType.DOUBLE, AttributeOrigin.COMPUTED, new Double(-1));
-        }
-        AttributeColumn eigenVmax = am.getNodeTable().getColumn("eigenVector");
-
-        double minCut = Double.MAX_VALUE;
-        int[] bestPartition = new int[N];
-        double localVolume = 0;
-        int sweep = 1;
-        while (localVolume < graph.getEdgeCount()/3 && sweep<N) { //the local target volume = 1/4 total volume (needs a better GUI for parameter input)
-            int sweepPoint = 1;
-            int[] partitions = new int[N];
-            double[] volumes = new double[2]; //for the demoninator of the quality function
-            double cut = 0; //for the numerator of the quality function
-            for (int i = 0; i < N; i++) {
-                Node u = indicies.get(i); //picking from a descending order
-                AttributeRow row = (AttributeRow) u.getNodeData().getAttributes();
-                if (Integer.parseInt(row.getValue(order).toString()) < sweep)
-                    partitions[i] = 1;
-                if (Integer.parseInt(row.getValue(order).toString()) == sweep)
-                    sweepPoint = i;
-                if (isCanceled) {
-                    return;
-                }
-            }
-            for (int i=0; i<N; i++) {
-                Node u = indicies.get(i);
-                AttributeRow row1 = (AttributeRow) u.getNodeData().getAttributes();
-                EdgeIterable iter;
-                if (isDirected) {
-                    iter = ((HierarchicalDirectedGraph) graph).getInEdgesAndMetaInEdges(u);
-                } else {
-                    iter = ((HierarchicalUndirectedGraph) graph).getEdgesAndMetaEdges(u);
-                }
-                for (Edge e : iter) {
-                    Node v = graph.getOpposite(u, e);
-                    AttributeRow row2 = (AttributeRow) v.getNodeData().getAttributes();
-                    Integer id = invIndicies.get(v);
-                    if (partitions[i]<1)
-                        volumes[0] += e.getWeight()
-                                //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
-                                ;
-                    else
-                        volumes[1] += e.getWeight()
-                                //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
-                                ;
-                    if (partitions[i] != partitions[id])
-                        cut += e.getWeight()
-                                //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
-                                ;
-                }
-            }
-            localVolume = volumes[1];
-            double newCut = cut / Math.min(volumes[0], volumes[1]);
-            Node s = indicies.get(sweepPoint); //picking from a descending order
-            AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
-            row.setValue("sweepQuality", newCut);
-            if (newCut < minCut) {
-                minCut = newCut;
-                for (int i=0; i<N; i++)
-                    bestPartition[i] = partitions[i];
-            }
-            sweep++; //indexing
-        }
-        for (int i = 0; i < N; i++) {
-            Node s = indicies.get(i); //picking from a descending order
-            AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
-            row.setValue(part, bestPartition[i]);
             if (isCanceled) {
                 return;
             }

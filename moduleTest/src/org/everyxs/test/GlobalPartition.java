@@ -57,12 +57,7 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
     }
     
     @Override
-    public void execute(GraphModel gm, AttributeModel am) {
-        Laplacian eigenRatio = new Laplacian();
-        eigenRatio.execute(gm, am);
-        Replicator eigenRatioR = new Replicator();
-        eigenRatioR.execute(gm, am); 
-        
+    public void execute(GraphModel gm, AttributeModel am) {      
         HierarchicalGraph graph;
         if (isDirected) {
             graph = gm.getHierarchicalDirectedGraphVisible();
@@ -71,6 +66,10 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
         }
         int N = graph.getNodeCount();
         graph.readLock();
+        DynamicOperator dynamics = new Replicator(graph);
+        dynamics.execute(gm, am);
+        //Replicator eigenRatioR = new Replicator(graph);
+        //eigenRatioR.execute(gm, am); 
         
         AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
         AttributeColumn order = attributeModel.getNodeTable().getColumn("eigenRatioOrder");
@@ -112,9 +111,9 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
                     return;
                 }
             }
+            
             for (int i=0; i<N; i++) {
                 Node u = indicies.get(i);
-                AttributeRow row1 = (AttributeRow) u.getNodeData().getAttributes();
                 EdgeIterable iter;
                 if (isDirected) {
                         iter = ((HierarchicalDirectedGraph) graph).getInEdgesAndMetaInEdges(u);
@@ -123,18 +122,17 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
                     }
                 for (Edge e : iter) {
                     Node v = graph.getOpposite(u, e);
-                    AttributeRow row2 = (AttributeRow) v.getNodeData().getAttributes();
                     Integer id = invIndicies.get(v);
                     if (partitions[i]<1)
-                        volumes[0] += e.getWeight() 
+                        volumes[0] += dynamics.reWeight(i, id)
                                 //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
                                 ;
                     else 
-                        volumes[1] += e.getWeight()
+                        volumes[1] += dynamics.reWeight(i, id)
                                 //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
                                 ;
                     if (partitions[i] != partitions[id])
-                        cut += e.getWeight()
+                        cut += dynamics.reWeight(i, id)
                                 //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
                                 ;
                 }

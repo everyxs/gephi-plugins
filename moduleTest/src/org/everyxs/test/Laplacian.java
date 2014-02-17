@@ -36,59 +36,18 @@ import org.openide.util.Lookup;
  *
  * @author pjmcswee
  */
-public class Laplacian implements Statistics, LongTask {
+public class Laplacian extends DynamicOperator {
     public static final String EIGENVECTOR = "eigenVector";
     public static final String EIGENVECTOR2 = "eigenRatioOrder";
-    private ProgressTicket progress;
-    private boolean isCanceled;
-    private boolean isDirected;
-    public double scale = 1; //needs poly treatment, graph as a field
+    double[] degree; 
 
-    public Laplacian() {
-        GraphController graphController = Lookup.getDefault().lookup(GraphController.class);
-        if (graphController != null && graphController.getModel() != null) {
-            isDirected = graphController.getModel().isDirected();
-        }
+    public Laplacian(HierarchicalGraph g) {
+        super(g);
+        degree = new double[scale.length];
     }
 
-
-    /**
-     * 
-     * @return
-     */
-    public boolean isDirected() {
-        return isDirected;
-    }
-
-    /**
-     * 
-     * @param isDirected
-     */
-    public void setDirected(boolean isDirected) {
-        this.isDirected = isDirected;
-    }
-
-    /**
-     *
-     * @param graphModel
-     * @param attributeModel
-     */
     @Override
-    public void execute(GraphModel graphModel, AttributeModel attributeModel) {
-        HierarchicalGraph graph;
-        if (isDirected) {
-            graph = graphModel.getHierarchicalDirectedGraphVisible();
-        } else {
-            graph = graphModel.getHierarchicalUndirectedGraphVisible();
-        }
-        try {
-            execute(graph, attributeModel);
-        } catch (NotConvergedException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-    }
-
-    public void execute(HierarchicalGraph hgraph, AttributeModel attributeModel) throws NotConvergedException {
+    public void execute(AttributeModel attributeModel) throws NotConvergedException {
 
         AttributeTable nodeTable = attributeModel.getNodeTable();
         AttributeColumn eigenCol = nodeTable.getColumn(EIGENVECTOR);
@@ -105,15 +64,15 @@ public class Laplacian implements Statistics, LongTask {
             eigenCol2 = nodeTable.addColumn(EIGENVECTOR2, "EigenRatioOrder", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
         }
 
-        int N = hgraph.getNodeCount();
-        hgraph.readLock();
+        int N = graph.getNodeCount();
+        graph.readLock();
 
         Progress.start(progress);
 
         HashMap<Integer, Node> indicies = new HashMap<Integer, Node>();
         HashMap<Node, Integer> invIndicies = new HashMap<Node, Integer>();
         int count = 0;
-        for (Node u : hgraph.getNodes()) {
+        for (Node u : graph.getNodes()) {
             indicies.put(count, u);
             invIndicies.put(u, count);
             count++;
@@ -123,18 +82,19 @@ public class Laplacian implements Statistics, LongTask {
             Node u = indicies.get(i);
             EdgeIterable iter;
             if (isDirected) {
-                    iter = ((HierarchicalDirectedGraph) hgraph).getInEdgesAndMetaInEdges(u);
+                    iter = ((HierarchicalDirectedGraph) graph).getInEdgesAndMetaInEdges(u);
                 } else {
-                    iter = ((HierarchicalUndirectedGraph) hgraph).getEdgesAndMetaEdges(u);
+                    iter = ((HierarchicalUndirectedGraph) graph).getEdgesAndMetaEdges(u);
                 }
             for (Edge e : iter) {
-                    Node v = hgraph.getOpposite(u, e);
+                    Node v = graph.getOpposite(u, e);
                     Integer id = invIndicies.get(v);
                     adjMatrix[i][id] = e.getWeight();
                 }
         }
-        LinearTransforms laplacian = new LinearTransforms(adjMatrix);     
-        DenseMatrix A = new DenseMatrix(laplacian.laplacianNorm());
+        LinearTransforms laplacian = new LinearTransforms(adjMatrix);       
+        DenseMatrix A = new DenseMatrix(laplacian.laplacianNorm(scale[0], adjMatrix)); //uniform scaling of normalized laplacian
+        
         EVD eigen = new EVD(adjMatrix.length);
         eigen.factor(A);
         DenseMatrix Pi = eigen.getRightEigenvectors();
@@ -163,6 +123,7 @@ public class Laplacian implements Statistics, LongTask {
                 }
             }*/
         }
+        System.out.println("eigen:"+temp[1]);
         
         NodeCompare[] list = new NodeCompare[N];
         for (int i = 0; i < N; i++) {
@@ -185,24 +146,18 @@ public class Laplacian implements Statistics, LongTask {
                 return;
             }
         }
-        hgraph.readUnlock();
+        graph.readUnlock();
 
         Progress.finish(progress);
     }
-
+    
+    public void setScale(int[] tuner) { //unifrom scaling tuner for scaled laplacian (need a more flexible version)
+        for (int i=0; i<scale.length; i++)
+            scale[i] = tuner[i]; //default: no scaling
+    }
     @Override
-    public String getReport() {
+    public double reWeight(int u, int v) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    public boolean cancel() {
-        this.isCanceled = true;
-        return true;
-    }
-
-    public void setProgressTicket(ProgressTicket progressTicket) {
-        this.progress = progressTicket;
-
-    }
+    
 }
-

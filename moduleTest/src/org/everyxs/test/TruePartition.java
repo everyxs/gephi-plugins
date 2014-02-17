@@ -58,11 +58,6 @@ class TruePartition implements org.gephi.statistics.spi.Statistics, org.gephi.ut
     
     @Override
     public void execute(GraphModel gm, AttributeModel am) {
-        Laplacian eigenRatio = new Laplacian();
-        eigenRatio.execute(gm, am);
-        Replicator eigenRatioR = new Replicator();
-        eigenRatioR.execute(gm, am); 
-        
         HierarchicalGraph graph;
         if (isDirected) {
             graph = gm.getHierarchicalDirectedGraphVisible();
@@ -71,6 +66,10 @@ class TruePartition implements org.gephi.statistics.spi.Statistics, org.gephi.ut
         }
         int N = graph.getNodeCount();
         graph.readLock();
+        Laplacian eigenRatio = new Laplacian(graph);
+        eigenRatio.execute(gm, am);
+        Replicator eigenRatioR = new Replicator(graph);
+        eigenRatioR.execute(gm, am); 
         
         AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
         AttributeColumn value = attributeModel.getNodeTable().getColumn("value");
