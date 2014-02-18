@@ -94,6 +94,8 @@ class Centrality implements org.gephi.statistics.spi.Statistics, org.gephi.utils
                 Node v = graph.getOpposite(u, e);
                 Integer id = invIndicies.get(v);
                 adjMatrix[i][id] = e.getWeight();
+                if (e.isDirected())
+                    adjMatrix[id][i] = e.getWeight();
             }
         }
 
@@ -106,22 +108,21 @@ class Centrality implements org.gephi.statistics.spi.Statistics, org.gephi.utils
         if (order == null) {
             order = nodeTable.addColumn("localOrder", "LocalOrder", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
         }
-
-        DynamicOperator operator = new Replicator(graph); //L operator
-        //Replicator operator = new Replicator(graph); //R operator
-        operator.execute(gm, am);
+        //Laplacian operator = new Laplacian(graph); //L operator
+        Replicator operator = new Replicator(graph); //L operator
         LinearTransforms transform = new LinearTransforms(adjMatrix);
-        //DoubleMatrix A = new DoubleMatrix(transform.laplacianNorm());
-        DoubleMatrix A = null;
+        double[][] stochastic = new double[N][N];
+        //stochastic = transform.laplacian(operator.scale);
         try {
-            A = new DoubleMatrix(transform.replicator()); //needs scaling implementation
+            stochastic = transform.laplacianNorm(operator.scale[0], transform.replicator());
         } catch (NotConvergedException ex) {
             Exceptions.printStackTrace(ex);
         }
+        DoubleMatrix A = new DoubleMatrix(stochastic);
 
         double[] central = new double[N];
         for (int i=0; i<N; i++)
-            central[0] = 1.0/N; //uniform seed
+            central[i] = 1.0/N; //uniform seed
         DoubleMatrix centralVector = new DoubleMatrix(central);
         double t = Double.MAX_VALUE; //find minimum t with given beta and quality bound
         for (int i=0; i<N; i++) {
@@ -130,15 +131,13 @@ class Centrality implements org.gephi.statistics.spi.Statistics, org.gephi.utils
             if (tmp <t)
                 t = tmp;
         }
-        centralVector = org.jblas.MatrixFunctions.pow(org.jblas.MatrixFunctions.expm(A),-t*1).mmul(centralVector); //decay =1
+        centralVector = org.jblas.MatrixFunctions.pow(org.jblas.MatrixFunctions.expm(A),t*20).mmul(centralVector); //decay =1
 
         NodeCompare[] list = new NodeCompare[N];
         for (int i = 0; i < N; i++) {
             Node s = indicies.get(i);
-            list[i] = new NodeCompare(invIndicies.get(s), centralVector.get(i)/Math.sqrt(operator.scale[0])); //scale needs to be an array with index i
-            //Test code
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
-            row.setValue(centrality, centralVector.get(i)/Math.sqrt(operator.scale[0]));
+            row.setValue(centrality, centralVector.get(i)/Math.sqrt(operator.scale[0]));//scale needs to be an array with index i
             if (isCanceled) {
                 return;
             }

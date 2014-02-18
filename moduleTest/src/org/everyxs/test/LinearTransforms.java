@@ -62,20 +62,42 @@ public class LinearTransforms {
             sum[i] = 0;
             for (int j=0; j<size; j++) 
                 sum[i] += reWeightedMatrix[i][j];
+            if (sum[i]<=0)
+                sum[i] = Double.MIN_VALUE;
             }
         
         double[][] laplacian = new double[size][size];
         for (int i=0; i<laplacian.length; i++) {
             for (int j=0; j<laplacian.length; j++){
                 if (j==i)
-                    laplacian[i][j] = 1/ scale;
+                    laplacian[i][j] = (1- reWeightedMatrix[i][j] / Math.sqrt(sum[i]) / Math.sqrt(sum[j]))/ scale;
                 else
-                    laplacian[i][j] = - reWeightedMatrix[i][j] / Math.sqrt(sum[i]*sum[j])/ scale;
+                    laplacian[i][j] = - reWeightedMatrix[i][j] / Math.sqrt(sum[i]) / Math.sqrt(sum[j])/ scale;
                 }
         }
         return laplacian;
     }
     
+     public double[][] laplacianNorm(double scale) {
+        double[] sum = new double[size];
+        for (int i=0; i<size; i++) {
+            sum[i] = 0;
+            for (int j=0; j<size; j++) 
+                sum[i] += adjMatrix[i][j];
+            }
+        
+        double[][] laplacian = new double[size][size];
+        for (int i=0; i<laplacian.length; i++) {
+            for (int j=0; j<laplacian.length; j++){
+                if (j==i)
+                    laplacian[i][j] = (1- adjMatrix[i][j] / Math.sqrt(sum[i]) / Math.sqrt(sum[j]))/ scale;
+                else
+                    laplacian[i][j] = - adjMatrix[i][j] / Math.sqrt(sum[i]) / Math.sqrt(sum[j])/ scale;
+                }
+        }
+        return laplacian;
+    }
+     
     public double[][] replicator() throws NotConvergedException {
         double[][] replicator = new double[size][size];
         DenseMatrix A = new DenseMatrix(adjMatrix);
@@ -127,6 +149,7 @@ public class LinearTransforms {
                     replicator[i][j] =  adjMatrix[i][j] * Pi.get(i, maxID[1]) * Pi.get(j, maxID[1]);
                 }
             }
+        
         return replicator;
     }
     

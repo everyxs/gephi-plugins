@@ -90,6 +90,8 @@ public class Laplacian extends DynamicOperator {
                     Node v = graph.getOpposite(u, e);
                     Integer id = invIndicies.get(v);
                     adjMatrix[i][id] = e.getWeight();
+                    if (e.isDirected())
+                        adjMatrix[id][i] = e.getWeight();
                 }
         }
         LinearTransforms laplacian = new LinearTransforms(adjMatrix);       

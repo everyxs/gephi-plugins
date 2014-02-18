@@ -82,7 +82,7 @@ public class Replicator extends DynamicOperator {
             Node u = indicies.get(i);
             EdgeIterable iter;
             if (isDirected) {
-                    iter = ((HierarchicalDirectedGraph) graph).getInEdgesAndMetaInEdges(u);
+                  iter = ((HierarchicalDirectedGraph) graph).getInEdgesAndMetaInEdges(u);
                 } else {
                     iter = ((HierarchicalUndirectedGraph) graph).getEdgesAndMetaEdges(u);
                 }
@@ -90,10 +90,12 @@ public class Replicator extends DynamicOperator {
                     Node v = graph.getOpposite(u, e);
                     Integer id = invIndicies.get(v);
                     adjMatrix[i][id] = e.getWeight();
+                    if (isDirected)
+                        adjMatrix[id][i] = e.getWeight();
                 }
         }
         LinearTransforms replicator = new LinearTransforms(adjMatrix);     
-        reWeightedMatrix = replicator.replicator2();
+        reWeightedMatrix = replicator.replicator();
         DenseMatrix A = new DenseMatrix(replicator.laplacianNorm(scale[0], reWeightedMatrix));
         EVD eigen = new EVD(adjMatrix.length);
         eigen.factor(A);
