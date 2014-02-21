@@ -66,7 +66,7 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
         }
         int N = graph.getNodeCount();
         graph.readLock();
-        DynamicOperator dynamics = new Replicator(graph);
+        DynamicOperator dynamics = new Laplacian(graph);
         dynamics.execute(gm, am);
         //Replicator eigenRatioR = new Replicator(graph);
         //eigenRatioR.execute(gm, am); 
@@ -124,17 +124,11 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
                     Node v = graph.getOpposite(u, e);
                     Integer id = invIndicies.get(v);
                     if (partitions[i]<1)
-                        volumes[0] += dynamics.reWeight(i, id)
-                                //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
-                                ;
+                        volumes[0] += dynamics.reWeight(i, id);
                     else 
-                        volumes[1] += dynamics.reWeight(i, id)
-                                //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
-                                ;
+                        volumes[1] += dynamics.reWeight(i, id);
                     if (partitions[i] != partitions[id])
-                        cut += dynamics.reWeight(i, id)
-                                //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
-                                ;
+                        cut += dynamics.reWeight(i, id) ;
                 }
             }
             double newCut = cut / Math.min(volumes[0], volumes[1]);

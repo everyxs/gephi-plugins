@@ -131,7 +131,7 @@ class Centrality implements org.gephi.statistics.spi.Statistics, org.gephi.utils
             if (tmp <t)
                 t = tmp;
         }
-        centralVector = org.jblas.MatrixFunctions.pow(org.jblas.MatrixFunctions.expm(A),t*20).mmul(centralVector); //decay =1
+        centralVector = org.jblas.MatrixFunctions.pow(org.jblas.MatrixFunctions.expm(A),-t*2).mmul(centralVector); //decay =1
 
         NodeCompare[] list = new NodeCompare[N];
         for (int i = 0; i < N; i++) {

@@ -34,16 +34,16 @@ import org.openide.util.Lookup;
 
 /**
  *
- * @author pjmcswee
+ * @author Xiaoran
  */
 public class Laplacian extends DynamicOperator {
     public static final String EIGENVECTOR = "eigenVector";
     public static final String EIGENVECTOR2 = "eigenRatioOrder";
-    double[] degree; 
+    double[][] adjMatrix;
 
     public Laplacian(HierarchicalGraph g) {
         super(g);
-        degree = new double[scale.length];
+        adjMatrix = new double[scale.length][scale.length];
     }
 
     @Override
@@ -77,7 +77,7 @@ public class Laplacian extends DynamicOperator {
             invIndicies.put(u, count);
             count++;
         }
-        double[][] adjMatrix = new double[N][N];
+        adjMatrix = new double[N][N];
         for (int i = 0; i < N; i++) {
             Node u = indicies.get(i);
             EdgeIterable iter;
@@ -159,7 +159,7 @@ public class Laplacian extends DynamicOperator {
     }
     @Override
     public double reWeight(int u, int v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return adjMatrix[u][v];
     }
     
 }

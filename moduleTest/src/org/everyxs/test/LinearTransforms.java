@@ -148,6 +148,7 @@ public class LinearTransforms {
             for (int j=0; j<replicator.length; j++){
                     replicator[i][j] =  adjMatrix[i][j] * Pi.get(i, maxID[1]) * Pi.get(j, maxID[1]);
                 }
+            System.out.println(Pi.get(i, maxID[1])); 
             }
         
         return replicator;
@@ -163,7 +164,7 @@ public class LinearTransforms {
         double[][] unbiasedAdj = new double[size][size];
         for (int i=0; i<unbiasedAdj.length; i++) 
             for (int j=0; j<unbiasedAdj.length; j++)
-                unbiasedAdj[i][j] = - adjMatrix[i][j]/ Math.sqrt(sum[i]*sum[j]);
+                unbiasedAdj[i][j] = adjMatrix[i][j]/ Math.sqrt(sum[i]*sum[j]);
         
         for (int i=0; i<size; i++) {
             sum[i] = 0;

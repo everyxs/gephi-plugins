@@ -34,7 +34,7 @@ import org.openide.util.Lookup;
 
 /**
  *
- * @author pjmcswee
+ * @author Xiaoran
  */
 public class Replicator extends DynamicOperator {
     public static final String EIGENVECTOR = "eigenVector";
