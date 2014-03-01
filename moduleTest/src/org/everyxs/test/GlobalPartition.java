@@ -79,6 +79,14 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
         if (part == null) {
             part = nodeTable.addColumn("partition", "GlobalPartition", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
         }
+        AttributeColumn part2 = nodeTable.getColumn("partition2");
+        if (part2 == null) {
+            part2 = nodeTable.addColumn("partition2", "GlobalPartition2", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
+        }
+        AttributeColumn part3 = nodeTable.getColumn("partition3");
+        if (part3 == null) {
+            part3 = nodeTable.addColumn("partition3", "GlobalPartition3", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
+        }
         AttributeColumn eigenCol0 = nodeTable.getColumn("sweepQuality");
         if (eigenCol0 == null) {
             eigenCol0 = nodeTable.addColumn("sweepQuality", "SweepQuality", AttributeType.DOUBLE, AttributeOrigin.COMPUTED, new Double(-1));
@@ -93,8 +101,14 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
             count++;
         }
         
-        double minCut = Double.MAX_VALUE;
-        int[] bestPartition = new int[N];
+        double[] minCut = new double[3]; //keep track of 2 smallest eigen values
+        for (int i=0; i<minCut.length; i++)
+            minCut[i] = Double.MAX_VALUE;
+        int[][] bestPartition = new int[N][3];
+        double newCutOld = Double.MAX_VALUE; //for local minimum detection
+        int[] partitionsOld = new int[N]; //for local minimum detection
+        boolean differenceSignOld = false; //for local minimum detection
+        
         for (int sweep=1; sweep<N; sweep++) { //the sweep bisector
             int sweepPoint = 1;
             int[] partitions = new int[N]; 
@@ -134,17 +148,50 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
             double newCut = cut / Math.min(volumes[0], volumes[1]);
             Node s = indicies.get(sweepPoint); //picking from a descending order
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
-            row.setValue("sweepQuality", newCut); 
-            if (newCut < minCut) {
-                minCut = newCut;
-                for (int i=0; i<N; i++)
-                    bestPartition[i] = partitions[i];
+            row.setValue("sweepQuality", newCut);
+            boolean differenceSign;
+            if (newCut < newCutOld) {
+                newCutOld = newCut;
+                partitionsOld = partitions;
+                differenceSign = false;
             }
+            else
+                differenceSign = true;
+            boolean flipSign = differenceSignOld == false && differenceSign ==true;
+                    
+            if (flipSign && newCutOld < minCut[2]) {
+                if (newCutOld < minCut[1]) {
+                    minCut[2] = minCut[1]; //shifting queue
+                    for (int i=0; i<N; i++)
+                        bestPartition[i][2] = bestPartition[i][1];
+                    if (newCutOld < minCut[0]) {
+                        minCut[1] = minCut[0]; //shifting queue
+                        for (int i=0; i<N; i++)
+                            bestPartition[i][1] = bestPartition[i][0];
+                        minCut[0] = newCutOld;
+                        for (int i=0; i<N; i++)
+                            bestPartition[i][0] = partitionsOld[i];
+                    }
+                    else {
+                        minCut[1] = newCutOld;
+                        for (int i=0; i<N; i++)
+                            bestPartition[i][1] = partitionsOld[i];
+                    }
+                }// for top 3 smalleest eigen values
+                else {
+                    minCut[2] = newCutOld;
+                        for (int i=0; i<N; i++)
+                        bestPartition[i][2] = partitionsOld[i];
+                }
+            }
+            differenceSignOld = differenceSign;
         }
         for (int i = 0; i < N; i++) {
             Node s = indicies.get(i); //picking from a descending order
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
-            row.setValue(part, bestPartition[i]); 
+            row.setValue(part, bestPartition[i][0]); 
+            row.setValue(part2, bestPartition[i][1]); 
+            row.setValue(part3, bestPartition[i][2]);             
             if (isCanceled) {
                 return;
             }

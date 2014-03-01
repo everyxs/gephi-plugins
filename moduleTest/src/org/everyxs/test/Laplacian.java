@@ -111,6 +111,8 @@ public class Laplacian extends DynamicOperator {
             //if (Lambda[i] < temp[2]) {
                 if (Lambda[i] < temp[1]) {
                     if (Lambda[i] < temp[0]) {
+                        temp[1] = temp [0];
+                        minID[1] = minID[0];
                         temp[0] = Lambda[i];
                         minID[0] = i;
                     }
