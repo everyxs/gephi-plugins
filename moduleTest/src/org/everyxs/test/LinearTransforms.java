@@ -31,38 +31,48 @@ public class LinearTransforms {
                 adjMatrix[i][j] = adjM[i][j];
     }
     
-    public double[][] laplacian() {
+    public double[][] laplacian(double[] scale) {
         double[][] laplacian = new double[size][size];
         double sum;
+        double maxSum = 0;
         for (int i=0; i<laplacian.length; i++) {
             sum = 0;
             for (int j=0; j<laplacian.length; j++) 
                 sum += adjMatrix[i][j];
+            if (sum > maxSum)
+                maxSum = sum;
             for (int j=0; j<laplacian.length; j++){
                 if (j==i)
-                    laplacian[i][j] = sum - adjMatrix[i][j];
+                    laplacian[i][j] = (sum - adjMatrix[i][j])/ Math.sqrt(scale[i]*scale[j]);
                 else
-                    laplacian[i][j] = - adjMatrix[i][j];
+                    laplacian[i][j] = - adjMatrix[i][j] / Math.sqrt(scale[i]*scale[j]);
                 }
             }
+        for (int i=0; i<laplacian.length; i++) {
+            for (int j=0; j<laplacian.length; j++){
+                 laplacian[i][j] =  laplacian[i][j] / maxSum;
+            }
+        }
         return laplacian;
     }
     
-     public double[][] laplacianNorm() {
+     public double[][] laplacianNorm(double scale, double[][] reWeightedMatrix) {
         double[] sum = new double[size];
         for (int i=0; i<size; i++) {
             sum[i] = 0;
             for (int j=0; j<size; j++) 
-                sum[i] += adjMatrix[i][j];
+                sum[i] += reWeightedMatrix[i][j];
+            if (sum[i]<=0)
+                sum[i] = Double.MIN_VALUE;
             }
         
         double[][] laplacian = new double[size][size];
         for (int i=0; i<laplacian.length; i++) {
             for (int j=0; j<laplacian.length; j++){
                 if (j==i)
-                    laplacian[i][j] = 1;
+                    laplacian[i][j] = (1- reWeightedMatrix[i][j] / Math.sqrt(sum[i]) / Math.sqrt(sum[j]))/ scale;
                 else
-                    laplacian[i][j] = - adjMatrix[i][j] / Math.sqrt(sum[i]*sum[j]);
+                    laplacian[i][j] = - reWeightedMatrix[i][j] / Math.sqrt(sum[i]) / Math.sqrt(sum[j])/ scale;
                 }
         }
         return laplacian;
@@ -73,24 +83,56 @@ public class LinearTransforms {
         DenseMatrix A = new DenseMatrix(adjMatrix);
         EVD eigen = new EVD(adjMatrix.length);
         eigen.factor(A);
+        DenseMatrix Pi = eigen.getRightEigenvectors();
         double[] Lambda = eigen.getRealEigenvalues();
-        double lambdaMax = 0;
+        double lambdaMax = -Double.MAX_VALUE;;
+        int maxID = -1;
         for (int i=0; i<Lambda.length; i++) 
-            if (Lambda[i] > lambdaMax)
-                lambdaMax = Lambda[i];   
+            if (Lambda[i] > lambdaMax) {
+                lambdaMax = Lambda[i];  
+                maxID = i;
+            }
  
         for (int i=0; i<replicator.length; i++) {
             for (int j=0; j<replicator.length; j++){
-                if (j==i)
-                    replicator[i][j] = 1 - adjMatrix[i][j]/lambdaMax;
-                else
-                    replicator[i][j] = - adjMatrix[i][j]/lambdaMax;
+                replicator[i][j] = adjMatrix[i][j] * Pi.get(i, maxID) * Pi.get(j, maxID);
+            }
+        }
+        return replicator;
+    }
+    
+        public double[][] replicator2() throws NotConvergedException {
+        double[][] replicator = new double[size][size];
+        DenseMatrix A = new DenseMatrix(adjMatrix);
+        EVD eigen = new EVD(adjMatrix.length);
+        eigen.factor(A);
+        DenseMatrix Pi = eigen.getRightEigenvectors();
+        double[] Lambda = eigen.getRealEigenvalues();
+        double[] lambdaMax = new double[2];
+        int[] maxID = new int[2];
+        for (int i=0; i<lambdaMax.length; i++)
+            lambdaMax[i] = -Double.MAX_VALUE;
+        for (int i=0; i<Lambda.length; i++)
+                if (Lambda[i] > lambdaMax[1]) {
+                    if (Lambda[i] > lambdaMax[0]) {
+                        lambdaMax[0] = Lambda[i];
+                        maxID[0] = i;
+                    }
+                    else {
+                        lambdaMax[1] = Lambda[i];
+                        maxID[1] = i;
+                    }
+                }
+ 
+        for (int i=0; i<replicator.length; i++) {
+            for (int j=0; j<replicator.length; j++){
+                    replicator[i][j] =  adjMatrix[i][j] * Pi.get(i, maxID[1]) * Pi.get(j, maxID[1]);
                 }
             }
         return replicator;
     }
     
-    public double[][] unbiasedAdj() throws NotConvergedException {
+    public double[][] unbiasedAdj(double scale) throws NotConvergedException {
         double[] sum = new double[size];
         for (int i=0; i<size; i++) {
             sum[i] = 0;
@@ -100,7 +142,7 @@ public class LinearTransforms {
         double[][] unbiasedAdj = new double[size][size];
         for (int i=0; i<unbiasedAdj.length; i++) 
             for (int j=0; j<unbiasedAdj.length; j++)
-                unbiasedAdj[i][j] = - adjMatrix[i][j]/ Math.sqrt(sum[i]*sum[j]);
+                unbiasedAdj[i][j] = adjMatrix[i][j]/ Math.sqrt(sum[i]*sum[j]);
         
         for (int i=0; i<size; i++) {
             sum[i] = 0;

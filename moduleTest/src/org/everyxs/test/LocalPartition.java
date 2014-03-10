@@ -107,14 +107,14 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
             order = nodeTable.addColumn("localOrder", "LocalOrder", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
         }
 
-        Laplacian operator0 = new Laplacian(); //L operator
-        Replicator operator = new Replicator(); //R operator
+        Laplacian operator0 = new Laplacian(graph); //L operator
+        Replicator operator = new Replicator(graph); //R operator
         operator0.execute(gm, am);
         LinearTransforms transform = new LinearTransforms(adjMatrix);
         //DoubleMatrix A = new DoubleMatrix(transform.laplacianNorm());
         DoubleMatrix A = null;
         try {
-            A = new DoubleMatrix(transform.replicator());
+            A = new DoubleMatrix(transform.replicator()); //needs scaling implementation
         } catch (NotConvergedException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -125,7 +125,7 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
         double t = Double.MAX_VALUE; //find minimum t with given beta and quality bound
         for (int i=0; i<N; i++) {
             Node u = indicies.get(i);
-            double tmp = Math.round(2*graph.getDegree(u)/operator.scale/1/1); //decay =1, quality bound=1 (needs a better GUI for parameter input)
+            double tmp = Math.round(2*graph.getDegree(u)/operator.scale[0]/1/1); //decay =1, quality bound=1 (needs a better GUI for parameter input)
             if (tmp <t)
                 t = tmp;
         }
@@ -134,10 +134,10 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
         NodeCompare[] list = new NodeCompare[N];
         for (int i = 0; i < N; i++) {
             Node s = indicies.get(i);
-            list[i] = new NodeCompare(invIndicies.get(s), centralVector.get(i)/Math.sqrt(operator.scale)); //scale needs to be an array with index i
+            list[i] = new NodeCompare(invIndicies.get(s), centralVector.get(i)/Math.sqrt(operator.scale[0])); //scale needs to be an array with index i
             //Test code
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
-            row.setValue(centrality, centralVector.get(i)/Math.sqrt(operator.scale));
+            row.setValue(centrality, centralVector.get(i)/Math.sqrt(operator.scale[0]));
             if (isCanceled) {
                 return;
             }

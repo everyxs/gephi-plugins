@@ -27,14 +27,14 @@ import org.openide.util.NbBundle.Messages;
 
 @ActionID(
         category = "Edit",
-        id = "org.everyxs.test.TruthButton"
+        id = "org.everyxs.test.CentralityButton"
 )
 @ActionRegistration(
-        displayName = "#CTL_TruthButton"
+        displayName = "#CTL_CentralityButton"
 )
-@ActionReference(path = "Menu/Plugins", position = 3133)
-@Messages("CTL_TruthButton=True Partition")
-public final class TruthButton implements ActionListener {
+@ActionReference(path = "Menu/Plugins", position = 2833)
+@Messages("CTL_CentralityButton=centrality")
+public final class CentralityButton implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -49,19 +49,24 @@ public final class TruthButton implements ActionListener {
         System.out.println("Edges: " + graph.getEdgeCount());
         ExportController ec = Lookup.getDefault().lookup(ExportController.class);
         
+        //Partition with 'source' column, which is in the data
         PartitionController partitionController = Lookup.getDefault().lookup(PartitionController.class);
+        /*Partition p;
+        p = partitionController.buildPartition(attributeModel.getNodeTable().getColumn("value"), graph);
+        NodeColorTransformer nodeColorTransformer = new NodeColorTransformer();
+        nodeColorTransformer.randomizeColors(p);
+        partitionController.transform(p, nodeColorTransformer);
+
+        //Export
+        try {
+            ec.exportFile(new File("partition1.pdf"));
+        } catch (IOException ex) {
+            return;
+        }*/
 
         //Run modularity algorithm - community detection
-        TruePartition gPart = new TruePartition();
-        gPart.execute(graphModel, attributeModel);
-
-        //Partition with 'modularity_class', just created by Modularity algorithm
-        AttributeColumn modColumn = attributeModel.getNodeTable().getColumn("partition");
-        Partition p2 = partitionController.buildPartition(modColumn, graph);
-        System.out.println(p2.getPartsCount() + " partitions found");
-        NodeColorTransformer nodeColorTransformer2 = new NodeColorTransformer();
-        nodeColorTransformer2.randomizeColors(p2);
-        partitionController.transform(p2, nodeColorTransformer2);
+        Centrality lPart = new Centrality();
+        lPart.execute(graphModel, attributeModel);
 
         //Export
         try {

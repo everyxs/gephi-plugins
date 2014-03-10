@@ -27,13 +27,13 @@ import org.openide.util.NbBundle.Messages;
 
 @ActionID(
         category = "Edit",
-        id = "org.everyxs.test.Mytest"
+        id = "org.everyxs.test.GlobalButton"
 )
 @ActionRegistration(
-        displayName = "#CTL_Mytest"
+        displayName = "#CTL_GlobalButton"
 )
 @ActionReference(path = "Menu/Plugins", position = 3233)
-@Messages("CTL_Mytest=Global Partition")
+@Messages("CTL_GlobalButton=Global Partition(max)")
 public final class GlobalButton implements ActionListener {
 
     @Override

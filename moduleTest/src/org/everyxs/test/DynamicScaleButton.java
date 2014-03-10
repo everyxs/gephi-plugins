@@ -27,18 +27,18 @@ import org.openide.util.NbBundle.Messages;
 
 @ActionID(
         category = "Edit",
-        id = "org.everyxs.test.TruthButton"
+        id = "org.everyxs.test.DynamicScaleButton"
 )
 @ActionRegistration(
-        displayName = "#CTL_TruthButton"
+        displayName = "#CTL_DynamicScaleButton"
 )
-@ActionReference(path = "Menu/Plugins", position = 3133)
-@Messages("CTL_TruthButton=True Partition")
-public final class TruthButton implements ActionListener {
+@ActionReference(path = "Menu/Plugins", position = 2933)
+@Messages("CTL_DynamicScaleButton=Dynamic Scale")
+public final class DynamicScaleButton implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //Get the current graph model
+     //Get the current graph model
         GraphController gc = Lookup.getDefault().lookup(GraphController.class);
         GraphModel graphModel = gc.getModel();       
         AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
@@ -49,10 +49,23 @@ public final class TruthButton implements ActionListener {
         System.out.println("Edges: " + graph.getEdgeCount());
         ExportController ec = Lookup.getDefault().lookup(ExportController.class);
         
+        //Partition with 'source' column, which is in the data
         PartitionController partitionController = Lookup.getDefault().lookup(PartitionController.class);
+        /*Partition p;
+        p = partitionController.buildPartition(attributeModel.getNodeTable().getColumn("value"), graph);
+        NodeColorTransformer nodeColorTransformer = new NodeColorTransformer();
+        nodeColorTransformer.randomizeColors(p);
+        partitionController.transform(p, nodeColorTransformer);
+
+        //Export
+        try {
+            ec.exportFile(new File("partition1.pdf"));
+        } catch (IOException ex) {
+            return;
+        }*/
 
         //Run modularity algorithm - community detection
-        TruePartition gPart = new TruePartition();
+        DynamicScale gPart = new DynamicScale();
         gPart.execute(graphModel, attributeModel);
 
         //Partition with 'modularity_class', just created by Modularity algorithm
@@ -69,5 +82,6 @@ public final class TruthButton implements ActionListener {
         } catch (IOException ex) {
             return;
         }
+
     }
 }
