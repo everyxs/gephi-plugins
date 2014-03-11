@@ -120,6 +120,11 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
             for (int j=0; j<N; j++)
                 temp[i][j] = -temp[i][j];
         A = new DoubleMatrix(temp);
+        try {
+            A = new DoubleMatrix(transform.replicator()); //needs scaling implementation
+        } catch (NotConvergedException ex) {
+            Exceptions.printStackTrace(ex);
+        }
 
         double[] central = new double[N];
         //central[0] = 1; //seed node at index 1 (needs a better GUI for seed selection)
@@ -130,6 +135,7 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
         for (int i=0; i<N; i++) {
             Node u = indicies.get(i);
             double tmp = Math.log(2)*graph.getDegree(u)/operator.scale[0]/1/1; //decay =1, quality bound=1 (needs a better GUI for parameter input)
+
             if (tmp <t)
                 t = tmp;
         }

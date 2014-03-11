@@ -34,7 +34,7 @@ import org.openide.util.Lookup;
 
 /**
  *
- * @author pjmcswee
+ * @author Xiaoran
  */
 public class Replicator extends DynamicOperator {
     public static final String EIGENVECTOR = "eigenVector";
@@ -90,7 +90,7 @@ public class Replicator extends DynamicOperator {
                     Node v = graph.getOpposite(u, e);
                     Integer id = invIndicies.get(v);
                     adjMatrix[i][id] = e.getWeight();
-                    //if (!e.isDirected())
+                    if (isDirected)
                         adjMatrix[id][i] = e.getWeight();
                 }
         }
