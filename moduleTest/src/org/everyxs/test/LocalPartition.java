@@ -94,6 +94,8 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
                 Node v = graph.getOpposite(u, e);
                 Integer id = invIndicies.get(v);
                 adjMatrix[i][id] = e.getWeight();
+                if (e.isDirected())
+                    adjMatrix[id][i] = e.getWeight();
             }
         }
 
@@ -113,23 +115,25 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
         LinearTransforms transform = new LinearTransforms(adjMatrix);
         //DoubleMatrix A = new DoubleMatrix(transform.laplacianNorm());
         DoubleMatrix A = null;
-        try {
-            A = new DoubleMatrix(transform.replicator()); //needs scaling implementation
-        } catch (NotConvergedException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        double[][] temp = transform.laplacianNorm(1);
+        for (int i=0; i<N; i++)
+            for (int j=0; j<N; j++)
+                temp[i][j] = -temp[i][j];
+        A = new DoubleMatrix(temp);
 
         double[] central = new double[N];
-        central[0] = 1; //seed node at index 1 (needs a better GUI for seed selection)
+        //central[0] = 1; //seed node at index 1 (needs a better GUI for seed selection)
+        for (int i =0; i<N; i++)
+            central[i] = 1.0/N;
         DoubleMatrix centralVector = new DoubleMatrix(central);
         double t = Double.MAX_VALUE; //find minimum t with given beta and quality bound
         for (int i=0; i<N; i++) {
             Node u = indicies.get(i);
-            double tmp = Math.round(2*graph.getDegree(u)/operator.scale[0]/1/1); //decay =1, quality bound=1 (needs a better GUI for parameter input)
+            double tmp = Math.log(2)*graph.getDegree(u)/operator.scale[0]/1/1; //decay =1, quality bound=1 (needs a better GUI for parameter input)
             if (tmp <t)
                 t = tmp;
         }
-        centralVector = org.jblas.MatrixFunctions.pow(org.jblas.MatrixFunctions.expm(A),-t*1).mmul(centralVector); //decay =1
+        centralVector = org.jblas.MatrixFunctions.pow(org.jblas.MatrixFunctions.expm(A),t).mmul(centralVector); //decay =1
 
         NodeCompare[] list = new NodeCompare[N];
         for (int i = 0; i < N; i++) {
