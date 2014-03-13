@@ -109,9 +109,7 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
             order = nodeTable.addColumn("localOrder", "LocalOrder", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
         }
 
-        Laplacian operator0 = new Laplacian(graph); //L operator
-        Replicator operator = new Replicator(graph); //R operator
-        operator0.execute(gm, am);
+        Laplacian operator = new Laplacian(graph); //L operator
         LinearTransforms transform = new LinearTransforms(adjMatrix);
         //DoubleMatrix A = new DoubleMatrix(transform.laplacianNorm());
         DoubleMatrix A = null;
@@ -120,11 +118,12 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
             for (int j=0; j<N; j++)
                 temp[i][j] = -temp[i][j];
         A = new DoubleMatrix(temp);
+        /*
         try {
             A = new DoubleMatrix(transform.replicator()); //needs scaling implementation
         } catch (NotConvergedException ex) {
             Exceptions.printStackTrace(ex);
-        }
+        }*/
 
         double[] central = new double[N];
         //central[0] = 1; //seed node at index 1 (needs a better GUI for seed selection)
@@ -163,9 +162,9 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
         }
 
         // The sweep
-        AttributeColumn part = nodeTable.getColumn("partition");
+        AttributeColumn part = nodeTable.getColumn("partition(local)");
         if (part == null) {
-            part = nodeTable.addColumn("partition", "LocalPartition", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
+            part = nodeTable.addColumn("partition(local)", "LocalPartition", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
         }
         AttributeColumn eigenCol0 = nodeTable.getColumn("sweepQuality");
         if (eigenCol0 == null) {

@@ -69,7 +69,7 @@ public final class LocalButton implements ActionListener {
         lPart.execute(graphModel, attributeModel);
 
         //Partition with 'modularity_class', just created by Modularity algorithm
-        AttributeColumn modColumn = attributeModel.getNodeTable().getColumn("partition");
+        AttributeColumn modColumn = attributeModel.getNodeTable().getColumn("partition(local)");
         Partition p2 = partitionController.buildPartition(modColumn, graph);
         System.out.println(p2.getPartsCount() + " partitions found");
         NodeColorTransformer nodeColorTransformer2 = new NodeColorTransformer();
@@ -77,10 +77,10 @@ public final class LocalButton implements ActionListener {
         partitionController.transform(p2, nodeColorTransformer2);
 
         //Export
-        try {
+        /*try {
             ec.exportFile(new File("partition2.pdf"));
         } catch (IOException ex) {
             return;
-        }
+        }*/
     }
 }
