@@ -139,7 +139,7 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
             if (tmp <t)
                 t = tmp;
         }
-        centralVector = org.jblas.MatrixFunctions.pow(org.jblas.MatrixFunctions.expm(A),t).mmul(centralVector); //decay =1
+        centralVector = org.jblas.MatrixFunctions.pow(org.jblas.MatrixFunctions.expm(A),t*0.75).mmul(centralVector); //decay =1
 
         NodeCompare[] list = new NodeCompare[N];
         for (int i = 0; i < N; i++) {
