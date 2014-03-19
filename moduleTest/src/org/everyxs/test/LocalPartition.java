@@ -109,41 +109,42 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
             order = nodeTable.addColumn("localOrder", "LocalOrder", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
         }
 
-        Laplacian operator = new Laplacian(graph); //L operator
+        DynamicOperator operator = new Replicator(graph); //L operator
         LinearTransforms transform = new LinearTransforms(adjMatrix);
-        //DoubleMatrix A = new DoubleMatrix(transform.laplacianNorm());
         DoubleMatrix A = null;
-        double[][] temp = transform.laplacianNorm(1);
-        for (int i=0; i<N; i++)
-            for (int j=0; j<N; j++)
-                temp[i][j] = -temp[i][j];
-        A = new DoubleMatrix(temp);
-        /*
+        double[][] temp = new double[N][N];
+        double[] degree = new double[N]; //degree vector for the reweighted graph
         try {
-            A = new DoubleMatrix(transform.replicator()); //needs scaling implementation
+            temp = transform.laplacianNorm(1,transform.replicator());
         } catch (NotConvergedException ex) {
             Exceptions.printStackTrace(ex);
-        }*/
+        }
+        for (int i=0; i<N; i++)
+            for (int j=0; j<N; j++) {
+                degree[i] += temp[i][j];
+                temp[i][j] = -temp[i][j];
+            }
+        A = new DoubleMatrix(temp);
 
         double[] central = new double[N];
-        //central[0] = 1; //seed node at index 1 (needs a better GUI for seed selection)
-        for (int i =0; i<N; i++)
-            central[i] = 1.0/N;
+        central[333] = 1; //seed node at index 1 (needs a better GUI for seed selection)
+        //for (int i =0; i<N; i++)
+        //    central[i] = 1.0/N;
         DoubleMatrix centralVector = new DoubleMatrix(central);
         double t = Double.MAX_VALUE; //find minimum t with given beta and quality bound
         for (int i=0; i<N; i++) {
             Node u = indicies.get(i);
-            double tmp = Math.log(2)*graph.getDegree(u)/operator.scale[0]/1/1; //decay =1, quality bound=1 (needs a better GUI for parameter input)
+            double tmp = Math.log(2)/graph.getDegree(u)/degree[i]/1/1; //decay =1, quality bound=1 (needs a better GUI for parameter input)
 
             if (tmp <t)
                 t = tmp;
         }
-        centralVector = org.jblas.MatrixFunctions.pow(org.jblas.MatrixFunctions.expm(A),t*0.75).mmul(centralVector); //decay =1
+        centralVector = org.jblas.MatrixFunctions.pow(org.jblas.MatrixFunctions.expm(A),t).mmul(centralVector); //decay =1
 
         NodeCompare[] list = new NodeCompare[N];
         for (int i = 0; i < N; i++) {
             Node s = indicies.get(i);
-            list[i] = new NodeCompare(invIndicies.get(s), centralVector.get(i)/Math.sqrt(operator.scale[0])); //scale needs to be an array with index i
+            list[i] = new NodeCompare(invIndicies.get(s), centralVector.get(i)/Math.sqrt(degree[i])); //scale needs to be an array with index i
             //Test code
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
             row.setValue(centrality, centralVector.get(i)/Math.sqrt(operator.scale[0]));
@@ -166,25 +167,42 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
         if (part == null) {
             part = nodeTable.addColumn("partition(local)", "LocalPartition", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
         }
+        AttributeColumn part2 = nodeTable.getColumn("partition2(local)");
+        if (part2 == null) {
+            part2 = nodeTable.addColumn("partition2(local)", "LocalPartition2", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
+        }
+        AttributeColumn part3 = nodeTable.getColumn("partition3(local)");
+        if (part3 == null) {
+            part3 = nodeTable.addColumn("partition3(local)", "LocalPartition3", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
+        }        
         AttributeColumn eigenCol0 = nodeTable.getColumn("sweepQuality");
         if (eigenCol0 == null) {
             eigenCol0 = nodeTable.addColumn("sweepQuality", "SweepQuality", AttributeType.DOUBLE, AttributeOrigin.COMPUTED, new Double(-1));
         }
         AttributeColumn eigenVmax = am.getNodeTable().getColumn("eigenVector");
 
-        double minCut = Double.MAX_VALUE;
-        int[] bestPartition = new int[N];
+        double[] minCut = new double[3]; //keep track of 2 smallest eigen values
+        for (int i=0; i<minCut.length; i++)
+            minCut[i] = Double.MAX_VALUE;
+        int[][] bestPartition = new int[N][3];
+        double newCutOld = Double.MAX_VALUE; //for local minimum detection
+        int[] partitionsOld = new int[N]; //for local minimum detection
+        boolean differenceSignOld = false; //for local minimum detection
+        int[] sweepOld = new int[2]; // window for local minimum detection
+        for (int i=0; i<sweepOld.length; i++)
+            sweepOld[i] = -N;
+        
         double localVolume = 0;
         int sweep = 1;
-        while (localVolume < graph.getEdgeCount()/3 && sweep<N) { //the local target volume = 1/4 total volume (needs a better GUI for parameter input)
+        while (localVolume < graph.getEdgeCount()*2 && sweep<N) { //the local target volume = 1/4 total volume (needs a better GUI for parameter input) //the sweep bisector
             int sweepPoint = 1;
-            int[] partitions = new int[N];
+            int[] partitions = new int[N]; 
             double[] volumes = new double[2]; //for the demoninator of the quality function
             double cut = 0; //for the numerator of the quality function
             for (int i = 0; i < N; i++) {
                 Node u = indicies.get(i); //picking from a descending order
                 AttributeRow row = (AttributeRow) u.getNodeData().getAttributes();
-                if (Integer.parseInt(row.getValue(order).toString()) < sweep)
+                if (Integer.parseInt(row.getValue(order).toString()) < sweep) 
                     partitions[i] = 1;
                 if (Integer.parseInt(row.getValue(order).toString()) == sweep)
                     sweepPoint = i;
@@ -194,54 +212,47 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
             }
             for (int i=0; i<N; i++) {
                 Node u = indicies.get(i);
-                AttributeRow row1 = (AttributeRow) u.getNodeData().getAttributes();
                 EdgeIterable iter;
                 if (isDirected) {
-                    iter = ((HierarchicalDirectedGraph) graph).getInEdgesAndMetaInEdges(u);
-                } else {
-                    iter = ((HierarchicalUndirectedGraph) graph).getEdgesAndMetaEdges(u);
-                }
+                        iter = ((HierarchicalDirectedGraph) graph).getInEdgesAndMetaInEdges(u);
+                    } else {
+                        iter = ((HierarchicalUndirectedGraph) graph).getEdgesAndMetaEdges(u);
+                    }
+
                 for (Edge e : iter) {
                     Node v = graph.getOpposite(u, e);
-                    AttributeRow row2 = (AttributeRow) v.getNodeData().getAttributes();
                     Integer id = invIndicies.get(v);
                     if (partitions[i]<1)
-                        volumes[0] += e.getWeight()
-                                //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
-                                ;
-                    else
-                        volumes[1] += e.getWeight()
-                                //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
-                                ;
+                        volumes[0] += operator.reWeight(i, id);
+                    else 
+                        volumes[1] += operator.reWeight(i, id);
                     if (partitions[i] != partitions[id])
-                        cut += e.getWeight()
-                                //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
-                                ;
+                        cut += operator.reWeight(i, id) ;
                 }
             }
             localVolume = volumes[1];
             double newCut = cut / Math.min(volumes[0], volumes[1]);
             Node s = indicies.get(sweepPoint); //picking from a descending order
-            AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
+            AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
             row.setValue("sweepQuality", newCut);
-            if (newCut < minCut) {
-                minCut = newCut;
+
+            if (newCut < minCut[2]) {
+                minCut[2] = newCut;
                 for (int i=0; i<N; i++)
-                    bestPartition[i] = partitions[i];
+                    bestPartition[i][2] = partitions[i];
             }
-            sweep++; //indexing
+            sweep++; //increment the counter
         }
         for (int i = 0; i < N; i++) {
             Node s = indicies.get(i); //picking from a descending order
-            AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
-            row.setValue(part, bestPartition[i]);
+            AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
+            row.setValue(part, bestPartition[i][2]); 
             if (isCanceled) {
                 return;
             }
         }
         graph.readUnlock();
         Progress.finish(progress);
-
     }
 
     @Override

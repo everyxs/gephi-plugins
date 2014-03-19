@@ -152,6 +152,7 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
             Node s = indicies.get(sweepPoint); //picking from a descending order
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
             row.setValue("sweepQuality", newCut);
+            
             boolean differenceSign;
             if (newCut < newCutOld) {
                 newCutOld = newCut;
@@ -161,7 +162,6 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
             else
                 differenceSign = true;
             boolean flipSign = differenceSignOld == false && differenceSign ==true;
-                    
             if (flipSign && newCutOld < minCut[2]) {
                 if (newCutOld < minCut[1] ) {
                     if (sweep - sweepOld[1] > N*0.05) { //control for local fluctuations
