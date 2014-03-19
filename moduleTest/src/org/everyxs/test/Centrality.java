@@ -108,8 +108,8 @@ class Centrality implements org.gephi.statistics.spi.Statistics, org.gephi.utils
         if (order == null) {
             order = nodeTable.addColumn("localOrder", "LocalOrder", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
         }
-        //Laplacian operator = new Laplacian(graph); //L operator
-        Replicator operator = new Replicator(graph); //L operator
+        Laplacian operator = new Laplacian(graph); //L operator
+        //Replicator operator = new Replicator(graph); //L operator
         LinearTransforms transform = new LinearTransforms(adjMatrix);
         double[][] stochastic = new double[N][N];
         //stochastic = transform.laplacian(operator.scale);

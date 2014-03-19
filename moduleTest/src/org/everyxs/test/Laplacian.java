@@ -39,11 +39,9 @@ import org.openide.util.Lookup;
 public class Laplacian extends DynamicOperator {
     public static final String EIGENVECTOR = "eigenVector";
     public static final String EIGENVECTOR2 = "eigenRatioOrder";
-    double[][] adjMatrix;
 
-    public Laplacian(HierarchicalGraph g) {
-        super(g);
-        adjMatrix = new double[scale.length][scale.length];
+    public Laplacian(HierarchicalGraph graph) {
+        super(graph);
     }
 
     @Override
@@ -64,40 +62,10 @@ public class Laplacian extends DynamicOperator {
             eigenCol2 = nodeTable.addColumn(EIGENVECTOR2, "EigenRatioOrder", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
         }
 
-        int N = graph.getNodeCount();
-        graph.readLock();
-
-        Progress.start(progress);
-
-        HashMap<Integer, Node> indicies = new HashMap<Integer, Node>();
-        HashMap<Node, Integer> invIndicies = new HashMap<Node, Integer>();
-        int count = 0;
-        for (Node u : graph.getNodes()) {
-            indicies.put(count, u);
-            invIndicies.put(u, count);
-            count++;
-        }
-        adjMatrix = new double[N][N];
-        for (int i = 0; i < N; i++) {
-            Node u = indicies.get(i);
-            EdgeIterable iter;
-            if (isDirected) {
-                    iter = ((HierarchicalDirectedGraph) graph).getInEdgesAndMetaInEdges(u);
-                } else {
-                    iter = ((HierarchicalUndirectedGraph) graph).getEdgesAndMetaEdges(u);
-                }
-            for (Edge e : iter) {
-                    Node v = graph.getOpposite(u, e);
-                    Integer id = invIndicies.get(v);
-                    adjMatrix[i][id] = e.getWeight();
-                    if (e.isDirected())
-                        adjMatrix[id][i] = e.getWeight();
-                }
-        }
-        LinearTransforms laplacian = new LinearTransforms(adjMatrix);       
-        DenseMatrix A = new DenseMatrix(laplacian.laplacianNorm(scale[0], adjMatrix)); //uniform scaling of normalized laplacian
+        int N = size;    
+        DenseMatrix A = new DenseMatrix(super.laplacianScale(adjMatrix)); //uniform scaling of normalized laplacianScale
         
-        EVD eigen = new EVD(adjMatrix.length);
+        EVD eigen = new EVD(N);
         eigen.factor(A);
         DenseMatrix Pi = eigen.getRightEigenvectors();
         double[] Lambda = eigen.getRealEigenvalues();
@@ -150,17 +118,12 @@ public class Laplacian extends DynamicOperator {
                 return;
             }
         }
-        graph.readUnlock();
 
         Progress.finish(progress);
     }
     
-    public void setScale(int[] tuner) { //unifrom scaling tuner for scaled laplacian (need a more flexible version)
-        for (int i=0; i<scale.length; i++)
-            scale[i] = tuner[i]; //default: no scaling
-    }
     @Override
-    public double reWeight(int u, int v) {
+    public double reWeightedEdge(int u, int v) {
         return adjMatrix[u][v];
     }
     

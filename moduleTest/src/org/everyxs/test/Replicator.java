@@ -39,11 +39,27 @@ import org.openide.util.Lookup;
 public class Replicator extends DynamicOperator {
     public static final String EIGENVECTOR = "eigenVector";
     public static final String EIGENVECTOR2 = "eigenRatioOrder";
-    double[][] reWeightedMatrix;
+    double[] eigenVector; //reweighting vector
 
-    public Replicator(HierarchicalGraph g) {
+    public Replicator(HierarchicalGraph g) throws NotConvergedException {
         super(g);
-        reWeightedMatrix = new double[scale.length][scale.length];
+        eigenVector = new double[size];
+        DenseMatrix A = new DenseMatrix(adjMatrix);
+        EVD eigen = new EVD(adjMatrix.length);
+        eigen.factor(A);
+        DenseMatrix Pi = eigen.getRightEigenvectors();
+        double[] Lambda = eigen.getRealEigenvalues();
+        double lambdaMax = -Double.MAX_VALUE;;
+        int maxID = -1;
+        for (int i=0; i<Lambda.length; i++) //find the max eigenvalue
+            if (Lambda[i] > lambdaMax) {
+                lambdaMax = Lambda[i];  
+                maxID = i;
+            }
+        for (int i=0; i<size; i++) {
+            eigenVector[i] = Pi.get(i, maxID); //eigenvector centrality for replicator reweighting 
+            scale[i] = lambdaMax * eigenVector[i]* eigenVector[i]; //default replicator scaling factors
+        }
     }
     
     @Override
@@ -64,39 +80,16 @@ public class Replicator extends DynamicOperator {
             eigenCol2 = nodeTable.addColumn(EIGENVECTOR2, "EigenRatioOrder", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
         }
 
-        int N = graph.getNodeCount();
-        graph.readLock();
-
-        Progress.start(progress);
-
-        HashMap<Integer, Node> indicies = new HashMap<Integer, Node>();
-        HashMap<Node, Integer> invIndicies = new HashMap<Node, Integer>();
-        int count = 0;
-        for (Node u : graph.getNodes()) {
-            indicies.put(count, u);
-            invIndicies.put(u, count);
-            count++;
-        }
-        double[][] adjMatrix = new double[N][N];
-        for (int i = 0; i < N; i++) {
-            Node u = indicies.get(i);
-            EdgeIterable iter;
-            if (isDirected) {
-                  iter = ((HierarchicalDirectedGraph) graph).getInEdgesAndMetaInEdges(u);
-                } else {
-                    iter = ((HierarchicalUndirectedGraph) graph).getEdgesAndMetaEdges(u);
-                }
-            for (Edge e : iter) {
-                    Node v = graph.getOpposite(u, e);
-                    Integer id = invIndicies.get(v);
-                    adjMatrix[i][id] = e.getWeight();
-                    if (isDirected)
-                        adjMatrix[id][i] = e.getWeight();
-                }
-        }
-        LinearTransforms replicator = new LinearTransforms(adjMatrix);     
-        reWeightedMatrix = replicator.replicator();
-        DenseMatrix A = new DenseMatrix(replicator.laplacianNorm(scale[0], reWeightedMatrix));
+        int N = size;
+        Progress.start(progress);  
+        
+        double[][] repMatrix = new double[size][size];
+        for (int i=0; i<N; i++) //reweight the matrix
+            for (int j=0; j<N; j++)
+                repMatrix[i][j] = adjMatrix[i][j] * eigenVector[i] * eigenVector[j];
+        repMatrix = super.laplacianScale(repMatrix);//operator obtained
+        
+        DenseMatrix A = new DenseMatrix(repMatrix);
         EVD eigen = new EVD(adjMatrix.length);
         eigen.factor(A);
         DenseMatrix Pi = eigen.getRightEigenvectors();
@@ -150,14 +143,13 @@ public class Replicator extends DynamicOperator {
                 return;
             }
         }
-        graph.readUnlock();
 
         Progress.finish(progress);
     }
 
     @Override
-    public double reWeight(int u, int v) {    
-        return reWeightedMatrix[u][v];
+    public double reWeightedEdge(int u, int v) {    
+        return adjMatrix[u][v]*eigenVector[u]*eigenVector[v];
     }
     
 }

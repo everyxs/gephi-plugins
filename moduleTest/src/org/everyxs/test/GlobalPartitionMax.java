@@ -153,11 +153,11 @@ class GlobalPartitionMax implements org.gephi.statistics.spi.Statistics, org.gep
                     Node v = graph.getOpposite(u, e);
                     Integer id = invIndicies.get(v);
                     if (partitions[i]<1)
-                        volumes[0] += 1//dynamics.reWeight(i, id)
+                        volumes[0] += 1//dynamics.reWeightedEdge(i, id)
                                 //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
                                 ;
                     else 
-                        volumes[1] += 1//dynamics.reWeight(i, id)
+                        volumes[1] += 1//dynamics.reWeightedEdge(i, id)
                                 //* Double.parseDouble(row1.getValue(eigenVmax).toString()) * Double.parseDouble(row2.getValue(eigenVmax).toString())
                                 ;
                     if (partitions[i] != partitions[id])

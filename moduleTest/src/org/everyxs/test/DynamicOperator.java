@@ -6,11 +6,17 @@
 
 package org.everyxs.test;
 
+import java.util.HashMap;
 import no.uib.cipr.matrix.NotConvergedException;
 import org.gephi.data.attributes.api.AttributeModel;
+import org.gephi.graph.api.Edge;
+import org.gephi.graph.api.EdgeIterable;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
+import org.gephi.graph.api.HierarchicalDirectedGraph;
 import org.gephi.graph.api.HierarchicalGraph;
+import org.gephi.graph.api.HierarchicalUndirectedGraph;
+import org.gephi.graph.api.Node;
 import org.gephi.statistics.spi.Statistics;
 import org.gephi.utils.longtask.spi.LongTask;
 import org.gephi.utils.progress.ProgressTicket;
@@ -25,18 +31,45 @@ public abstract class DynamicOperator implements Statistics, LongTask {
     ProgressTicket progress;
     boolean isCanceled;
     boolean isDirected;
-    public HierarchicalGraph graph;
+    int size;
+    public double[][] adjMatrix;
     public double[] scale; //needs poly treatment, graph as a field
-
-    public DynamicOperator(HierarchicalGraph g) {
+    HashMap<Integer, Node> indicies = new HashMap<Integer, Node>();
+    HashMap<Node, Integer> invIndicies = new HashMap<Node, Integer>();
+    
+    public DynamicOperator(HierarchicalGraph graph) {
         GraphController graphController = Lookup.getDefault().lookup(GraphController.class);
         if (graphController != null && graphController.getModel() != null) {
             isDirected = graphController.getModel().isDirected();
         }
-        graph = g;
-        scale = new double[g.getNodeCount()];
-        for (int i=0; i<scale.length; i++)
-            scale[i] = 1; //default: no scaling
+        indicies = new HashMap<Integer, Node>();
+        invIndicies = new HashMap<Node, Integer>();
+        int count = 0;
+        for (Node u : graph.getNodes()) {
+            indicies.put(count, u);
+            invIndicies.put(u, count);
+            count++;
+        }
+        size = count;
+        adjMatrix = new double[size][size];
+        scale = new double[size];
+        for (int i = 0; i < size; i++) {
+            Node u = indicies.get(i);
+            scale[i] = graph.getDegree(u); //default: normalized laplaican
+            EdgeIterable iter;
+            if (isDirected) {
+                    iter = ((HierarchicalDirectedGraph) graph).getInEdgesAndMetaInEdges(u);
+                } else {
+                    iter = ((HierarchicalUndirectedGraph) graph).getEdgesAndMetaEdges(u);
+                }
+            for (Edge e : iter) {
+                    Node v = graph.getOpposite(u, e);
+                    Integer id = invIndicies.get(v);
+                    adjMatrix[i][id] = e.getWeight();
+                    if (e.isDirected())
+                        adjMatrix[id][i] = e.getWeight();
+                }
+        }
     }
     
     /**
@@ -75,9 +108,26 @@ public abstract class DynamicOperator implements Statistics, LongTask {
         }
     }
     
-    public void setScale(int tuner) { //unifrom scaling tuner for scaled laplacian (need a more flexible version)
+    public double[][] laplacianScale(double[][] inputMatrix) {
+        double[][] laplacian = new double[size][size];
+        double sum;
+        for (int i=0; i<laplacian.length; i++) {
+            sum = 0;
+            for (int j=0; j<laplacian.length; j++) 
+                sum += inputMatrix[i][j];
+            for (int j=0; j<laplacian.length; j++){
+                if (j==i)
+                    laplacian[i][j] = (sum - inputMatrix[i][j])/ Math.sqrt(scale[i]*scale[j]);
+                else
+                    laplacian[i][j] = - inputMatrix[i][j] / Math.sqrt(scale[i]*scale[j]);
+                }
+            }
+        return laplacian;
+    }
+    
+    public void setScale(double tuner) { //unifrom scaling tuner for scaled laplacianScale (need a more flexible version)
         for (int i=0; i<scale.length; i++)
-            scale[i] = tuner; //default: no scaling
+            scale[i] = Math.pow(scale[i], tuner); //raise scale to powers
     }
 
     @Override
@@ -97,6 +147,6 @@ public abstract class DynamicOperator implements Statistics, LongTask {
     }
     
    public abstract void execute(AttributeModel attributeModel) throws NotConvergedException;
-   public abstract double reWeight(int u, int v);
+   public abstract double reWeightedEdge(int u, int v);
    
 }

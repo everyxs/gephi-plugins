@@ -1,6 +1,7 @@
 package org.everyxs.test;
 
 import java.util.HashMap;
+import no.uib.cipr.matrix.NotConvergedException;
 import static org.everyxs.test.Laplacian.EIGENVECTOR2;
 import org.gephi.data.attributes.api.AttributeColumn;
 import org.gephi.data.attributes.api.AttributeController;
@@ -22,6 +23,7 @@ import org.gephi.statistics.spi.Statistics;
 import org.gephi.utils.longtask.spi.LongTask;
 import org.gephi.utils.progress.Progress;
 import org.gephi.utils.progress.ProgressTicket;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 /**
@@ -68,7 +70,12 @@ class TruePartition implements org.gephi.statistics.spi.Statistics, org.gephi.ut
         graph.readLock();
         Laplacian eigenRatio = new Laplacian(graph);
         eigenRatio.execute(gm, am);
-        Replicator eigenRatioR = new Replicator(graph);
+        Replicator eigenRatioR = null;
+        try {
+            eigenRatioR = new Replicator(graph);
+        } catch (NotConvergedException ex) {
+            Exceptions.printStackTrace(ex);
+        }
         eigenRatioR.execute(gm, am); 
         
         AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();

@@ -65,7 +65,7 @@ public final class GlobalButton implements ActionListener {
         }*/
 
         //Run modularity algorithm - community detection
-        GlobalPartition gPart = new GlobalPartition();
+        GlobalPartition gPart = new GlobalPartition(1,0);
         gPart.execute(graphModel, attributeModel);
 
         //Partition with 'modularity_class', just created by Modularity algorithm
