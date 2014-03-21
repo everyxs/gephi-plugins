@@ -111,17 +111,17 @@ public abstract class DynamicOperator implements Statistics, LongTask {
     public double[][] laplacianScale(double[][] inputMatrix) {
         double[][] laplacian = new double[size][size];
         double sum;
-        for (int i=0; i<laplacian.length; i++) {
+        for (int i=0; i<size; i++) {
             sum = 0;
-            for (int j=0; j<laplacian.length; j++) 
+            for (int j=0; j<size; j++) 
                 sum += inputMatrix[i][j];
-            for (int j=0; j<laplacian.length; j++){
+            for (int j=0; j<size; j++){
                 if (j==i)
                     laplacian[i][j] = (sum - inputMatrix[i][j])/ Math.sqrt(scale[i]*scale[j]);
                 else
                     laplacian[i][j] = - inputMatrix[i][j] / Math.sqrt(scale[i]*scale[j]);
-                }
-            }
+             }
+         }
         return laplacian;
     }
     

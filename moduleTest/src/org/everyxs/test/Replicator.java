@@ -87,10 +87,10 @@ public class Replicator extends DynamicOperator {
         for (int i=0; i<N; i++) //reweight the matrix
             for (int j=0; j<N; j++)
                 repMatrix[i][j] = adjMatrix[i][j] * eigenVector[i] * eigenVector[j];
-        repMatrix = super.laplacianScale(repMatrix);//operator obtained
+        repMatrix = laplacianScale(repMatrix);//operator obtained
         
         DenseMatrix A = new DenseMatrix(repMatrix);
-        EVD eigen = new EVD(adjMatrix.length);
+        EVD eigen = new EVD(N);
         eigen.factor(A);
         DenseMatrix Pi = eigen.getRightEigenvectors();
         double[] Lambda = eigen.getRealEigenvalues();

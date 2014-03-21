@@ -36,27 +36,20 @@ import org.openide.util.Lookup;
  *
  * @author Xiaoran
  */
-public class Laplacian extends DynamicOperator {
+public class UnbiasedAdj extends DynamicOperator {
     public static final String EIGENVECTOR = "eigenVector";
     public static final String EIGENVECTOR2 = "eigenRatioOrder";
+    double[] degrees; //reweighting vector
 
-    public Laplacian(HierarchicalGraph graph) {
-        super(graph);
-    }
-    
-    //constructor for unnormalized laplacian
-    public Laplacian(HierarchicalGraph graph, boolean normalized) {
-        super(graph);
-        if (!normalized){
-            double degreeMax = -Double.MAX_VALUE;;
-            for (int i=0; i<scale.length; i++) //find the max degree
-                if (scale[i] > degreeMax)
-                    degreeMax = scale[i];  
-            for (int i=0; i<scale.length; i++) //find the max eigenvalue
-                scale[i] = degreeMax;
+    public UnbiasedAdj(HierarchicalGraph g) {
+        super(g);
+        degrees = new double[size];
+        for (int i=0; i<size; i++) {
+            degrees[i] = scale[i]; //degrees for unbiased adjacency reweighting 
+            scale[i] = 1; //default unbiased adjacency scaling factors
         }
     }
-
+    
     @Override
     public void execute(AttributeModel attributeModel) throws NotConvergedException {
 
@@ -76,11 +69,16 @@ public class Laplacian extends DynamicOperator {
         }
 
         int N = size;
-        Progress.start(progress);
-        double[][] laplacian = laplacianScale(adjMatrix);
-        DenseMatrix A = new DenseMatrix(laplacian); //uniform scaling of normalized laplacianScale
+        Progress.start(progress);  
         
-        EVD eigen = new EVD(N);
+        double[][] unbiasedAdj = new double[size][size];
+        for (int i=0; i<N; i++) //reweight the matrix
+            for (int j=0; j<N; j++)
+                unbiasedAdj[i][j] = adjMatrix[i][j] / Math.sqrt(degrees[i]*degrees[j]);
+        unbiasedAdj = laplacianScale(unbiasedAdj);//operator obtained
+        
+        DenseMatrix A = new DenseMatrix(unbiasedAdj);
+        EVD eigen = new EVD(adjMatrix.length);
         eigen.factor(A);
         DenseMatrix Pi = eigen.getRightEigenvectors();
         double[] Lambda = eigen.getRealEigenvalues();
@@ -136,10 +134,10 @@ public class Laplacian extends DynamicOperator {
 
         Progress.finish(progress);
     }
-    
+
     @Override
-    public double reWeightedEdge(int u, int v) {
-        return adjMatrix[u][v];
+    public double reWeightedEdge(int u, int v) {    
+        return adjMatrix[u][v]/Math.sqrt(degrees[u]*degrees[v]);
     }
     
 }

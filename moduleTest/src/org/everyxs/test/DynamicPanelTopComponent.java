@@ -76,6 +76,8 @@ public final class DynamicPanelTopComponent extends TopComponent {
         jRadioButtonReplicator = new javax.swing.JRadioButton();
         jButtonGlobal = new javax.swing.JButton();
         jButtonLocal = new javax.swing.JButton();
+        NLaplacian = new javax.swing.JRadioButton();
+        UnbiasedAdj = new javax.swing.JRadioButton();
 
         jTextField1.setText(org.openide.util.NbBundle.getMessage(DynamicPanelTopComponent.class, "DynamicPanelTopComponent.jTextField1.text")); // NOI18N
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
@@ -116,6 +118,22 @@ public final class DynamicPanelTopComponent extends TopComponent {
             }
         });
 
+        buttonGroup1.add(NLaplacian);
+        org.openide.awt.Mnemonics.setLocalizedText(NLaplacian, org.openide.util.NbBundle.getMessage(DynamicPanelTopComponent.class, "DynamicPanelTopComponent.NLaplacian.text")); // NOI18N
+        NLaplacian.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NLaplacianActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(UnbiasedAdj);
+        org.openide.awt.Mnemonics.setLocalizedText(UnbiasedAdj, org.openide.util.NbBundle.getMessage(DynamicPanelTopComponent.class, "DynamicPanelTopComponent.UnbiasedAdj.text")); // NOI18N
+        UnbiasedAdj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UnbiasedAdjActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -123,19 +141,25 @@ public final class DynamicPanelTopComponent extends TopComponent {
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jRadioButtonReplicator)
-                    .addComponent(jRadioButtonLaplacian)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34)
-                        .addComponent(jLabel1)))
-                .addContainerGap(387, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButtonLocal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonGlobal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(74, 74, 74))
+                        .addComponent(jRadioButtonLaplacian)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jRadioButtonReplicator)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(34, 34, 34)
+                                .addComponent(jLabel1))
+                            .addComponent(UnbiasedAdj))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 187, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonLocal, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonGlobal))
+                        .addGap(74, 74, 74))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(NLaplacian)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,15 +168,22 @@ public final class DynamicPanelTopComponent extends TopComponent {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addGap(37, 37, 37)
+                .addGap(31, 31, 31)
                 .addComponent(jRadioButtonLaplacian)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButtonReplicator)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
-                .addComponent(jButtonGlobal)
+                .addComponent(NLaplacian)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonLocal)
-                .addGap(54, 54, 54))
+                .addComponent(jRadioButtonReplicator)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(UnbiasedAdj)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButtonLocal)
+                        .addGap(54, 54, 54))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButtonGlobal)
+                        .addContainerGap())))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -237,7 +268,17 @@ public final class DynamicPanelTopComponent extends TopComponent {
         }
     }//GEN-LAST:event_jButtonGlobalActionPerformed
 
+    private void NLaplacianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NLaplacianActionPerformed
+        inputMatrix = 1; 
+    }//GEN-LAST:event_NLaplacianActionPerformed
+
+    private void UnbiasedAdjActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UnbiasedAdjActionPerformed
+        inputMatrix = 4; 
+    }//GEN-LAST:event_UnbiasedAdjActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JRadioButton NLaplacian;
+    private javax.swing.JRadioButton UnbiasedAdj;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButtonGlobal;
     private javax.swing.JButton jButtonLocal;
