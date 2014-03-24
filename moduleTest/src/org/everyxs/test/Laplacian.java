@@ -77,6 +77,7 @@ public class Laplacian extends DynamicOperator {
 
         int N = size;
         Progress.start(progress);
+        
         double[][] laplacian = laplacianScale(adjMatrix);
         DenseMatrix A = new DenseMatrix(laplacian); //uniform scaling of normalized laplacianScale
         
@@ -115,10 +116,10 @@ public class Laplacian extends DynamicOperator {
         NodeCompare[] list = new NodeCompare[N];
         for (int i = 0; i < N; i++) {
             Node s = indicies.get(i);
-            list[i] = new NodeCompare(invIndicies.get(s),  Pi.get(i, minID[1])/Pi.get(i, minID[0]));
+            list[i] = new NodeCompare(i,  Pi.get(i, minID[1])/Pi.get(i, minID[0]));
             //Test code
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
-            row.setValue(eigenCol, Pi.get(i, minID[0])); 
+            row.setValue(eigenCol, Pi.get(i, minID[1])); 
             if (isCanceled) {
                 return;
             }
