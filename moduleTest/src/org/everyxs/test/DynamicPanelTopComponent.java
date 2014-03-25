@@ -214,12 +214,12 @@ public final class DynamicPanelTopComponent extends TopComponent {
         PartitionController partitionController = Lookup.getDefault().lookup(PartitionController.class);
 
         //Run global community detection
-        if (!localSwitch) {
-            GlobalPartition gPart = new GlobalPartition(scalePower, inputMatrix);
+        if (localSwitch) {
+            LocalPartition gPart = new LocalPartition(scalePower, inputMatrix);
             gPart.execute(graphModel, attributeModel);
         }
         //Partition with 'partition', just created by global spectral algorithm
-        AttributeColumn modColumn = attributeModel.getNodeTable().getColumn("partition");
+        AttributeColumn modColumn = attributeModel.getNodeTable().getColumn("partition(local)");
         Partition p2 = partitionController.buildPartition(modColumn, graph);
         System.out.println(p2.getPartsCount() + " partitions found");
         NodeColorTransformer nodeColorTransformer2 = new NodeColorTransformer();
@@ -262,7 +262,7 @@ public final class DynamicPanelTopComponent extends TopComponent {
 
         //Export
         try {
-            ec.exportFile(new File("partition2.pdf"));
+            ec.exportFile(new File("partition1.pdf"));
         } catch (IOException ex) {
             return;
         }

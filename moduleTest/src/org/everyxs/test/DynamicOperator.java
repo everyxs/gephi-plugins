@@ -33,7 +33,8 @@ public abstract class DynamicOperator implements Statistics, LongTask {
     boolean isDirected;
     int size;
     public double[][] adjMatrix;
-    public double[] scale; //needs poly treatment, graph as a field
+    public double[] scale; //scaling factor diagonal terms
+    double[] degrees;
     HashMap<Integer, Node> indicies = new HashMap<Integer, Node>();
     HashMap<Node, Integer> invIndicies = new HashMap<Node, Integer>();
     
@@ -53,9 +54,11 @@ public abstract class DynamicOperator implements Statistics, LongTask {
         size = count;
         adjMatrix = new double[size][size];
         scale = new double[size];
+        degrees = new double[size];
         for (int i = 0; i < size; i++) {
             Node u = indicies.get(i);
             scale[i] = graph.getDegree(u); //default: normalized laplaican
+            degrees[i] = scale[i];
             EdgeIterable iter;
             if (isDirected) {
                     iter = ((HierarchicalDirectedGraph) graph).getInEdgesAndMetaInEdges(u);
@@ -95,14 +98,16 @@ public abstract class DynamicOperator implements Statistics, LongTask {
      */
     @Override
     public void execute(GraphModel graphModel, AttributeModel attributeModel) {
-        HierarchicalGraph graph;
-        if (isDirected) {
-            graph = graphModel.getHierarchicalDirectedGraphVisible();
-        } else {
-            graph = graphModel.getHierarchicalUndirectedGraphVisible();
-        }
         try {
             execute(attributeModel);
+        } catch (NotConvergedException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+    
+    public void executeLocal(GraphModel graphModel, AttributeModel attributeModel) {
+        try {
+            executeLocal(attributeModel);
         } catch (NotConvergedException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -148,8 +153,9 @@ public abstract class DynamicOperator implements Statistics, LongTask {
         this.progress = progressTicket;
 
     }
-    
+   
    public abstract void execute(AttributeModel attributeModel) throws NotConvergedException;
+   public abstract void executeLocal(AttributeModel attributeModel) throws NotConvergedException;
    public abstract double reWeightedEdge(int u, int v);
    
 }

@@ -29,6 +29,7 @@ import org.gephi.statistics.spi.Statistics;
 import org.gephi.utils.longtask.spi.LongTask;
 import org.gephi.utils.progress.Progress;
 import org.gephi.utils.progress.ProgressTicket;
+import org.jblas.DoubleMatrix;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
@@ -39,15 +40,9 @@ import org.openide.util.Lookup;
 public class UnbiasedAdj extends DynamicOperator {
     public static final String EIGENVECTOR = "eigenVector";
     public static final String EIGENVECTOR2 = "eigenRatioOrder";
-    double[] degrees; //reweighting vector
 
     public UnbiasedAdj(HierarchicalGraph g) {
         super(g);
-        degrees = new double[size];
-        for (int i=0; i<size; i++) {
-            degrees[i] = scale[i]; //degrees for unbiased adjacency reweighting 
-            scale[i] = 1; //default unbiased adjacency scaling factors
-        }
     }
     
     @Override
@@ -138,6 +133,66 @@ public class UnbiasedAdj extends DynamicOperator {
     @Override
     public double reWeightedEdge(int u, int v) {    
         return adjMatrix[u][v]/Math.sqrt(degrees[u]*degrees[v]);
+    }
+
+    @Override
+    public void executeLocal(AttributeModel attributeModel) throws NotConvergedException {
+        
+        AttributeTable nodeTable = attributeModel.getNodeTable();
+        AttributeColumn centrality = nodeTable.getColumn("centrality");
+        if (centrality == null) {
+            centrality = nodeTable.addColumn("centrality", "Centrality", AttributeType.DOUBLE, AttributeOrigin.COMPUTED, new Double(0));
+        }
+        AttributeColumn order = attributeModel.getNodeTable().getColumn("localOrder");
+        if (order == null) {
+            order = nodeTable.addColumn("localOrder", "LocalOrder", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
+        }
+
+        DoubleMatrix A = null;
+        double[][] unbiasedAdj = new double[size][size];
+        for (int i=0; i<size; i++) //reweight the matrix
+            for (int j=0; j<size; j++)
+                unbiasedAdj[i][j] = adjMatrix[i][j] / Math.sqrt(degrees[i]*degrees[j]);
+        unbiasedAdj = laplacianScale(unbiasedAdj);//operator obtained
+        for (int i=0; i<size; i++)
+            for (int j=0; j<size; j++) {
+                unbiasedAdj[i][j] = -unbiasedAdj[i][j];
+            }
+        A = new DoubleMatrix(unbiasedAdj);
+
+        double[] central = new double[size];
+        central[333] = 1; //seed node at index 1 (needs a better GUI for seed selection)
+        //for (int i =0; i<N; i++)
+        //    central[i] = 1.0/N;
+        DoubleMatrix centralVector = new DoubleMatrix(central);
+        double t = Double.MAX_VALUE; //find minimum t with given beta and quality bound
+        for (int i=0; i<size; i++) {
+            double tmp = Math.log(2)/scale[i]/degrees[i]/1/1; //decay =1, quality bound=1 (needs a better GUI for parameter input)
+            if (tmp <t)
+                t = tmp;
+        }
+        centralVector = org.jblas.MatrixFunctions.pow(org.jblas.MatrixFunctions.expm(A),t).mmul(centralVector); //decay =1
+
+        NodeCompare[] list = new NodeCompare[size];
+        for (int i = 0; i < size; i++) {
+            Node s = indicies.get(i);
+            list[i] = new NodeCompare(invIndicies.get(s), centralVector.get(i)/Math.sqrt(scale[i])); //scale needs to be an array with index i
+            //Test code
+            AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
+            row.setValue(centrality, list[i].getAttribute());
+            if (isCanceled) {
+                return;
+            }
+        }
+        Arrays.sort(list);
+        for (int i = 0; i < size; i++) {
+            Node s = indicies.get(list[size-i-1].getID()); //picking from a descending order
+            AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
+            row.setValue(order, i);
+            if (isCanceled) {
+                return;
+            }
+        }
     }
     
 }

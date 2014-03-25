@@ -65,11 +65,11 @@ public final class LocalButton implements ActionListener {
         }*/
 
         //Run modularity algorithm - community detection
-        LocalPartition lPart = new LocalPartition();
+        LocalPartition lPart = new LocalPartition(1,1);
         lPart.execute(graphModel, attributeModel);
 
         //Partition with 'modularity_class', just created by Modularity algorithm
-        AttributeColumn modColumn = attributeModel.getNodeTable().getColumn("partition");
+        AttributeColumn modColumn = attributeModel.getNodeTable().getColumn("partition(local)");
         Partition p2 = partitionController.buildPartition(modColumn, graph);
         System.out.println(p2.getPartsCount() + " partitions found");
         NodeColorTransformer nodeColorTransformer2 = new NodeColorTransformer();

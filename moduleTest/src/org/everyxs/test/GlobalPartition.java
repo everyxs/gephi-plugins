@@ -93,8 +93,6 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
         }
         dynamics.setScale(scalePower);
         dynamics.execute(gm, am);
-        //Replicator eigenRatioR = new Replicator(graph);
-        //eigenRatioR.execute(gm, am); 
         
         AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
         AttributeColumn order = attributeModel.getNodeTable().getColumn("eigenRatioOrder");
@@ -123,7 +121,7 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
         int[][] bestPartition = new int[N][3];
         double newCutOld = Double.MAX_VALUE; //for local minimum detection
         int[] partitionsOld = new int[N]; //for local minimum detection
-        boolean differenceSignOld = false; //for local minimum detection
+        int differenceSignOld = 0; //for local minimum detection
         int[] sweepOld = new int[2]; // window for local minimum detection
         for (int i=0; i<sweepOld.length; i++)
             sweepOld[i] = -N;
@@ -169,27 +167,25 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
             row.setValue("sweepQuality", newCut);
             
-            boolean differenceSign = false;
+            int differenceSign = 0;
             if (newCut < newCutOld) {
                 newCutOld = newCut;
                 partitionsOld = partitions;
-                differenceSign = false;
+                differenceSign = -1;
             }
             else if (newCut > newCutOld) {
-                differenceSign = true;
+                differenceSign = 1;
             }
-            boolean flipSign = differenceSignOld == false && differenceSign ==true;
-            if (sweep==N-1 && differenceSign==false)
+            boolean flipSign = differenceSignOld == -1 && differenceSign == 1;
+            if (sweep==N-1 && differenceSign==-1)
                 flipSign = true; //for boundary condition at the end of sweep
             if (flipSign && newCutOld < minCut[2]) {
                 if (newCutOld < minCut[1] ) {
-                    if (sweep - sweepOld[1] > N*0.05) { //control for local fluctuations, window size: 5%
-                        minCut[2] = minCut[1]; //shifting queue
-                        for (int i=0; i<N; i++)
-                            bestPartition[i][2] = bestPartition[i][1];
-                    }
                     if (newCutOld < minCut[0]) {
                         if (sweep - sweepOld[0] > N*0.05) { //control for local fluctuations
+                            minCut[2] = minCut[1]; //shifting queue
+                            for (int i=0; i<N; i++)
+                                bestPartition[i][2] = bestPartition[i][1];
                             minCut[1] = minCut[0]; //shifting queue
                             for (int i=0; i<N; i++)
                                 bestPartition[i][1] = bestPartition[i][0];
@@ -197,31 +193,33 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
                         sweepOld[0] = sweep; //update local flag
                         sweepOld[1] = sweep; //update local flag
                         minCut[0] = newCutOld;
-                        newCutOld = Double.MAX_VALUE;
                         for (int i=0; i<N; i++)
                             bestPartition[i][0] = partitionsOld[i];
                     }
                     else {
+                        if (sweep - sweepOld[1] > N*0.05) { //control for local fluctuations, window size: 5%
+                            minCut[2] = minCut[1]; //shifting queue
+                            for (int i=0; i<N; i++)
+                                bestPartition[i][2] = bestPartition[i][1];
+                        }
                         if (sweep - sweepOld[0] > N*0.05) { //control for local fluctuations
                             sweepOld[1] = sweep; //update local flag
                             minCut[1] = newCutOld;
                             for (int i=0; i<N; i++)
                                 bestPartition[i][1] = partitionsOld[i];
                         }
-                        newCutOld = Double.MAX_VALUE;
                     }
                 }// for top 3 smalleest eigen values
                 else {
                     if (sweep - sweepOld[1] > N*0.05) { //control for local fluctuations
                         minCut[2] = newCutOld;
-                        newCutOld = Double.MAX_VALUE;
                         for (int i=0; i<N; i++)
                             bestPartition[i][2] = partitionsOld[i];
                     }
-                    newCutOld = Double.MAX_VALUE;
                 }
             }
             differenceSignOld = differenceSign;
+            newCutOld = newCut;
         }
         for (int i = 0; i < N; i++) {
             Node s = dynamics.indicies.get(i); //picking from a descending order
