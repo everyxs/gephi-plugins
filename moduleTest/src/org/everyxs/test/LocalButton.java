@@ -65,7 +65,7 @@ public final class LocalButton implements ActionListener {
         }*/
 
         //Run modularity algorithm - community detection
-        LocalPartition lPart = new LocalPartition(1,1);
+        LocalPartition lPart = new LocalPartition(1,1,1,1,1);
         lPart.execute(graphModel, attributeModel);
 
         //Partition with 'modularity_class', just created by Modularity algorithm

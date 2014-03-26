@@ -50,9 +50,9 @@ public class Laplacian extends DynamicOperator {
         super(graph);
         if (!normalized){
             double degreeMax = -Double.MAX_VALUE;;
-            for (int i=0; i<scale.length; i++) //find the max degree
-                if (scale[i] > degreeMax)
-                    degreeMax = scale[i];  
+            for (int i=0; i<degrees.length; i++) //find the max degree
+                if (degrees[i] > degreeMax)
+                    degreeMax = degrees[i];  
             for (int i=0; i<scale.length; i++) //find the max eigenvalue
                 scale[i] = degreeMax;
         }
@@ -117,7 +117,7 @@ public class Laplacian extends DynamicOperator {
         NodeCompare[] list = new NodeCompare[N];
         for (int i = 0; i < N; i++) {
             Node s = indicies.get(i);
-            list[i] = new NodeCompare(i,  -Pi.get(i, minID[1])/Pi.get(i, minID[0]));
+            list[i] = new NodeCompare(i,  Pi.get(i, minID[1])/Pi.get(i, minID[0]));
             //Test code
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
             row.setValue(eigenCol, Pi.get(i, minID[1])); 
@@ -145,7 +145,7 @@ public class Laplacian extends DynamicOperator {
     }
 
     @Override
-    public void executeLocal(AttributeModel attributeModel) throws NotConvergedException {
+    public void executeLocal(AttributeModel attributeModel, int seed, double qualityBound) throws NotConvergedException {
         
         AttributeTable nodeTable = attributeModel.getNodeTable();
         AttributeColumn centrality = nodeTable.getColumn("centrality");
@@ -166,22 +166,22 @@ public class Laplacian extends DynamicOperator {
         A = new DoubleMatrix(temp);
 
         double[] central = new double[size];
-        central[333] = 1; //seed node at index 1 (needs a better GUI for seed selection)
+        central[seed] = 1; //seed node at index 1 (needs a better GUI for seed selection)
         //for (int i =0; i<N; i++)
         //    central[i] = 1.0/N;
         DoubleMatrix centralVector = new DoubleMatrix(central);
         double t = Double.MAX_VALUE; //find minimum t with given beta and quality bound
         for (int i=0; i<size; i++) {
-            double tmp = Math.log(2)/scale[i]/degrees[i]/1/1; //decay =1, quality bound=1 (needs a better GUI for parameter input)
+            double tmp = Math.log(2)*scale[i]/degrees[i]/1; //decay =1
             if (tmp <t)
                 t = tmp;
         }
-        centralVector = org.jblas.MatrixFunctions.pow(org.jblas.MatrixFunctions.expm(A),t).mmul(centralVector); //decay =1
+        centralVector = org.jblas.MatrixFunctions.pow(org.jblas.MatrixFunctions.expm(A),t/qualityBound/qualityBound).mmul(centralVector);
 
         NodeCompare[] list = new NodeCompare[size];
         for (int i = 0; i < size; i++) {
             Node s = indicies.get(i);
-            list[i] = new NodeCompare(invIndicies.get(s), centralVector.get(i)/Math.sqrt(scale[i])); //scale needs to be an array with index i
+            list[i] = new NodeCompare(invIndicies.get(s), centralVector.get(i)/Math.sqrt(scale[i])); 
             //Test code
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
             row.setValue(centrality, list[i].getAttribute());

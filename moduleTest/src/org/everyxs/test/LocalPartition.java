@@ -38,13 +38,19 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
     private boolean isDirected;
     private double scalePower;
     int inputMatrix;
-    public LocalPartition(double scaleP, int input) {
+    double targetVolume;
+    int seed;
+    double qualityBound;
+    public LocalPartition(double scaleP, int input, double targetV, int s, double qBound) {
         GraphController graphController = Lookup.getDefault().lookup(GraphController.class);
         if (graphController != null && graphController.getModel() != null) {
             isDirected = graphController.getModel().isDirected();
         }
         scalePower = scaleP;
         inputMatrix = input;
+        targetVolume = targetV;
+        seed = s;
+        qualityBound = qBound;
     }
 
 
@@ -94,7 +100,11 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
                 break;                
         }
         dynamics.setScale(scalePower);
-        dynamics.executeLocal(gm, am);
+        try {
+            dynamics.executeLocal(am, seed, qualityBound);
+        } catch (NotConvergedException ex) {
+            Exceptions.printStackTrace(ex);
+        }
         // The sweep
         AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
         AttributeColumn order = attributeModel.getNodeTable().getColumn("localOrder");
@@ -129,8 +139,11 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
             sweepOld[i] = -N;
         
         double localVolume = 0;
+        double totalVolume = 0;
+        for (int i=0; i<N; i++)
+            totalVolume += dynamics.scale[i];
         int sweep = 1;
-        while (localVolume < graph.getEdgeCount()*2 && sweep<N) { //the local target volume = 1/4 total volume (needs a better GUI for parameter input) //the sweep bisector
+        while (localVolume < targetVolume*totalVolume && sweep<N) { // the sweep bisector with the localTargetVolume in [0,1]
             int sweepPoint = 1;
             int[] partitions = new int[N]; 
             double[] volumes = new double[2]; //for the demoninator of the quality function

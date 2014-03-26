@@ -121,7 +121,7 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
         int[][] bestPartition = new int[N][3];
         double newCutOld = Double.MAX_VALUE; //for local minimum detection
         int[] partitionsOld = new int[N]; //for local minimum detection
-        int differenceSignOld = 0; //for local minimum detection
+        int differenceSignOld = 1; //for local minimum detection
         int[] sweepOld = new int[2]; // window for local minimum detection
         for (int i=0; i<sweepOld.length; i++)
             sweepOld[i] = -N;
@@ -176,7 +176,7 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
             else if (newCut > newCutOld) {
                 differenceSign = 1;
             }
-            boolean flipSign = differenceSignOld == -1 && differenceSign == 1;
+            boolean flipSign = differenceSignOld <=0 && differenceSign >=0;
             if (sweep==N-1 && differenceSign==-1)
                 flipSign = true; //for boundary condition at the end of sweep
             if (flipSign && newCutOld < minCut[2]) {

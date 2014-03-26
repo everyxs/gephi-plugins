@@ -105,14 +105,6 @@ public abstract class DynamicOperator implements Statistics, LongTask {
         }
     }
     
-    public void executeLocal(GraphModel graphModel, AttributeModel attributeModel) {
-        try {
-            executeLocal(attributeModel);
-        } catch (NotConvergedException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-    }
-    
     public double[][] laplacianScale(double[][] inputMatrix) {
         double[][] laplacian = new double[size][size];
         double sum;
@@ -155,7 +147,7 @@ public abstract class DynamicOperator implements Statistics, LongTask {
     }
    
    public abstract void execute(AttributeModel attributeModel) throws NotConvergedException;
-   public abstract void executeLocal(AttributeModel attributeModel) throws NotConvergedException;
+   public abstract void executeLocal(AttributeModel attributeModel, int seed, double qualityBound) throws NotConvergedException;
    public abstract double reWeightedEdge(int u, int v);
    
 }
