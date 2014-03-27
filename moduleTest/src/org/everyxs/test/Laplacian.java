@@ -120,7 +120,7 @@ public class Laplacian extends DynamicOperator {
             list[i] = new NodeCompare(i,  Pi.get(i, minID[1])/Pi.get(i, minID[0]));
             //Test code
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
-            row.setValue(eigenCol, Pi.get(i, minID[1])); 
+            row.setValue(eigenCol, Pi.get(i, minID[0])); 
             if (isCanceled) {
                 return;
             }
