@@ -1,5 +1,6 @@
 package org.everyxs.test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import no.uib.cipr.matrix.NotConvergedException;
 import static org.everyxs.test.Laplacian.EIGENVECTOR2;
@@ -120,11 +121,14 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
             minCut[i] = Double.MAX_VALUE;
         int[][] bestPartition = new int[N][3];
         double newCutOld = Double.MAX_VALUE; //for local minimum detection
-        int[] partitionsOld = new int[N]; //for local minimum detection
+        //int[] partitionsOld = new int[N]; //for local minimum detection
         int differenceSignOld = 1; //for local minimum detection
         int[] sweepOld = new int[2]; // window for local minimum detection
         for (int i=0; i<sweepOld.length; i++)
             sweepOld[i] = -N;
+        NodeCompare[] localList = new NodeCompare[N];
+        for (int i=0; i<N; i++)
+            localList[i] = new NodeCompare();
         
         for (int sweep=1; sweep<N; sweep++) { //the sweep bisector
             int sweepPoint = 1;
@@ -170,15 +174,21 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
             int differenceSign = 0;
             if (newCut < newCutOld) {
                 newCutOld = newCut;
-                partitionsOld = partitions;
+                //partitionsOld = partitions;
+                sweepOld[0] = sweep;
                 differenceSign = -1;
             }
             else if (newCut > newCutOld) {
                 differenceSign = 1;
             }
             boolean flipSign = differenceSignOld <=0 && differenceSign >=0;
-            if (sweep==N-1 && differenceSign==-1)
-                flipSign = true; //for boundary condition at the end of sweep
+            //if (sweep==N-1 && differenceSign==-1)
+                //flipSign = true; //for boundary condition at the end of sweep
+            if (flipSign)
+                localList[sweep] = new NodeCompare(sweepOld[0],  newCutOld);
+            
+            
+            /* //local optima detection with moving window (direction sensitive heuristic)
             if (flipSign && newCutOld < minCut[2]) {
                 if (newCutOld < minCut[1] ) {
                     if (newCutOld < minCut[0]) {
@@ -217,10 +227,26 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
                             bestPartition[i][2] = partitionsOld[i];
                     }
                 }
-            }
+            }*/
             differenceSignOld = differenceSign;
-            newCutOld = newCut;
+            newCutOld = newCut; 
         }
+        
+        for (int h=0; h<3; h++) {
+            Arrays.sort(localList); //resort the local minimums (after local window removal)
+            if (localList[0].getAttribute() < Double.MAX_VALUE) {
+                int sweep = localList[0].getID();//get the sweep point
+                for (int i = 0; i < N; i++) {
+                    Node u = dynamics.indicies.get(i); //picking from a descending order
+                    AttributeRow row = (AttributeRow) u.getNodeData().getAttributes();
+                    if (Integer.parseInt(row.getValue(order).toString()) < sweep) 
+                        bestPartition[i][h] = 1;
+                    if (localList[i].getID() !=-1 && Math.abs(localList[i].getID()- sweep) <= N*0.05 )
+                        localList[i].setAttribute(Double.MAX_VALUE);
+                }
+            }
+        }
+        
         for (int i = 0; i < N; i++) {
             Node s = dynamics.indicies.get(i); //picking from a descending order
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         

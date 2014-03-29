@@ -7,7 +7,6 @@
 package org.everyxs.test;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import no.uib.cipr.matrix.DenseMatrix;
 import no.uib.cipr.matrix.NotConvergedException;
 import no.uib.cipr.matrix.EVD;
@@ -17,21 +16,10 @@ import org.gephi.data.attributes.api.AttributeOrigin;
 import org.gephi.data.attributes.api.AttributeRow;
 import org.gephi.data.attributes.api.AttributeTable;
 import org.gephi.data.attributes.api.AttributeType;
-import org.gephi.graph.api.Edge;
-import org.gephi.graph.api.EdgeIterable;
-import org.gephi.graph.api.GraphController;
-import org.gephi.graph.api.GraphModel;
-import org.gephi.graph.api.HierarchicalDirectedGraph;
 import org.gephi.graph.api.HierarchicalGraph;
-import org.gephi.graph.api.HierarchicalUndirectedGraph;
 import org.gephi.graph.api.Node;
-import org.gephi.statistics.spi.Statistics;
-import org.gephi.utils.longtask.spi.LongTask;
 import org.gephi.utils.progress.Progress;
-import org.gephi.utils.progress.ProgressTicket;
 import org.jblas.DoubleMatrix;
-import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
 
 /**
  *
@@ -117,7 +105,7 @@ public class Laplacian extends DynamicOperator {
         NodeCompare[] list = new NodeCompare[N];
         for (int i = 0; i < N; i++) {
             Node s = indicies.get(i);
-            list[i] = new NodeCompare(i,  Pi.get(i, minID[1])/Pi.get(i, minID[0]));
+            list[i] = new NodeCompare(i,  -Pi.get(i, minID[1])/Pi.get(i, minID[0]));
             //Test code
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
             row.setValue(eigenCol, Pi.get(i, minID[0])); 

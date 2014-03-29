@@ -12,7 +12,12 @@ package org.everyxs.test;
  */
 public class NodeCompare implements Comparable<NodeCompare>{
     private final int id;
-    private final Double attribute;
+    private Double attribute;
+    
+    public NodeCompare() {
+        id = -1;
+        attribute = Double.MAX_VALUE;
+    }
     
     public NodeCompare(int i, Double a) {
         id = i;
@@ -23,13 +28,17 @@ public class NodeCompare implements Comparable<NodeCompare>{
         return attribute;
     }
     
+    public void setAttribute(double newValue) {
+        attribute = newValue;
+    }
+    
     public int getID() {
         return id;
     }
     
     @Override
     public int compareTo(NodeCompare node) {
-        //descending order
+        //ascending order
         return this.attribute.compareTo(node.getAttribute());
     }
 }
