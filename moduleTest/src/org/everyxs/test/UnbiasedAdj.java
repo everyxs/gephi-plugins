@@ -32,6 +32,7 @@ public class UnbiasedAdj extends DynamicOperator {
     public UnbiasedAdj(HierarchicalGraph g) {
         super(g);
         for (int i=0; i<size; i++) {
+            reweight[i] = Math.sqrt(1.0/degrees[i]); //degree centrality for Unbiased Adjacency reweighting 
             scale[i] = 1; //default unbiased adjacency scaling factors
         }
     }
@@ -60,7 +61,7 @@ public class UnbiasedAdj extends DynamicOperator {
         double[][] unbiasedAdj = new double[size][size];
         for (int i=0; i<N; i++) //reweight the matrix
             for (int j=0; j<N; j++)
-                unbiasedAdj[i][j] = adjMatrix[i][j] / Math.sqrt(degrees[i]*degrees[j]);
+                unbiasedAdj[i][j] = adjMatrix[i][j] *reweight[i]*reweight[j];
         unbiasedAdj = laplacianScale(unbiasedAdj);//operator obtained
         
         DenseMatrix A = new DenseMatrix(unbiasedAdj);
@@ -119,11 +120,6 @@ public class UnbiasedAdj extends DynamicOperator {
         }
 
         Progress.finish(progress);
-    }
-
-    @Override
-    public double reWeightedEdge(int u, int v) {    
-        return adjMatrix[u][v]/Math.sqrt(degrees[u]*degrees[v]);
     }
 
     @Override

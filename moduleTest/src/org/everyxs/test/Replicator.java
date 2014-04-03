@@ -28,11 +28,9 @@ import org.jblas.DoubleMatrix;
 public class Replicator extends DynamicOperator {
     public static final String EIGENVECTOR = "eigenVector";
     public static final String EIGENVECTOR2 = "eigenRatioOrder";
-    double[] eigenVector; //reweighting vector
 
     public Replicator(HierarchicalGraph g) throws NotConvergedException {
         super(g);
-        eigenVector = new double[size];
         DenseMatrix A = new DenseMatrix(adjMatrix);
         EVD eigen = new EVD(adjMatrix.length);
         eigen.factor(A);
@@ -46,8 +44,8 @@ public class Replicator extends DynamicOperator {
                 maxID = i;
             }
         for (int i=0; i<size; i++) {
-            eigenVector[i] = Pi.get(i, maxID); //eigenvector centrality for replicator reweighting 
-            scale[i] = lambdaMax * eigenVector[i]* eigenVector[i]; //default replicator scaling factors
+            reweight[i] = Pi.get(i, maxID); //eigenvector centrality for replicator reweighting 
+            scale[i] = lambdaMax * reweight[i]* reweight[i]; //default replicator scaling factors
         }
     }
     
@@ -75,7 +73,7 @@ public class Replicator extends DynamicOperator {
         double[][] repMatrix = new double[size][size];
         for (int i=0; i<N; i++) //reweight the matrix
             for (int j=0; j<N; j++)
-                repMatrix[i][j] = adjMatrix[i][j] * eigenVector[i] * eigenVector[j];
+                repMatrix[i][j] = adjMatrix[i][j] * reweight[i] * reweight[j];
         repMatrix = laplacianScale(repMatrix);//operator obtained
         
         DenseMatrix A = new DenseMatrix(repMatrix);
@@ -137,11 +135,6 @@ public class Replicator extends DynamicOperator {
     }
 
     @Override
-    public double reWeightedEdge(int u, int v) {    
-        return adjMatrix[u][v]*eigenVector[u]*eigenVector[v];
-    }
-
-    @Override
     public void executeLocal(AttributeModel attributeModel, int seed, double qualityBound) throws NotConvergedException {
         
         AttributeTable nodeTable = attributeModel.getNodeTable();
@@ -158,7 +151,7 @@ public class Replicator extends DynamicOperator {
         double[][] repMatrix = new double[size][size];
         for (int i=0; i<size; i++) //reweight the matrix
             for (int j=0; j<size; j++)
-                repMatrix[i][j] = adjMatrix[i][j] * eigenVector[i] * eigenVector[j];
+                repMatrix[i][j] = adjMatrix[i][j] * reweight[i] * reweight[j];
         repMatrix = laplacianScale(repMatrix);//operator obtained
         for (int i=0; i<size; i++)
             for (int j=0; j<size; j++) {

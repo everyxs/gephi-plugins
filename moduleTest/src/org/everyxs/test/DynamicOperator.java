@@ -34,6 +34,7 @@ public abstract class DynamicOperator implements Statistics, LongTask {
     int size;
     public double[][] adjMatrix;
     public double[] scale; //scaling factor diagonal terms
+    public double[] reweight; //reweighting factor diagonal terms 
     double[] degrees;
     HashMap<Integer, Node> indicies = new HashMap<Integer, Node>();
     HashMap<Node, Integer> invIndicies = new HashMap<Node, Integer>();
@@ -54,10 +55,12 @@ public abstract class DynamicOperator implements Statistics, LongTask {
         size = count;
         adjMatrix = new double[size][size];
         scale = new double[size];
+        reweight = new double[size];
         degrees = new double[size];
         for (int i = 0; i < size; i++) {
             Node u = indicies.get(i);
             scale[i] = graph.getDegree(u); //default: normalized laplaican
+            reweight[i] = 1;
             degrees[i] = scale[i];
             EdgeIterable iter;
             if (isDirected) {
@@ -125,11 +128,25 @@ public abstract class DynamicOperator implements Statistics, LongTask {
         return laplacian;
     }
     
+    public double[][] reweight(double[][] inputMatrix) {
+        double[][] outputMatrix = new double[size][size];
+        for (int i=0; i<size; i++) {
+            for (int j=0; j<size; j++)
+                outputMatrix[i][j] = - inputMatrix[i][j] * Math.sqrt(reweight[i]*reweight[j]);
+         }
+        return outputMatrix;
+    }
+    
     public void setScale(double tuner) { //unifrom scaling tuner for scaled laplacianScale (need a more flexible version)
         for (int i=0; i<scale.length; i++)
             scale[i] = Math.pow(scale[i], tuner); //raise scale to powers
     }
 
+    public void setWeight(double tuner) { //unifrom scaling tuner for scaled laplacianScale (need a more flexible version)
+        for (int i=0; i<reweight.length; i++)
+            reweight[i] = Math.pow(reweight[i], tuner); //raise scale to powers
+    }
+    
     @Override
     public String getReport() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -145,9 +162,11 @@ public abstract class DynamicOperator implements Statistics, LongTask {
         this.progress = progressTicket;
 
     }
-   
-   public abstract void execute(AttributeModel attributeModel) throws NotConvergedException;
-   public abstract void executeLocal(AttributeModel attributeModel, int seed, double qualityBound) throws NotConvergedException;
-   public abstract double reWeightedEdge(int u, int v);
+    public double reWeightedEdge(int u, int v) {    
+        return adjMatrix[u][v]*reweight[u]*reweight[v];
+    }
+    
+    public abstract void execute(AttributeModel attributeModel) throws NotConvergedException;
+    public abstract void executeLocal(AttributeModel attributeModel, int seed, double qualityBound) throws NotConvergedException;
    
 }

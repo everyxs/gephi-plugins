@@ -44,6 +44,8 @@ public class Laplacian extends DynamicOperator {
             for (int i=0; i<scale.length; i++) //find the max eigenvalue
                 scale[i] = degreeMax;
         }
+        /*for (int i=0; i<size; i++)
+            reweight[i] = Math.sqrt(1.0/degrees[i]); //degree centrality for pseudo Unbiased Adjacency reweighting */
     }
 
     @Override
@@ -125,11 +127,6 @@ public class Laplacian extends DynamicOperator {
         }
 
         Progress.finish(progress);
-    }
-    
-    @Override
-    public double reWeightedEdge(int u, int v) {
-        return adjMatrix[u][v];
     }
 
     @Override

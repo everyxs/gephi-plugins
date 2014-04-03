@@ -36,13 +36,15 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
     private boolean isCanceled;
     private boolean isDirected;
     private double scalePower;
+    private double reweightPower;
     int inputMatrix;
-    public GlobalPartition(double scaleP, int input) {
+    public GlobalPartition(double scaleP, double weightP, int input) {
         GraphController graphController = Lookup.getDefault().lookup(GraphController.class);
         if (graphController != null && graphController.getModel() != null) {
             isDirected = graphController.getModel().isDirected();
         }
         scalePower = scaleP;
+        reweightPower = weightP;
         inputMatrix = input;
     }
 
@@ -93,6 +95,7 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
                 break;                
         }
         dynamics.setScale(scalePower);
+        dynamics.setWeight(reweightPower);
         dynamics.execute(gm, am);
         
         AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
