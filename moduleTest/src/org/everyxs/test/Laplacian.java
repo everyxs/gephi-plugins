@@ -69,7 +69,7 @@ public class Laplacian extends DynamicOperator {
         int N = size;
         Progress.start(progress);
         
-        double[][] laplacian = laplacianNorm(adjMatrix);
+        double[][] laplacian = laplacianScale(adjMatrix);
         DenseMatrix A = new DenseMatrix(laplacian); //uniform scaling of normalized laplacianScale
         
         EVD eigen = new EVD(N);
