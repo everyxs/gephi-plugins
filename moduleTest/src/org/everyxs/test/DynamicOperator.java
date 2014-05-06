@@ -128,6 +128,28 @@ public abstract class DynamicOperator implements Statistics, LongTask {
         return laplacian;
     }
     
+         public double[][] laplacianNorm(double[][] reWeightedMatrix) {
+        double[] sum = new double[size];
+        for (int i=0; i<size; i++) {
+            sum[i] = 0;
+            for (int j=0; j<size; j++) 
+                sum[i] += reWeightedMatrix[i][j];
+            if (sum[i]<=0)
+                sum[i] = Double.MIN_VALUE;
+            }
+        
+        double[][] laplacian = new double[size][size];
+        for (int i=0; i<laplacian.length; i++) {
+            for (int j=0; j<laplacian.length; j++){
+                if (j==i)
+                    laplacian[i][j] = 1- reWeightedMatrix[i][j] / Math.sqrt(sum[i]*scale[i]) / Math.sqrt(sum[j]*scale[j]);
+                else
+                    laplacian[i][j] = - reWeightedMatrix[i][j] / Math.sqrt(sum[i]*scale[i]) / Math.sqrt(sum[j]*scale[j]);
+                }
+        }
+        return laplacian;
+    }
+         
     public double[][] reweight(double[][] inputMatrix) {
         double[][] outputMatrix = new double[size][size];
         for (int i=0; i<size; i++) {
@@ -138,8 +160,13 @@ public abstract class DynamicOperator implements Statistics, LongTask {
     }
     
     public void setScale(double tuner) { //unifrom scaling tuner for scaled laplacianScale (need a more flexible version)
-        for (int i=0; i<scale.length; i++)
-            scale[i] = Math.pow(scale[i], tuner); //raise scale to powers
+        for (int i=0; i<scale.length; i++) {
+            if (tuner > 0)
+                scale[i] = scale[i]* tuner; //raise scale to powers
+            else
+                scale[i] = 1;
+        }
+            
     }
 
     public void setWeight(double tuner) { //unifrom scaling tuner for scaled laplacianScale (need a more flexible version)

@@ -152,7 +152,7 @@ public class Replicator extends DynamicOperator {
         for (int i=0; i<size; i++) //reweight the matrix
             for (int j=0; j<size; j++)
                 repMatrix[i][j] = adjMatrix[i][j] * reweight[i] * reweight[j];
-        repMatrix = laplacianScale(repMatrix);//operator obtained
+        repMatrix = laplacianNorm(repMatrix);//operator obtained
         for (int i=0; i<size; i++)
             for (int j=0; j<size; j++) {
                 repMatrix[i][j] = -repMatrix[i][j];
