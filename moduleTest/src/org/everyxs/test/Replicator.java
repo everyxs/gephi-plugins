@@ -178,7 +178,7 @@ public class Replicator extends DynamicOperator {
             list[i] = new NodeCompare(invIndicies.get(s), centralVector.get(i)/Math.sqrt(scale[i]));
             //Test code
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
-            row.setValue(centrality, list[i].getAttribute());
+            row.setValue(centrality, centralVector.get(i));
             if (isCanceled) {
                 return;
             }

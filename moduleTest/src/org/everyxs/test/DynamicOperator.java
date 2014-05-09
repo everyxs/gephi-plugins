@@ -8,7 +8,10 @@ package org.everyxs.test;
 
 import java.util.HashMap;
 import no.uib.cipr.matrix.NotConvergedException;
+import org.gephi.data.attributes.api.AttributeColumn;
 import org.gephi.data.attributes.api.AttributeModel;
+import org.gephi.data.attributes.api.AttributeRow;
+import org.gephi.data.attributes.api.AttributeTable;
 import org.gephi.graph.api.Edge;
 import org.gephi.graph.api.EdgeIterable;
 import org.gephi.graph.api.GraphController;
@@ -111,6 +114,7 @@ public abstract class DynamicOperator implements Statistics, LongTask {
     public double[][] laplacianScale(double[][] inputMatrix) {
         double[][] laplacian = new double[size][size];
         double sum;
+        double degreeMax = -Double.MAX_VALUE;;
         for (int i=0; i<size; i++) {
             sum = 0;
             for (int j=0; j<size; j++)  {
@@ -123,8 +127,13 @@ public abstract class DynamicOperator implements Statistics, LongTask {
                     laplacian[i][j] = (sum - inputMatrix[i][j])/ Math.sqrt(scale[i]*scale[j]);
                 else
                     laplacian[i][j] = - inputMatrix[i][j] / Math.sqrt(scale[i]*scale[j]);
-             }
-         }
+            }
+            if (sum / scale[i] > degreeMax)
+                degreeMax = sum / scale[i];
+        }
+        for (int i=0; i<scale.length; i++) //find the max degree of the scaled graph
+            for (int j=0; j<size; j++)
+                laplacian[i][j] = laplacian[i][j] / degreeMax;
         return laplacian;
     }
     
@@ -167,6 +176,14 @@ public abstract class DynamicOperator implements Statistics, LongTask {
                 scale[i] = 1;
         }
             
+    }
+    
+    public void setScale(AttributeColumn input) { //unifrom scaling tuner for scaled laplacianScale (need a more flexible version)
+        for (int i=0; i<scale.length; i++) {
+            Node s = indicies.get(i); //picking from a descending order
+            AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
+            scale[i] = scale[i]*Double.parseDouble(row.getValue(input).toString());
+        }
     }
 
     public void setWeight(double tuner) { //unifrom scaling tuner for scaled laplacianScale (need a more flexible version)

@@ -151,9 +151,11 @@ public class Laplacian extends DynamicOperator {
         A = new DoubleMatrix(temp);
 
         double[] central = new double[size];
-        central[seed] = 1; //seed node at index 1 (needs a better GUI for seed selection)
-        //for (int i =0; i<N; i++)
-        //    central[i] = 1.0/N;
+        if (seed <0)
+            for (int i =0; i<size; i++)
+                central[i] = 1.0/size;
+        else
+            central[seed] = 1; //seed node at index 1 (needs a better GUI for seed selection)
         DoubleMatrix centralVector = new DoubleMatrix(central);
         double t = Double.MAX_VALUE; //find minimum t with given beta and quality bound
         for (int i=0; i<size; i++) {
@@ -169,7 +171,7 @@ public class Laplacian extends DynamicOperator {
             list[i] = new NodeCompare(invIndicies.get(s), centralVector.get(i)/Math.sqrt(scale[i])); 
             //Test code
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
-            row.setValue(centrality, list[i].getAttribute());
+            row.setValue(centrality, centralVector.get(i));
             if (isCanceled) {
                 return;
             }

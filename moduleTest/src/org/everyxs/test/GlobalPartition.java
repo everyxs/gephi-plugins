@@ -74,6 +74,11 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
             graph = gm.getHierarchicalUndirectedGraphVisible();
         }
         int N = graph.getNodeCount();
+        
+        AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
+        AttributeTable nodeTable = attributeModel.getNodeTable();
+        AttributeColumn scale = nodeTable.getColumn("scale");
+
         graph.readLock();
         DynamicOperator dynamics = null;
         switch (inputMatrix) {
@@ -94,14 +99,12 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
                 dynamics = new Laplacian(graph);
                 break;                
         }
-        dynamics.setScale(scalePower);
+        dynamics.setScale(scale);
         dynamics.setWeight(reweightPower);
         dynamics.execute(gm, am);
         
-        AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
-        AttributeColumn order = attributeModel.getNodeTable().getColumn("eigenRatioOrder");
-        AttributeColumn eigenVmax = attributeModel.getNodeTable().getColumn("eigenVector");
-        AttributeTable nodeTable = attributeModel.getNodeTable();
+        AttributeColumn order = nodeTable.getColumn("eigenRatioOrder");
+        AttributeColumn eigenVmax = nodeTable.getColumn("eigenVector");
         AttributeColumn part = nodeTable.getColumn("partition");
         if (part == null) {
             part = nodeTable.addColumn("partition", "GlobalPartition", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));

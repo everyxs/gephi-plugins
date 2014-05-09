@@ -80,6 +80,10 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
         }
         int N = graph.getNodeCount();
         graph.readLock();
+        AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
+        AttributeTable nodeTable = attributeModel.getNodeTable();
+        AttributeColumn scale = nodeTable.getColumn("scale");
+        
         DynamicOperator dynamics = null;
         switch (inputMatrix) {
             case 0: //straight up laplacianScale
@@ -99,17 +103,15 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
                 dynamics = new Laplacian(graph);
                 break;                
         }
-        dynamics.setScale(scalePower);
+        dynamics.setScale(scale);
         try {
             dynamics.executeLocal(am, seed, qualityBound);
         } catch (NotConvergedException ex) {
             Exceptions.printStackTrace(ex);
         }
-        // The sweep
-        AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
-        AttributeColumn order = attributeModel.getNodeTable().getColumn("localOrder");
-        AttributeColumn eigenVmax = attributeModel.getNodeTable().getColumn("centrality");
-        AttributeTable nodeTable = attributeModel.getNodeTable();
+        
+        AttributeColumn order = nodeTable.getColumn("localOrder");
+        AttributeColumn eigenVmax = nodeTable.getColumn("centrality");
         AttributeColumn part = nodeTable.getColumn("partition(local)");
         if (part == null) {
             part = nodeTable.addColumn("partition(local)", "LocalPartition", AttributeType.INT, AttributeOrigin.COMPUTED, new Integer(0));
@@ -126,7 +128,7 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
         if (eigenCol0 == null) {
             eigenCol0 = nodeTable.addColumn("localQuality", "LocalQuality", AttributeType.DOUBLE, AttributeOrigin.COMPUTED, new Double(-1));
         }
-
+        // The sweep
         double[] minCut = new double[3]; //keep track of 2 smallest eigen values
         for (int i=0; i<minCut.length; i++)
             minCut[i] = Double.MAX_VALUE;
