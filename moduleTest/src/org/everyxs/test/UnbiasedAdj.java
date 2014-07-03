@@ -58,10 +58,7 @@ public class UnbiasedAdj extends DynamicOperator {
         int N = size;
         Progress.start(progress);  
         
-        double[][] unbiasedAdj = new double[size][size];
-        for (int i=0; i<N; i++) //reweight the matrix
-            for (int j=0; j<N; j++)
-                unbiasedAdj[i][j] = adjMatrix[i][j] *reweight[i]*reweight[j];
+        double[][] unbiasedAdj = reweight(adjMatrix);
         unbiasedAdj = laplacianScale(unbiasedAdj);//operator obtained
         
         DenseMatrix A = new DenseMatrix(unbiasedAdj);

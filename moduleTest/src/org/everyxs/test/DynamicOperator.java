@@ -120,9 +120,9 @@ public abstract class DynamicOperator implements Statistics, LongTask {
             }
             for (int j=0; j<size; j++){
                 if (j==i)
-                    laplacian[i][j] = (sum - inputMatrix[i][j])/ Math.sqrt(scale[i]*scale[j]);
+                    laplacian[i][j] = (sum - inputMatrix[i][j])/ scale[j];//Math.sqrt(scale[i]*scale[j]);
                 else
-                    laplacian[i][j] = - inputMatrix[i][j] / Math.sqrt(scale[i]*scale[j]);
+                    laplacian[i][j] = - inputMatrix[i][j] / scale[j]; //Math.sqrt(scale[i]*scale[j]);
              }
          }
         return laplacian;
@@ -132,7 +132,7 @@ public abstract class DynamicOperator implements Statistics, LongTask {
         double[][] outputMatrix = new double[size][size];
         for (int i=0; i<size; i++) {
             for (int j=0; j<size; j++)
-                outputMatrix[i][j] = - inputMatrix[i][j] * Math.sqrt(reweight[i]*reweight[j]);
+                outputMatrix[i][j] = inputMatrix[i][j] * Math.sqrt(reweight[i]*reweight[j]);
          }
         return outputMatrix;
     }

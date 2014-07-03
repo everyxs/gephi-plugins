@@ -70,10 +70,7 @@ public class Replicator extends DynamicOperator {
         int N = size;
         Progress.start(progress);  
         
-        double[][] repMatrix = new double[size][size];
-        for (int i=0; i<N; i++) //reweight the matrix
-            for (int j=0; j<N; j++)
-                repMatrix[i][j] = adjMatrix[i][j] * reweight[i] * reweight[j];
+        double[][] repMatrix = reweight(adjMatrix);
         repMatrix = laplacianScale(repMatrix);//operator obtained
         
         DenseMatrix A = new DenseMatrix(repMatrix);
