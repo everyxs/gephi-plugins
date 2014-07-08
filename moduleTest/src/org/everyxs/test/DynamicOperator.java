@@ -127,9 +127,9 @@ public abstract class DynamicOperator implements Statistics, LongTask {
                     laplacian[i][j] = (sum - inputMatrix[i][j])/ Math.sqrt(scale[i]*scale[j]);
                 else
                     laplacian[i][j] = - inputMatrix[i][j] / Math.sqrt(scale[i]*scale[j]);
+                if (laplacian[i][j] > degreeMax)
+                    degreeMax = laplacian[i][j];
             }
-            if (sum / scale[i] > degreeMax)
-                degreeMax = sum / scale[i];
         }
         for (int i=0; i<scale.length; i++) //find the max degree of the scaled graph
             for (int j=0; j<size; j++)
