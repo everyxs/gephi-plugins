@@ -111,6 +111,7 @@ public abstract class DynamicOperator implements Statistics, LongTask {
     public double[][] laplacianScale(double[][] inputMatrix) {
         double[][] laplacian = new double[size][size];
         double sum;
+        double degreeMax = -Double.MAX_VALUE;;
         for (int i=0; i<size; i++) {
             sum = 0;
             for (int j=0; j<size; j++)  {
@@ -123,8 +124,13 @@ public abstract class DynamicOperator implements Statistics, LongTask {
                     laplacian[i][j] = (sum - inputMatrix[i][j])/ scale[j];//Math.sqrt(scale[i]*scale[j]);
                 else
                     laplacian[i][j] = - inputMatrix[i][j] / scale[j]; //Math.sqrt(scale[i]*scale[j]);
-             }
-         }
+              if (laplacian[i][j] > degreeMax)
+                    degreeMax = laplacian[i][j];
+            }
+        }
+        for (int i=0; i<scale.length; i++) //find the max degree of the scaled graph
+            for (int j=0; j<size; j++)
+                laplacian[i][j] = laplacian[i][j] / degreeMax;
         return laplacian;
     }
     
