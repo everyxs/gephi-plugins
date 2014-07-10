@@ -329,7 +329,8 @@ public final class DynamicPanelTopComponent extends TopComponent {
         System.out.println("Edges: " + graph.getEdgeCount());
         ExportController ec = Lookup.getDefault().lookup(ExportController.class);
         PartitionController partitionController = Lookup.getDefault().lookup(PartitionController.class);
-
+        localSwitch = false;
+        
         //Run global community detection
         if (!localSwitch) {
             GlobalPartition gPart = new GlobalPartition(scalePower, reweightPower, inputMatrix);

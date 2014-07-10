@@ -58,7 +58,10 @@ public class UnbiasedAdj extends DynamicOperator {
         int N = size;
         Progress.start(progress);  
         
-        double[][] unbiasedAdj = reweight(adjMatrix);
+        double[][] unbiasedAdj = new double[size][size];
+        for (int i=0; i<N; i++) //reweight the matrix
+            for (int j=0; j<N; j++)
+                unbiasedAdj[i][j] = adjMatrix[i][j] *reweight[i]*reweight[j];
         unbiasedAdj = laplacianScale(unbiasedAdj);//operator obtained
         
         DenseMatrix A = new DenseMatrix(unbiasedAdj);
@@ -163,7 +166,7 @@ public class UnbiasedAdj extends DynamicOperator {
             list[i] = new NodeCompare(invIndicies.get(s), centralVector.get(i)/Math.sqrt(scale[i]));
             //Test code
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
-            row.setValue(centrality, list[i].getAttribute());
+            row.setValue(centrality, centralVector.get(i));
             if (isCanceled) {
                 return;
             }

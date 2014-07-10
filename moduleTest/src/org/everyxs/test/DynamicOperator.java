@@ -8,7 +8,10 @@ package org.everyxs.test;
 
 import java.util.HashMap;
 import no.uib.cipr.matrix.NotConvergedException;
+import org.gephi.data.attributes.api.AttributeColumn;
 import org.gephi.data.attributes.api.AttributeModel;
+import org.gephi.data.attributes.api.AttributeRow;
+import org.gephi.data.attributes.api.AttributeTable;
 import org.gephi.graph.api.Edge;
 import org.gephi.graph.api.EdgeIterable;
 import org.gephi.graph.api.GraphController;
@@ -121,10 +124,10 @@ public abstract class DynamicOperator implements Statistics, LongTask {
             }
             for (int j=0; j<size; j++){
                 if (j==i)
-                    laplacian[i][j] = (sum - inputMatrix[i][j])/ scale[j];//Math.sqrt(scale[i]*scale[j]);
+                    laplacian[i][j] = (sum - inputMatrix[i][j])/ Math.sqrt(scale[i]*scale[j]);
                 else
-                    laplacian[i][j] = - inputMatrix[i][j] / scale[j]; //Math.sqrt(scale[i]*scale[j]);
-              if (laplacian[i][j] > degreeMax)
+                    laplacian[i][j] = - inputMatrix[i][j] / Math.sqrt(scale[i]*scale[j]);
+                if (laplacian[i][j] > degreeMax)
                     degreeMax = laplacian[i][j];
             }
         }
@@ -134,18 +137,53 @@ public abstract class DynamicOperator implements Statistics, LongTask {
         return laplacian;
     }
     
+         public double[][] laplacianNorm(double[][] reWeightedMatrix) {
+        double[] sum = new double[size];
+        for (int i=0; i<size; i++) {
+            sum[i] = 0;
+            for (int j=0; j<size; j++) 
+                sum[i] += reWeightedMatrix[i][j];
+            if (sum[i]<=0)
+                sum[i] = Double.MIN_VALUE;
+            }
+        
+        double[][] laplacian = new double[size][size];
+        for (int i=0; i<laplacian.length; i++) {
+            for (int j=0; j<laplacian.length; j++){
+                if (j==i)
+                    laplacian[i][j] = 1- reWeightedMatrix[i][j] / Math.sqrt(sum[i]*scale[i]) / Math.sqrt(sum[j]*scale[j]);
+                else
+                    laplacian[i][j] = - reWeightedMatrix[i][j] / Math.sqrt(sum[i]*scale[i]) / Math.sqrt(sum[j]*scale[j]);
+                }
+        }
+        return laplacian;
+    }
+         
     public double[][] reweight(double[][] inputMatrix) {
         double[][] outputMatrix = new double[size][size];
         for (int i=0; i<size; i++) {
             for (int j=0; j<size; j++)
-                outputMatrix[i][j] = inputMatrix[i][j] * Math.sqrt(reweight[i]*reweight[j]);
+                outputMatrix[i][j] = - inputMatrix[i][j] * Math.sqrt(reweight[i]*reweight[j]);
          }
         return outputMatrix;
     }
     
     public void setScale(double tuner) { //unifrom scaling tuner for scaled laplacianScale (need a more flexible version)
-        for (int i=0; i<scale.length; i++)
-            scale[i] = Math.pow(scale[i], tuner); //raise scale to powers
+        for (int i=0; i<scale.length; i++) {
+            if (tuner > 0)
+                scale[i] = scale[i]* tuner; //raise scale to powers
+            else
+                scale[i] = 1;
+        }
+            
+    }
+    
+    public void setScale(AttributeColumn input) { //unifrom scaling tuner for scaled laplacianScale (need a more flexible version)
+        for (int i=0; i<scale.length; i++) {
+            Node s = indicies.get(i); //picking from a descending order
+            AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
+            scale[i] = scale[i]*Double.parseDouble(row.getValue(input).toString());
+        }
     }
 
     public void setWeight(double tuner) { //unifrom scaling tuner for scaled laplacianScale (need a more flexible version)
