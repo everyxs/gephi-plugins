@@ -36,9 +36,9 @@ public abstract class DynamicOperator implements Statistics, LongTask {
     boolean isDirected;
     int size;
     public double[][] adjMatrix;
-    public double[] scale; //scaling factor diagonal terms
+    public double[] scale; //node delay scaling factor diagonal terms
     public double[] reweight; //reweighting factor diagonal terms 
-    double[] degrees;
+    double[] degrees; //degrees vector of the interaction graph
     HashMap<Integer, Node> indicies = new HashMap<Integer, Node>();
     HashMap<Node, Integer> invIndicies = new HashMap<Node, Integer>();
     
@@ -62,9 +62,9 @@ public abstract class DynamicOperator implements Statistics, LongTask {
         degrees = new double[size];
         for (int i = 0; i < size; i++) {
             Node u = indicies.get(i);
-            scale[i] = graph.getDegree(u); //default: normalized laplaican
+            scale[i] =1; //default: normalized laplaican
             reweight[i] = 1;
-            degrees[i] = scale[i];
+            degrees[i] =  graph.getDegree(u);
             EdgeIterable iter;
             if (isDirected) {
                     iter = ((HierarchicalDirectedGraph) graph).getInEdgesAndMetaInEdges(u);
@@ -111,49 +111,44 @@ public abstract class DynamicOperator implements Statistics, LongTask {
         }
     }
     
-    public double[][] laplacianScale(double[][] inputMatrix) {
+    /**
+     * This function implements the node delay factor scaling of the operator, with the constrain \tau_min = 1
+     * @param inputMatrix double[][]
+     */   
+    public double[][] delayScale(double[][] inputMatrix) {
         double[][] laplacian = new double[size][size];
-        double sum;
-        double degreeMax = -Double.MAX_VALUE;;
+        double diagonalMax = -Double.MAX_VALUE;;
         for (int i=0; i<size; i++) {
-            sum = 0;
-            for (int j=0; j<size; j++)  {
-                sum += inputMatrix[i][j];
-                if (sum <=0)
-                    sum = Double.MIN_VALUE;
-            }
             for (int j=0; j<size; j++){
                 if (j==i)
-                    laplacian[i][j] = (sum - inputMatrix[i][j])/ Math.sqrt(scale[i]*scale[j]);
+                    laplacian[i][j] = inputMatrix[i][j]/ Math.sqrt(scale[i]*scale[j]);
                 else
-                    laplacian[i][j] = - inputMatrix[i][j] / Math.sqrt(scale[i]*scale[j]);
-                if (laplacian[i][j] > degreeMax)
-                    degreeMax = laplacian[i][j];
+                    laplacian[i][j] = inputMatrix[i][j]/ Math.sqrt(scale[i]*scale[j]);
+                if (laplacian[i][j] > diagonalMax)
+                    diagonalMax = laplacian[i][j];
             }
         }
-        for (int i=0; i<scale.length; i++) //find the max degree of the scaled graph
+        for (int i=0; i<scale.length; i++) //find the max element of the scaled laplacian
             for (int j=0; j<size; j++)
-                laplacian[i][j] = laplacian[i][j] / degreeMax;
+                laplacian[i][j] = laplacian[i][j] / diagonalMax; //uniform scaling to set \tau_min = 1
         return laplacian;
     }
     
-         public double[][] laplacianNorm(double[][] reWeightedMatrix) {
+    public double[][] laplacianNorm(double[][] reWeightedMatrix) {
         double[] sum = new double[size];
         for (int i=0; i<size; i++) {
             sum[i] = 0;
             for (int j=0; j<size; j++) 
                 sum[i] += reWeightedMatrix[i][j];
-            if (sum[i]<=0)
-                sum[i] = Double.MIN_VALUE;
-            }
-        
+            degrees[i] = sum[i];
+        }
         double[][] laplacian = new double[size][size];
         for (int i=0; i<laplacian.length; i++) {
             for (int j=0; j<laplacian.length; j++){
                 if (j==i)
-                    laplacian[i][j] = 1- reWeightedMatrix[i][j] / Math.sqrt(sum[i]*scale[i]) / Math.sqrt(sum[j]*scale[j]);
+                    laplacian[i][j] = 1- reWeightedMatrix[i][j] / Math.sqrt(sum[i]*sum[j]);
                 else
-                    laplacian[i][j] = - reWeightedMatrix[i][j] / Math.sqrt(sum[i]*scale[i]) / Math.sqrt(sum[j]*scale[j]);
+                    laplacian[i][j] = - reWeightedMatrix[i][j] / Math.sqrt(sum[i]*sum[j]);
                 }
         }
         return laplacian;
@@ -163,12 +158,12 @@ public abstract class DynamicOperator implements Statistics, LongTask {
         double[][] outputMatrix = new double[size][size];
         for (int i=0; i<size; i++) {
             for (int j=0; j<size; j++)
-                outputMatrix[i][j] = - inputMatrix[i][j] * Math.sqrt(reweight[i]*reweight[j]);
+                outputMatrix[i][j] = inputMatrix[i][j] * reweight[i]*reweight[j];
          }
         return outputMatrix;
     }
     
-    public void setScale(double tuner) { //unifrom scaling tuner for scaled laplacianScale (need a more flexible version)
+    public void setScale(double tuner) { //unifrom scaling tuner for scaled delayScale (need a more flexible version)
         for (int i=0; i<scale.length; i++) {
             if (tuner > 0)
                 scale[i] = scale[i]* tuner; //raise scale to powers
@@ -178,15 +173,15 @@ public abstract class DynamicOperator implements Statistics, LongTask {
             
     }
     
-    public void setScale(AttributeColumn input) { //unifrom scaling tuner for scaled laplacianScale (need a more flexible version)
+    public void setScale(AttributeColumn input) { //unifrom scaling tuner for scaled delayScale (need a more flexible version)
         for (int i=0; i<scale.length; i++) {
             Node s = indicies.get(i); //picking from a descending order
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
-            scale[i] = scale[i]*Double.parseDouble(row.getValue(input).toString());
+            scale[i] = Double.parseDouble(row.getValue(input).toString());
         }
     }
 
-    public void setWeight(double tuner) { //unifrom scaling tuner for scaled laplacianScale (need a more flexible version)
+    public void setWeight(double tuner) { //unifrom scaling tuner for scaled delayScale (need a more flexible version)
         for (int i=0; i<reweight.length; i++)
             reweight[i] = Math.pow(reweight[i], tuner); //raise scale to powers
     }

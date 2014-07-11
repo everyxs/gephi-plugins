@@ -84,7 +84,7 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
         graph.readLock();
         DynamicOperator dynamics = null;
         switch (inputMatrix) {
-            case 0: //straight up laplacianScale
+            case 0: //straight up delayScale
                 dynamics = new Laplacian(graph, false);
                 break;
             case 2: //reweight by eigenvectors
@@ -97,7 +97,7 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
             case 4: //reweight by degrees
                 dynamics = new UnbiasedAdj(graph);
                 break;
-            default: //normalized laplacianScale
+            default: //normalized delayScale
                 dynamics = new Laplacian(graph);
                 break;                
         }
@@ -158,9 +158,9 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
             for (int i=0; i<N; i++) {
                 Node u = dynamics.indicies.get(i);
                 if (partitions[i]<1)
-                    volumes[0] += dynamics.scale[i];
+                    volumes[0] += dynamics.scale[i]*dynamics.degrees[i];
                 else 
-                    volumes[1] += dynamics.scale[i];
+                    volumes[1] += dynamics.scale[i]*dynamics.degrees[i];
                 EdgeIterable iter;
                 if (isDirected) {
                         iter = ((HierarchicalDirectedGraph) graph).getInEdgesAndMetaInEdges(u);
@@ -194,48 +194,6 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
                 //flipSign = true; //for boundary condition at the end of sweep
             if (flipSign)
                 localList[sweep] = new NodeCompare(sweepOld[0],  newCutOld);
-            
-            
-            /* //local optima detection with moving window (direction sensitive heuristic)
-            if (flipSign && newCutOld < minCut[2]) {
-                if (newCutOld < minCut[1] ) {
-                    if (newCutOld < minCut[0]) {
-                        if (sweep - sweepOld[0] > N*0.05) { //control for local fluctuations
-                            minCut[2] = minCut[1]; //shifting queue
-                            for (int i=0; i<N; i++)
-                                bestPartition[i][2] = bestPartition[i][1];
-                            minCut[1] = minCut[0]; //shifting queue
-                            for (int i=0; i<N; i++)
-                                bestPartition[i][1] = bestPartition[i][0];
-                        }
-                        sweepOld[0] = sweep; //update local flag
-                        sweepOld[1] = sweep; //update local flag
-                        minCut[0] = newCutOld;
-                        for (int i=0; i<N; i++)
-                            bestPartition[i][0] = partitionsOld[i];
-                    }
-                    else {
-                        if (sweep - sweepOld[1] > N*0.05) { //control for local fluctuations, window size: 5%
-                            minCut[2] = minCut[1]; //shifting queue
-                            for (int i=0; i<N; i++)
-                                bestPartition[i][2] = bestPartition[i][1];
-                        }
-                        if (sweep - sweepOld[0] > N*0.05) { //control for local fluctuations
-                            sweepOld[1] = sweep; //update local flag
-                            minCut[1] = newCutOld;
-                            for (int i=0; i<N; i++)
-                                bestPartition[i][1] = partitionsOld[i];
-                        }
-                    }
-                }// for top 3 smalleest eigen values
-                else {
-                    if (sweep - sweepOld[1] > N*0.05) { //control for local fluctuations
-                        minCut[2] = newCutOld;
-                        for (int i=0; i<N; i++)
-                            bestPartition[i][2] = partitionsOld[i];
-                    }
-                }
-            }*/
             differenceSignOld = differenceSign;
             newCutOld = newCut; 
         }

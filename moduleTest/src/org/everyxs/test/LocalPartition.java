@@ -88,7 +88,7 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
         }
         DynamicOperator dynamics = null;
         switch (inputMatrix) {
-            case 0: //straight up laplacianScale
+            case 0: //straight up delayScale
                 dynamics = new Laplacian(graph, false);
                 break;
             case 2: //reweight by eigenvectors
@@ -101,7 +101,7 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
             case 4: //reweight by degrees
                 dynamics = new UnbiasedAdj(graph);
                 break;
-            default: //normalized laplacianScale
+            default: //normalized delayScale
                 dynamics = new Laplacian(graph);
                 break;                
         }
@@ -166,9 +166,9 @@ class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.u
             for (int i=0; i<N; i++) {
                 Node u = dynamics.indicies.get(i);
                 if (partitions[i]<1)
-                    volumes[0] += dynamics.scale[i];
+                    volumes[0] += dynamics.scale[i]*dynamics.degrees[i];
                 else 
-                    volumes[1] += dynamics.scale[i];
+                    volumes[1] += dynamics.scale[i]*dynamics.degrees[i];
                 EdgeIterable iter;
                 if (isDirected) {
                         iter = ((HierarchicalDirectedGraph) graph).getInEdgesAndMetaInEdges(u);

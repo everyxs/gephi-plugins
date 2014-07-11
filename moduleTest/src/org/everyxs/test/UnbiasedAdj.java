@@ -33,7 +33,6 @@ public class UnbiasedAdj extends DynamicOperator {
         super(g);
         for (int i=0; i<size; i++) {
             reweight[i] = Math.sqrt(1.0/degrees[i]); //degree centrality for Unbiased Adjacency reweighting 
-            scale[i] = 1; //default unbiased adjacency scaling factors
         }
     }
     
@@ -43,11 +42,6 @@ public class UnbiasedAdj extends DynamicOperator {
         AttributeTable nodeTable = attributeModel.getNodeTable();
         AttributeColumn eigenCol = nodeTable.getColumn(EIGENVECTOR);
         AttributeColumn eigenCol2 = nodeTable.getColumn(EIGENVECTOR2);
-        /* Test code
-        AttributeColumn eigenCol0 = nodeTable.getColumn("eigenRatio");
-        if (eigenCol0 == null) {
-            eigenCol0 = nodeTable.addColumn("eigenRatio", "EigenRatio", AttributeType.DOUBLE, AttributeOrigin.COMPUTED, new Double(0));
-        }*/
         if (eigenCol == null) {
             eigenCol = nodeTable.addColumn(EIGENVECTOR, "EigenVector", AttributeType.DOUBLE, AttributeOrigin.COMPUTED, new Double(0));
         }
@@ -58,11 +52,15 @@ public class UnbiasedAdj extends DynamicOperator {
         int N = size;
         Progress.start(progress);  
         
-        double[][] unbiasedAdj = new double[size][size];
-        for (int i=0; i<N; i++) //reweight the matrix
-            for (int j=0; j<N; j++)
-                unbiasedAdj[i][j] = adjMatrix[i][j] *reweight[i]*reweight[j];
-        unbiasedAdj = laplacianScale(unbiasedAdj);//operator obtained
+        double[][] unbiasedAdj = reweight(adjMatrix);
+        unbiasedAdj = laplacianNorm(unbiasedAdj);
+        double degreeMax = -Double.MAX_VALUE;;
+        for (int i=0; i<degrees.length; i++) //find the max degree of the interaction graph
+            if (degrees[i] > degreeMax)
+                degreeMax = degrees[i];  
+        for (int i=0; i<scale.length; i++)
+            scale[i] = degreeMax / degrees[i]; //find the max degree of the interaction graph
+        unbiasedAdj = delayScale(unbiasedAdj);//operator obtained
         
         DenseMatrix A = new DenseMatrix(unbiasedAdj);
         EVD eigen = new EVD(adjMatrix.length);
@@ -136,11 +134,15 @@ public class UnbiasedAdj extends DynamicOperator {
         }
 
         DoubleMatrix A = null;
-        double[][] unbiasedAdj = new double[size][size];
-        for (int i=0; i<size; i++) //reweight the matrix
-            for (int j=0; j<size; j++)
-                unbiasedAdj[i][j] = adjMatrix[i][j] / Math.sqrt(degrees[i]*degrees[j]);
-        unbiasedAdj = laplacianScale(unbiasedAdj);//operator obtained
+        double[][] unbiasedAdj = reweight(adjMatrix);
+        unbiasedAdj = laplacianNorm(unbiasedAdj);
+        double degreeMax = -Double.MAX_VALUE;;
+        for (int i=0; i<degrees.length; i++) //find the max degree of the interaction graph
+            if (degrees[i] > degreeMax)
+                degreeMax = degrees[i];  
+        for (int i=0; i<scale.length; i++)
+            scale[i] = degreeMax / degrees[i]; //find the max degree of the interaction graph
+        unbiasedAdj = delayScale(unbiasedAdj);//operator obtained
         for (int i=0; i<size; i++)
             for (int j=0; j<size; j++) {
                 unbiasedAdj[i][j] = -unbiasedAdj[i][j];

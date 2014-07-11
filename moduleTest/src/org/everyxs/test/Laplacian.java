@@ -41,11 +41,9 @@ public class Laplacian extends DynamicOperator {
             for (int i=0; i<degrees.length; i++) //find the max degree
                 if (degrees[i] > degreeMax)
                     degreeMax = degrees[i];  
-            for (int i=0; i<scale.length; i++) //find the max eigenvalue
-                scale[i] = degreeMax;
+            for (int i=0; i<scale.length; i++)
+                scale[i] = degreeMax / degrees[i];
         }
-        /*for (int i=0; i<size; i++)
-            reweight[i] = Math.sqrt(1.0/degrees[i]); //degree centrality for pseudo Unbiased Adjacency reweighting */
     }
 
     @Override
@@ -69,8 +67,9 @@ public class Laplacian extends DynamicOperator {
         int N = size;
         Progress.start(progress);
         
-        double[][] laplacian = laplacianScale(adjMatrix);
-        DenseMatrix A = new DenseMatrix(laplacian); //uniform scaling of normalized laplacianScale
+        double[][] laplacian = laplacianNorm(adjMatrix);
+        laplacian = delayScale(laplacian);
+        DenseMatrix A = new DenseMatrix(laplacian); //uniform scaling of normalized delayScale
         
         EVD eigen = new EVD(N);
         eigen.factor(A);
@@ -143,7 +142,8 @@ public class Laplacian extends DynamicOperator {
         }
 
         DoubleMatrix A = null;
-        double[][] temp = laplacianScale(adjMatrix);
+        double[][] temp = laplacianNorm(adjMatrix);
+        temp = delayScale(temp);
         for (int i=0; i<size; i++)
             for (int j=0; j<size; j++) {
                 temp[i][j] = -temp[i][j];

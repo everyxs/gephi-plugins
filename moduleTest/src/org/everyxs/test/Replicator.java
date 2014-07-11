@@ -45,7 +45,6 @@ public class Replicator extends DynamicOperator {
             }
         for (int i=0; i<size; i++) {
             reweight[i] = Pi.get(i, maxID); //eigenvector centrality for replicator reweighting 
-            scale[i] = lambdaMax * reweight[i]* reweight[i]; //default replicator scaling factors
         }
     }
     
@@ -70,11 +69,8 @@ public class Replicator extends DynamicOperator {
         int N = size;
         Progress.start(progress);  
         
-        double[][] repMatrix = new double[size][size];
-        for (int i=0; i<N; i++) //reweight the matrix
-            for (int j=0; j<N; j++)
-                repMatrix[i][j] = adjMatrix[i][j] * reweight[i] * reweight[j];
-        repMatrix = laplacianScale(repMatrix);//operator obtained
+        double[][] repMatrix = reweight(adjMatrix);
+        repMatrix = laplacianNorm(repMatrix);//operator obtained
         
         DenseMatrix A = new DenseMatrix(repMatrix);
         EVD eigen = new EVD(N);
@@ -148,11 +144,8 @@ public class Replicator extends DynamicOperator {
         }
 
         DoubleMatrix A = null;
-        double[][] repMatrix = new double[size][size];
-        for (int i=0; i<size; i++) //reweight the matrix
-            for (int j=0; j<size; j++)
-                repMatrix[i][j] = adjMatrix[i][j] * reweight[i] * reweight[j];
-        repMatrix = laplacianScale(repMatrix);//operator obtained
+        double[][] repMatrix = reweight(adjMatrix);
+        repMatrix = laplacianNorm(repMatrix);//operator obtained
         for (int i=0; i<size; i++)
             for (int j=0; j<size; j++) {
                 repMatrix[i][j] = -repMatrix[i][j];
