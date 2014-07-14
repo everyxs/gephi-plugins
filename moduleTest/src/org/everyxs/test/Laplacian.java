@@ -28,22 +28,17 @@ import org.jblas.DoubleMatrix;
 public class Laplacian extends DynamicOperator {
     public static final String EIGENVECTOR = "eigenVector";
     public static final String EIGENVECTOR2 = "eigenRatioOrder";
+    boolean normalized = true;
 
     public Laplacian(HierarchicalGraph graph) {
         super(graph);
     }
     
     //constructor for unnormalized laplacian
-    public Laplacian(HierarchicalGraph graph, boolean normalized) {
+    @SuppressWarnings("empty-statement")
+    public Laplacian(HierarchicalGraph graph, boolean normalize) {
         super(graph);
-        if (!normalized){
-            double degreeMax = -Double.MAX_VALUE;;
-            for (int i=0; i<degrees.length; i++) //find the max degree
-                if (degrees[i] > degreeMax)
-                    degreeMax = degrees[i];  
-            for (int i=0; i<scale.length; i++)
-                scale[i] = degreeMax / degrees[i];
-        }
+        normalized = normalize;
     }
 
     @Override
@@ -68,6 +63,14 @@ public class Laplacian extends DynamicOperator {
         Progress.start(progress);
         
         double[][] laplacian = laplacianNorm(adjMatrix);
+        if (!normalized){
+            double degreeMax = -Double.MAX_VALUE;;
+            for (int i=0; i<degrees.length; i++) //find the max degree
+                if (degrees[i] > degreeMax)
+                    degreeMax = degrees[i];  
+            for (int i=0; i<scale.length; i++)
+                scale[i] = degreeMax / degrees[i];
+        }
         laplacian = delayScale(laplacian);
         DenseMatrix A = new DenseMatrix(laplacian); //uniform scaling of normalized delayScale
         

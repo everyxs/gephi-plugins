@@ -84,7 +84,7 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
         graph.readLock();
         DynamicOperator dynamics = null;
         switch (inputMatrix) {
-            case 0: //straight up delayScale
+            case 0: //straight up Laplacian
                 dynamics = new Laplacian(graph, false);
                 break;
             case 2: //reweight by eigenvectors
@@ -94,11 +94,11 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
                     Exceptions.printStackTrace(ex);
                 }
                 break;
-            case 4: //reweight by degrees
+            case 4: //reweight by sqrt of degrees
                 dynamics = new UnbiasedAdj(graph);
                 break;
-            default: //normalized delayScale
-                dynamics = new Laplacian(graph);
+            default: //normalized Laplacian
+                dynamics = new Laplacian(graph, true);
                 break;                
         }
         dynamics.setScale(scale);

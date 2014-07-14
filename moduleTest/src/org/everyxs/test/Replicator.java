@@ -28,6 +28,7 @@ import org.jblas.DoubleMatrix;
 public class Replicator extends DynamicOperator {
     public static final String EIGENVECTOR = "eigenVector";
     public static final String EIGENVECTOR2 = "eigenRatioOrder";
+    double lambdaMax;
 
     public Replicator(HierarchicalGraph g) throws NotConvergedException {
         super(g);
@@ -36,7 +37,7 @@ public class Replicator extends DynamicOperator {
         eigen.factor(A);
         DenseMatrix Pi = eigen.getRightEigenvectors();
         double[] Lambda = eigen.getRealEigenvalues();
-        double lambdaMax = -Double.MAX_VALUE;;
+        lambdaMax = -Double.MAX_VALUE;;
         int maxID = -1;
         for (int i=0; i<Lambda.length; i++) //find the max eigenvalue
             if (Lambda[i] > lambdaMax) {
@@ -45,6 +46,7 @@ public class Replicator extends DynamicOperator {
             }
         for (int i=0; i<size; i++) {
             reweight[i] = Pi.get(i, maxID); //eigenvector centrality for replicator reweighting 
+            //scale[i] = lambdaMax * reweight[i]* reweight[i]; //default replicator scaling factors
         }
     }
     
@@ -71,6 +73,7 @@ public class Replicator extends DynamicOperator {
         
         double[][] repMatrix = reweight(adjMatrix);
         repMatrix = laplacianNorm(repMatrix);//operator obtained
+        repMatrix = delayScale(repMatrix);
         
         DenseMatrix A = new DenseMatrix(repMatrix);
         EVD eigen = new EVD(N);

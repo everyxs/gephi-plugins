@@ -117,20 +117,11 @@ public abstract class DynamicOperator implements Statistics, LongTask {
      */   
     public double[][] delayScale(double[][] inputMatrix) {
         double[][] laplacian = new double[size][size];
-        double diagonalMax = -Double.MAX_VALUE;;
         for (int i=0; i<size; i++) {
             for (int j=0; j<size; j++){
-                if (j==i)
-                    laplacian[i][j] = inputMatrix[i][j]/ Math.sqrt(scale[i]*scale[j]);
-                else
-                    laplacian[i][j] = inputMatrix[i][j]/ Math.sqrt(scale[i]*scale[j]);
-                if (laplacian[i][j] > diagonalMax)
-                    diagonalMax = laplacian[i][j];
+                laplacian[i][j] = inputMatrix[i][j]/ Math.sqrt(scale[i]*scale[j]);
             }
         }
-        for (int i=0; i<scale.length; i++) //find the max element of the scaled laplacian
-            for (int j=0; j<size; j++)
-                laplacian[i][j] = laplacian[i][j] / diagonalMax; //uniform scaling to set \tau_min = 1
         return laplacian;
     }
     
@@ -138,7 +129,7 @@ public abstract class DynamicOperator implements Statistics, LongTask {
         double[] sum = new double[size];
         for (int i=0; i<size; i++) {
             sum[i] = 0;
-            for (int j=0; j<size; j++) 
+            for (int j=0; j<size; j++)
                 sum[i] += reWeightedMatrix[i][j];
             degrees[i] = sum[i];
         }
@@ -173,11 +164,11 @@ public abstract class DynamicOperator implements Statistics, LongTask {
             
     }
     
-    public void setScale(AttributeColumn input) { //unifrom scaling tuner for scaled delayScale (need a more flexible version)
+    public void setScale(AttributeColumn input) { //unifrom scaling tuner for scaled laplacianScale (need a more flexible version)
         for (int i=0; i<scale.length; i++) {
             Node s = indicies.get(i); //picking from a descending order
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
-            scale[i] = Double.parseDouble(row.getValue(input).toString());
+            scale[i] = scale[i]*Double.parseDouble(row.getValue(input).toString());
         }
     }
 
