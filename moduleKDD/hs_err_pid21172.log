@@ -1,0 +1,1530 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007ff0c7cfeae8, pid=21172, tid=140672220186368
+#
+# JRE version: Java(TM) SE Runtime Environment (7.0_45-b18) (build 1.7.0_45-b18)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (24.45-b08 mixed mode linux-amd64 compressed oops)
+# Problematic frame:
+# C  [libX11.so.6+0x33ae8]  XQueryExtension+0x28
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.sun.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007ff0d8078000):  VMThread [stack: 0x00007ff0cda6c000,0x00007ff0cdb6d000] [id=21184]
+
+siginfo:si_signo=SIGSEGV: si_errno=0, si_code=1 (SEGV_MAPERR), si_addr=0x0000000041896718
+
+Registers:
+RAX=0x00007ff07c000a30, RBX=0x0000000041895db0, RCX=0x00007ff0cdb6b518, RDX=0x00007ff0cdb6b514
+RSP=0x00007ff0cdb6b4b0, RBP=0x00007ff0c567d932, RSI=0x00007ff0c567d932, RDI=0x0000000041895db0
+R8 =0x00007ff0cdb6b51c, R9 =0x0000000000000010, R10=0x00007ff0e0bf7fa8, R11=0x0000000000000000
+R12=0x0000000000000000, R13=0x00007ff0c567d932, R14=0x00007ff07c000a30, R15=0x0000000000000000
+RIP=0x00007ff0c7cfeae8, EFLAGS=0x0000000000010202, CSGSFS=0x0000000000000033, ERR=0x0000000000000004
+  TRAPNO=0x000000000000000e
+
+Top of Stack: (sp=0x00007ff0cdb6b4b0)
+0x00007ff0cdb6b4b0:   0000000000000000 0000003000000003
+0x00007ff0cdb6b4c0:   0000006e0000005b 0000007c00000077
+0x00007ff0cdb6b4d0:   00000000ffffffff 0000000041895db0
+0x00007ff0cdb6b4e0:   00007ff0c567d932 0000000000000000
+0x00007ff0cdb6b4f0:   00007ff0c567d932 00007ff07c000a30
+0x00007ff0cdb6b500:   0000000000000000 00007ff0c7cf2b25
+0x00007ff0cdb6b510:   00007ff0e1456048 00007ff0c57b6520
+0x00007ff0cdb6b520:   00007ff0c57b6520 0000000041895db0
+0x00007ff0cdb6b530:   00007ff04185e980 00007ff0cc2350fb
+0x00007ff0cdb6b540:   00007ff0e0849790 0000001100000038
+0x00007ff0cdb6b550:   00007ff0cdb6b5d0 0000000000000000
+0x00007ff0cdb6b560:   00007ff0cdb6b5d0 0000000041895db0
+0x00007ff0cdb6b570:   0000000000000000 00007ff0e1456048
+0x00007ff0cdb6b580:   00007ff0c57cfd50 00007ff0c5624119
+0x00007ff0cdb6b590:   0000000000000000 0000000000000038
+0x00007ff0cdb6b5a0:   00007ff0cdb6b5d0 00007ff0cdb6b5f0
+0x00007ff0cdb6b5b0:   0000000000000000 00007ff0e1456048
+0x00007ff0cdb6b5c0:   00007ff0400a9310 00007ff0c561ab42
+0x00007ff0cdb6b5d0:   00007ff0cdb6b820 00007ff0c567d8b1
+0x00007ff0cdb6b5e0:   00007ff0cdb6b820 00007ff0e124292d
+0x00007ff0cdb6b5f0:   00007ff0e14572c8 00007ff0e1457858
+0x00007ff0cdb6b600:   00007ff0e143a000 00007ff0d8009910
+0x00007ff0cdb6b610:   00007ff0d800a400 00007ff0d8009dc0
+0x00007ff0cdb6b620:   00007ff0d800a900 00007ff0d8017830
+0x00007ff0cdb6b630:   00007ff0d80fad60 00007ff0d80fb270
+0x00007ff0cdb6b640:   00007ff04c0947b0 00007ff04c094c90
+0x00007ff0cdb6b650:   00007ff0400419d0 00007ff04003a4b0
+0x00007ff0cdb6b660:   00007ff0580436c0 00007ff0400a6260
+0x00007ff0cdb6b670:   00007ff0400a9f20 00007ff040099a20
+0x00007ff0cdb6b680:   00007ff040099550 00007ff0400aa410
+0x00007ff0cdb6b690:   00007ff0400a9310 00007ff0d81b59b0
+0x00007ff0cdb6b6a0:   00007ff0d81b73d0 00007ff0d81b6ed0 
+
+Instructions: (pc=0x00007ff0c7cfeae8)
+0x00007ff0c7cfeac8:   24 d8 48 89 fb 4c 89 64 24 e0 4c 89 6c 24 e8 48
+0x00007ff0c7cfead8:   89 f5 4c 89 74 24 f0 4c 89 7c 24 f8 48 83 ec 58
+0x00007ff0c7cfeae8:   48 8b 87 68 09 00 00 49 89 d4 49 89 cd 4d 89 c6
+0x00007ff0c7cfeaf8:   48 85 c0 74 02 ff 10 ba 08 00 00 00 be 62 00 00 
+
+Register to memory mapping:
+
+RAX=0x00007ff07c000a30 is an unknown value
+RBX=0x0000000041895db0 is an unknown value
+RCX=0x00007ff0cdb6b518 is an unknown value
+RDX=0x00007ff0cdb6b514 is an unknown value
+RSP=0x00007ff0cdb6b4b0 is an unknown value
+RBP=0x00007ff0c567d932: <offset 0x96932> in /usr/lib/fglrx/libGL.so.1 at 0x00007ff0c55e7000
+RSI=0x00007ff0c567d932: <offset 0x96932> in /usr/lib/fglrx/libGL.so.1 at 0x00007ff0c55e7000
+RDI=0x0000000041895db0 is an unknown value
+R8 =0x00007ff0cdb6b51c is an unknown value
+R9 =0x0000000000000010 is an unknown value
+R10=0x00007ff0e0bf7fa8: <offset 0x3bcfa8> in /lib/x86_64-linux-gnu/libc.so.6 at 0x00007ff0e083b000
+R11=0x0000000000000000 is an unknown value
+R12=0x0000000000000000 is an unknown value
+R13=0x00007ff0c567d932: <offset 0x96932> in /usr/lib/fglrx/libGL.so.1 at 0x00007ff0c55e7000
+R14=0x00007ff07c000a30 is an unknown value
+R15=0x0000000000000000 is an unknown value
+
+
+Stack: [0x00007ff0cda6c000,0x00007ff0cdb6d000],  sp=0x00007ff0cdb6b4b0,  free space=1021k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libX11.so.6+0x33ae8]  XQueryExtension+0x28
+
+VM_Operation (0x00007ff0b43314a0): Exit, mode: safepoint, requested by thread 0x00007ff042d2c800
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00007ff040f9b800 JavaThread "Image Fetcher 0" daemon [_thread_blocked, id=21486, stack(0x00007ff0c4406000,0x00007ff0c4507000)]
+  0x00007ff058066800 JavaThread "Context Panel consumer thread" daemon [_thread_blocked, id=21465, stack(0x00007ff0c4204000,0x00007ff0c4305000)]
+  0x00007ff042e18800 JavaThread "Inactive RequestProcessor thread [Was:On Start/Stop/null]" daemon [_thread_blocked, id=21464, stack(0x00007ff0c4305000,0x00007ff0c4406000)]
+  0x00007ff058025800 JavaThread "DHNS View Destructor" daemon [_thread_blocked, id=21461, stack(0x00007ff0a7dfe000,0x00007ff0a7eff000)]
+  0x00007ff0580ec800 JavaThread "attribute-event-bus" daemon [_thread_blocked, id=21460, stack(0x00007ff0a7eff000,0x00007ff0a8000000)]
+  0x00007ff0580ec000 JavaThread "graph-event-bus" daemon [_thread_blocked, id=21459, stack(0x00007ff0a75fd000,0x00007ff0a76fe000)]
+  0x00007ff04027b000 JavaThread "VisualizationThreadPool 2" daemon [_thread_blocked, id=21421, stack(0x00007ff0a76fe000,0x00007ff0a77ff000)]
+  0x00007ff040581800 JavaThread "VisualizationThreadPool 1" daemon [_thread_blocked, id=21420, stack(0x00007ff0a74fc000,0x00007ff0a75fd000)]
+  0x00007ff042daa000 JavaThread "VisualizationThreadPool 1" daemon [_thread_blocked, id=21419, stack(0x00007ff0c4a9f000,0x00007ff0c4ba0000)]
+  0x00007ff042d2c800 JavaThread "Default RequestProcessor" daemon [_thread_blocked, id=21400, stack(0x00007ff0b4232000,0x00007ff0b4333000)]
+  0x00007fefd8163800 JavaThread "DHNS View Destructor" daemon [_thread_blocked, id=21301, stack(0x00007ff0ac0e9000,0x00007ff0ac1ea000)]
+  0x00007fefd8162800 JavaThread "attribute-event-bus" daemon [_thread_blocked, id=21300, stack(0x00007ff0ac1ea000,0x00007ff0ac2eb000)]
+  0x00007fefd815f800 JavaThread "graph-event-bus" daemon [_thread_blocked, id=21299, stack(0x00007ff0a6afa000,0x00007ff0a6bfb000)]
+  0x00007fefd80e3000 JavaThread "DHNS View Destructor" daemon [_thread_blocked, id=21282, stack(0x00007ff0a6878000,0x00007ff0a6979000)]
+  0x00007fefd80e2000 JavaThread "attribute-event-bus" daemon [_thread_blocked, id=21281, stack(0x00007ff0c469b000,0x00007ff0c479c000)]
+  0x00007fefd80be000 JavaThread "graph-event-bus" daemon [_thread_blocked, id=21280, stack(0x00007ff0c5a2c000,0x00007ff0c5b2d000)]
+  0x00007ff040d04800 JavaThread "SwingWorker-pool-1-thread-10" daemon [_thread_blocked, id=21247, stack(0x00007ff0b5d63000,0x00007ff0b5e64000)]
+  0x00007ff040d02800 JavaThread "SwingWorker-pool-1-thread-9" daemon [_thread_blocked, id=21246, stack(0x00007ff0b5e64000,0x00007ff0b5f65000)]
+  0x00007ff040ce3000 JavaThread "SwingWorker-pool-1-thread-8" daemon [_thread_blocked, id=21245, stack(0x00007ff0b5f65000,0x00007ff0b6066000)]
+  0x00007ff040cde800 JavaThread "SwingWorker-pool-1-thread-7" daemon [_thread_blocked, id=21244, stack(0x00007ff0b6066000,0x00007ff0b6167000)]
+  0x00007ff040cd5800 JavaThread "SwingWorker-pool-1-thread-6" daemon [_thread_blocked, id=21243, stack(0x00007ff0b6167000,0x00007ff0b6268000)]
+  0x00007ff040cd0000 JavaThread "SwingWorker-pool-1-thread-5" daemon [_thread_blocked, id=21242, stack(0x00007ff0b6268000,0x00007ff0b6369000)]
+  0x00007ff040c90000 JavaThread "SwingWorker-pool-1-thread-4" daemon [_thread_blocked, id=21241, stack(0x00007ff0b6369000,0x00007ff0b646a000)]
+  0x00007ff040c6c800 JavaThread "SwingWorker-pool-1-thread-3" daemon [_thread_blocked, id=21240, stack(0x00007ff0b646a000,0x00007ff0b656b000)]
+  0x00007ff040c68800 JavaThread "SwingWorker-pool-1-thread-2" daemon [_thread_blocked, id=21239, stack(0x00007ff0b656b000,0x00007ff0b666c000)]
+  0x00007ff040b64000 JavaThread "SwingWorker-pool-1-thread-1" daemon [_thread_blocked, id=21238, stack(0x00007ff0b68c3000,0x00007ff0b69c4000)]
+  0x00007ff02c331000 JavaThread "DHNS View Destructor" daemon [_thread_blocked, id=21234, stack(0x00007ff0c479c000,0x00007ff0c489d000)]
+  0x00007ff02c2a6800 JavaThread "attribute-event-bus" daemon [_thread_blocked, id=21233, stack(0x00007ff0b7c72000,0x00007ff0b7d73000)]
+  0x00007ff02c276800 JavaThread "graph-event-bus" daemon [_thread_blocked, id=21232, stack(0x00007ff0b6ac5000,0x00007ff0b6bc6000)]
+  0x00007ff040350000 JavaThread "Dynamic Set Visible Interval Thread" daemon [_thread_blocked, id=21208, stack(0x00007ff0c4585000,0x00007ff0c4686000)]
+  0x00007ff040345000 JavaThread "Dynamic Model EventDispatchThread" daemon [_thread_blocked, id=21207, stack(0x00007ff0c708d000,0x00007ff0c718e000)]
+  0x00007ff0d800b800 JavaThread "DestroyJavaVM" [_thread_blocked, id=21173, stack(0x00007ff0e1336000,0x00007ff0e1437000)]
+  0x00007ff04c4dc000 JavaThread "TimerQueue" daemon [_thread_blocked, id=21205, stack(0x00007ff0c489d000,0x00007ff0c499e000)]
+  0x00007ff04c4d5800 JavaThread "Thread-1" daemon [_thread_blocked, id=21204, stack(0x00007ff0c499e000,0x00007ff0c4a9f000)]
+  0x00007ff058067800 JavaThread "File Watcher" daemon [_thread_in_native, id=21202, stack(0x00007ff0c592b000,0x00007ff0c5a2c000)]
+  0x00007ff04c0fd800 JavaThread "AWT-EventQueue-0" [_thread_blocked, id=21200, stack(0x00007ff0c6778000,0x00007ff0c6879000)]
+  0x00007ff04c0fc000 JavaThread "AWT-Shutdown" [_thread_blocked, id=21199, stack(0x00007ff0c6879000,0x00007ff0c697a000)]
+  0x00007ff04c09c000 JavaThread "AWT-XAWT" daemon [_thread_blocked, id=21198, stack(0x00007ff0c697a000,0x00007ff0c6a7b000)]
+  0x00007ff04c079000 JavaThread "Java2D Disposer" daemon [_thread_blocked, id=21197, stack(0x00007ff0c6e8b000,0x00007ff0c6f8c000)]
+  0x00007ff04c039000 JavaThread "RequestProcessor queue manager" daemon [_thread_blocked, id=21196, stack(0x00007ff0c6f8c000,0x00007ff0c708d000)]
+  0x00007ff0d81b1000 JavaThread "CLI Requests Server" daemon [_thread_in_native, id=21193, stack(0x00007ff0cc960000,0x00007ff0cca61000)]
+  0x00007ff0d8188000 JavaThread "Active Reference Queue Daemon" daemon [_thread_blocked, id=21192, stack(0x00007ff0cca61000,0x00007ff0ccb62000)]
+  0x00007ff0d80a5000 JavaThread "Service Thread" daemon [_thread_blocked, id=21190, stack(0x00007ff0cd0f6000,0x00007ff0cd1f7000)]
+  0x00007ff0d80a2800 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=21189, stack(0x00007ff0cd1f7000,0x00007ff0cd2f8000)]
+  0x00007ff0d809f800 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=21188, stack(0x00007ff0cd2f8000,0x00007ff0cd3f9000)]
+  0x00007ff0d8095800 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=21187, stack(0x00007ff0cd3f9000,0x00007ff0cd4fa000)]
+  0x00007ff0d807e800 JavaThread "Finalizer" daemon [_thread_blocked, id=21186, stack(0x00007ff0cd96b000,0x00007ff0cda6c000)]
+  0x00007ff0d807a800 JavaThread "Reference Handler" daemon [_thread_blocked, id=21185, stack(0x00007ff08026f000,0x00007ff080370000)]
+
+Other Threads:
+=>0x00007ff0d8078000 VMThread [stack: 0x00007ff0cda6c000,0x00007ff0cdb6d000] [id=21184]
+
+VM state:at safepoint (shutting down)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00007ff0d8007ab0] Threads_lock - owner thread: 0x00007ff0d8078000
+
+Heap
+ PSYoungGen      total 2242560K, used 203877K [0x0000000759500000, 0x00000007ff980000, 0x0000000800000000)
+  eden space 1783808K, 11% used [0x0000000759500000,0x0000000765c197f8,0x00000007c6300000)
+  from space 458752K, 0% used [0x00000007c6300000,0x00000007c6300000,0x00000007e2300000)
+  to   space 445440K, 0% used [0x00000007e4680000,0x00000007e4680000,0x00000007ff980000)
+ ParOldGen       total 713728K, used 115195K [0x000000060c000000, 0x0000000637900000, 0x0000000759500000)
+  object space 713728K, 16% used [0x000000060c000000,0x000000061307ed38,0x0000000637900000)
+ PSPermGen       total 83968K, used 54412K [0x0000000606e00000, 0x000000060c000000, 0x000000060c000000)
+  object space 83968K, 64% used [0x0000000606e00000,0x000000060a323190,0x000000060c000000)
+
+Card table byte_map: [0x00007ff0dd677000,0x00007ff0de641000] byte_map_base: 0x00007ff0da640000
+
+Polling page: 0x00007ff0e1452000
+
+Code Cache  [0x00007ff0d5000000, 0x00007ff0d57a0000, 0x00007ff0d8000000)
+ total_blobs=3397 nmethods=2284 adapters=1064 free_code_cache=41507Kb largest_free_block=42336768
+
+Compilation events (10 events):
+Event: 333.114 Thread 0x00007ff0d80a2800 2568             sun.swing.ImageCache$Entry::equals (147 bytes)
+Event: 333.116 Thread 0x00007ff0d80a2800 nmethod 2568 0x00007ff0d57893d0 code [0x00007ff0d5789540, 0x00007ff0d5789798]
+Event: 333.354 Thread 0x00007ff0d809f800 2569             javax.swing.DefaultButtonModel::isEnabled (16 bytes)
+Event: 333.354 Thread 0x00007ff0d809f800 nmethod 2569 0x00007ff0d5773350 code [0x00007ff0d5773480, 0x00007ff0d57734f8]
+Event: 339.361 Thread 0x00007ff0d80a2800 2570             java.util.PriorityQueue::peek (16 bytes)
+Event: 339.362 Thread 0x00007ff0d80a2800 nmethod 2570 0x00007ff0d578ddd0 code [0x00007ff0d578df20, 0x00007ff0d578dfb8]
+Event: 343.159 Thread 0x00007ff0d809f800 2571   !         javax.swing.TimerQueue::sharedInstance (44 bytes)
+Event: 343.161 Thread 0x00007ff0d809f800 nmethod 2571 0x00007ff0d578f510 code [0x00007ff0d578f6a0, 0x00007ff0d578faf8]
+Event: 344.884 Thread 0x00007ff0d80a2800 2572             com.sun.org.apache.xerces.internal.impl.XMLScanner::scanPubidLiteral (188 bytes)
+Event: 344.896 Thread 0x00007ff0d80a2800 nmethod 2572 0x00007ff0d52fbf10 code [0x00007ff0d52fc180, 0x00007ff0d52fcf60]
+
+GC Heap History (10 events):
+Event: 181.270 GC heap before
+{Heap before GC invocations=19 (full 2):
+ PSYoungGen      total 2012160K, used 1797296K [0x0000000759500000, 0x00000007f6680000, 0x0000000800000000)
+  eden space 1603584K, 88% used [0x0000000759500000,0x00000007af9fe630,0x00000007bb300000)
+  from space 408576K, 93% used [0x00000007d8680000,0x00000007efcad9e0,0x00000007f1580000)
+  to   space 478720K, 0% used [0x00000007bb300000,0x00000007bb300000,0x00000007d8680000)
+ ParOldGen       total 1992192K, used 1448094K [0x000000060c000000, 0x0000000685980000, 0x0000000759500000)
+  object space 1992192K, 72% used [0x000000060c000000,0x0000000664627870,0x0000000685980000)
+ PSPermGen       total 83968K, used 53993K [0x0000000606e00000, 0x000000060c000000, 0x000000060c000000)
+  object space 83968K, 64% used [0x0000000606e00000,0x000000060a2ba6e8,0x000000060c000000)
+Event: 181.367 GC heap after
+Heap after GC invocations=19 (full 2):
+ PSYoungGen      total 2082304K, used 734K [0x0000000759500000, 0x0000000800000000, 0x0000000800000000)
+  eden space 1603584K, 0% used [0x0000000759500000,0x0000000759500000,0x00000007bb300000)
+  from space 478720K, 0% used [0x00000007bb300000,0x00000007bb3b7990,0x00000007d8680000)
+  to   space 468480K, 0% used [0x00000007e3680000,0x00000007e3680000,0x0000000800000000)
+ ParOldGen       total 1992192K, used 1831114K [0x000000060c000000, 0x0000000685980000, 0x0000000759500000)
+  object space 1992192K, 91% used [0x000000060c000000,0x000000067bc32b20,0x0000000685980000)
+ PSPermGen       total 83968K, used 53993K [0x0000000606e00000, 0x000000060c000000, 0x000000060c000000)
+  object space 83968K, 64% used [0x0000000606e00000,0x000000060a2ba6e8,0x000000060c000000)
+}
+Event: 181.367 GC heap before
+{Heap before GC invocations=20 (full 3):
+ PSYoungGen      total 2082304K, used 734K [0x0000000759500000, 0x0000000800000000, 0x0000000800000000)
+  eden space 1603584K, 0% used [0x0000000759500000,0x0000000759500000,0x00000007bb300000)
+  from space 478720K, 0% used [0x00000007bb300000,0x00000007bb3b7990,0x00000007d8680000)
+  to   space 468480K, 0% used [0x00000007e3680000,0x00000007e3680000,0x0000000800000000)
+ ParOldGen       total 1992192K, used 1831114K [0x000000060c000000, 0x0000000685980000, 0x0000000759500000)
+  object space 1992192K, 91% used [0x000000060c000000,0x000000067bc32b20,0x0000000685980000)
+ PSPermGen       total 83968K, used 53993K [0x0000000606e00000, 0x000000060c000000, 0x000000060c000000)
+  object space 83968K, 64% used [0x0000000606e00000,0x000000060a2ba6e8,0x000000060c000000)
+Event: 181.692 GC heap after
+Heap after GC invocations=20 (full 3):
+ PSYoungGen      total 2082304K, used 0K [0x0000000759500000, 0x0000000800000000, 0x0000000800000000)
+  eden space 1603584K, 0% used [0x0000000759500000,0x0000000759500000,0x00000007bb300000)
+  from space 478720K, 0% used [0x00000007bb300000,0x00000007bb300000,0x00000007d8680000)
+  to   space 468480K, 0% used [0x00000007e3680000,0x00000007e3680000,0x0000000800000000)
+ ParOldGen       total 2439168K, used 1823583K [0x000000060c000000, 0x00000006a0e00000, 0x0000000759500000)
+  object space 2439168K, 74% used [0x000000060c000000,0x000000067b4d7cf0,0x00000006a0e00000)
+ PSPermGen       total 83968K, used 53993K [0x0000000606e00000, 0x000000060c000000, 0x000000060c000000)
+  object space 83968K, 64% used [0x0000000606e00000,0x000000060a2ba6e8,0x000000060c000000)
+}
+Event: 198.439 GC heap before
+{Heap before GC invocations=21 (full 3):
+ PSYoungGen      total 2082304K, used 1602387K [0x0000000759500000, 0x0000000800000000, 0x0000000800000000)
+  eden space 1603584K, 99% used [0x0000000759500000,0x00000007bb1d4cf0,0x00000007bb300000)
+  from space 478720K, 0% used [0x00000007bb300000,0x00000007bb300000,0x00000007d8680000)
+  to   space 468480K, 0% used [0x00000007e3680000,0x00000007e3680000,0x0000000800000000)
+ ParOldGen       total 2439168K, used 1823583K [0x000000060c000000, 0x00000006a0e00000, 0x0000000759500000)
+  object space 2439168K, 74% used [0x000000060c000000,0x000000067b4d7cf0,0x00000006a0e00000)
+ PSPermGen       total 83968K, used 53993K [0x0000000606e00000, 0x000000060c000000, 0x000000060c000000)
+  object space 83968K, 64% used [0x0000000606e00000,0x000000060a2ba6e8,0x000000060c000000)
+Event: 198.469 GC heap after
+Heap after GC invocations=21 (full 3):
+ PSYoungGen      total 2222592K, used 191447K [0x0000000759500000, 0x00000007fe300000, 0x0000000800000000)
+  eden space 1783808K, 0% used [0x0000000759500000,0x0000000759500000,0x00000007c6300000)
+  from space 438784K, 43% used [0x00000007e3680000,0x00000007ef175fa8,0x00000007fe300000)
+  to   space 458752K, 0% used [0x00000007c6300000,0x00000007c6300000,0x00000007e2300000)
+ ParOldGen       total 2439168K, used 1823583K [0x000000060c000000, 0x00000006a0e00000, 0x0000000759500000)
+  object space 2439168K, 74% used [0x000000060c000000,0x000000067b4d7cf0,0x00000006a0e00000)
+ PSPermGen       total 83968K, used 53993K [0x0000000606e00000, 0x000000060c000000, 0x000000060c000000)
+  object space 83968K, 64% used [0x0000000606e00000,0x000000060a2ba6e8,0x000000060c000000)
+}
+Event: 310.698 GC heap before
+{Heap before GC invocations=22 (full 3):
+ PSYoungGen      total 2222592K, used 1975255K [0x0000000759500000, 0x00000007fe300000, 0x0000000800000000)
+  eden space 1783808K, 100% used [0x0000000759500000,0x00000007c6300000,0x00000007c6300000)
+  from space 438784K, 43% used [0x00000007e3680000,0x00000007ef175fa8,0x00000007fe300000)
+  to   space 458752K, 0% used [0x00000007c6300000,0x00000007c6300000,0x00000007e2300000)
+ ParOldGen       total 2439168K, used 1823583K [0x000000060c000000, 0x00000006a0e00000, 0x0000000759500000)
+  object space 2439168K, 74% used [0x000000060c000000,0x000000067b4d7cf0,0x00000006a0e00000)
+ PSPermGen       total 83968K, used 54251K [0x0000000606e00000, 0x000000060c000000, 0x000000060c000000)
+  object space 83968K, 64% used [0x0000000606e00000,0x000000060a2fafb0,0x000000060c000000)
+Event: 310.787 GC heap after
+Heap after GC invocations=22 (full 3):
+ PSYoungGen      total 2242560K, used 17585K [0x0000000759500000, 0x00000007ff980000, 0x0000000800000000)
+  eden space 1783808K, 0% used [0x0000000759500000,0x0000000759500000,0x00000007c6300000)
+  from space 458752K, 3% used [0x00000007c6300000,0x00000007c742c7a8,0x00000007e2300000)
+  to   space 445440K, 0% used [0x00000007e4680000,0x00000007e4680000,0x00000007ff980000)
+ ParOldGen       total 2439168K, used 2014689K [0x000000060c000000, 0x00000006a0e00000, 0x0000000759500000)
+  object space 2439168K, 82% used [0x000000060c000000,0x0000000686f78648,0x00000006a0e00000)
+ PSPermGen       total 83968K, used 54251K [0x0000000606e00000, 0x000000060c000000, 0x000000060c000000)
+  object space 83968K, 64% used [0x0000000606e00000,0x000000060a2fafb0,0x000000060c000000)
+}
+Event: 310.787 GC heap before
+{Heap before GC invocations=23 (full 4):
+ PSYoungGen      total 2242560K, used 17585K [0x0000000759500000, 0x00000007ff980000, 0x0000000800000000)
+  eden space 1783808K, 0% used [0x0000000759500000,0x0000000759500000,0x00000007c6300000)
+  from space 458752K, 3% used [0x00000007c6300000,0x00000007c742c7a8,0x00000007e2300000)
+  to   space 445440K, 0% used [0x00000007e4680000,0x00000007e4680000,0x00000007ff980000)
+ ParOldGen       total 2439168K, used 2014689K [0x000000060c000000, 0x00000006a0e00000, 0x0000000759500000)
+  object space 2439168K, 82% used [0x000000060c000000,0x0000000686f78648,0x00000006a0e00000)
+ PSPermGen       total 83968K, used 54251K [0x0000000606e00000, 0x000000060c000000, 0x000000060c000000)
+  object space 83968K, 64% used [0x0000000606e00000,0x000000060a2fafb0,0x000000060c000000)
+Event: 310.924 GC heap after
+Heap after GC invocations=23 (full 4):
+ PSYoungGen      total 2242560K, used 0K [0x0000000759500000, 0x00000007ff980000, 0x0000000800000000)
+  eden space 1783808K, 0% used [0x0000000759500000,0x0000000759500000,0x00000007c6300000)
+  from space 458752K, 0% used [0x00000007c6300000,0x00000007c6300000,0x00000007e2300000)
+  to   space 445440K, 0% used [0x00000007e4680000,0x00000007e4680000,0x00000007ff980000)
+ ParOldGen       total 713728K, used 115195K [0x000000060c000000, 0x0000000637900000, 0x0000000759500000)
+  object space 713728K, 16% used [0x000000060c000000,0x000000061307ed38,0x0000000637900000)
+ PSPermGen       total 83968K, used 54249K [0x0000000606e00000, 0x000000060c000000, 0x000000060c000000)
+  object space 83968K, 64% used [0x0000000606e00000,0x000000060a2fa510,0x000000060c000000)
+}
+
+Deoptimization events (10 events):
+Event: 321.119 Thread 0x00007ff040edc000 Uncommon trap: reason=range_check action=make_not_entrant pc=0x00007ff0d5466f74 method=java.awt.image.DirectColorModel.setFields()V @ 65
+Event: 343.974 Thread 0x00007ff04c0fd800 Uncommon trap: reason=unreached action=reinterpret pc=0x00007ff0d54a2ccc method=org.netbeans.ProxyClassLoader.loadClass(Ljava/lang/String;Z)Ljava/lang/Class; @ 273
+Event: 343.981 Thread 0x00007ff04c0fd800 Uncommon trap: reason=unreached action=reinterpret pc=0x00007ff0d5708d28 method=javax.swing.JLabel.setText(Ljava/lang/String;)V @ 83
+Event: 343.998 Thread 0x00007ff04c0fd800 Uncommon trap: reason=unreached action=reinterpret pc=0x00007ff0d56d5b98 method=javax.swing.plaf.basic.BasicLabelUI.getPreferredSize(Ljavax/swing/JComponent;)Ljava/awt/Dimension; @ 100
+Event: 344.031 Thread 0x00007ff04c0fd800 Uncommon trap: reason=unreached action=reinterpret pc=0x00007ff0d56eb75c method=javax.swing.plaf.basic.BasicLabelUI.paint(Ljava/awt/Graphics;Ljavax/swing/JComponent;)V @ 96
+Event: 344.874 Thread 0x00007ff04c09c000 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0x00007ff0d55eede0 method=sun.awt.X11.XBaseWindow.dispatchEvent(Lsun/awt/X11/XEvent;)V @ 262
+Event: 344.879 Thread 0x00007ff04c09c000 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007ff0d55eee2c method=sun.awt.X11.XBaseWindow.dispatchEvent(Lsun/awt/X11/XEvent;)V @ 270
+Event: 345.413 Thread 0x00007ff04c0fd800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0x00007ff0d54bfc98 method=org.openide.util.lookup.AbstractLookup.getPairsAsLHS()Ljava/util/LinkedHashSet; @ 27
+Event: 346.417 Thread 0x00007fefe800b000 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007ff0d54391fc method=org.openide.util.RequestProcessor$Item.clearOrNew(Z)Z @ 2
+Event: 346.417 Thread 0x00007fefe800b000 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007ff0d54391fc method=org.openide.util.RequestProcessor$Item.clearOrNew(Z)Z @ 2
+
+Internal exceptions (10 events):
+Event: 320.057 Thread 0x00007ff043715000 Implicit null exception at 0x00007ff0d56e5d34 to 0x00007ff0d56e668d
+Event: 323.275 Thread 0x00007ff042d2c800 Threw 0x000000075b676cc8 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 323.275 Thread 0x00007ff042d2c800 Threw 0x000000075b6790a0 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 343.973 Thread 0x00007ff04c0fd800 Threw 0x0000000763bac960 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 343.973 Thread 0x00007ff04c0fd800 Threw 0x0000000763baf648 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 343.981 Thread 0x00007ff04c0fd800 Implicit null exception at 0x00007ff0d57085ac to 0x00007ff0d5708d1d
+Event: 344.035 Thread 0x00007ff04c0fd800 Threw 0x0000000763f8fb80 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jni.cpp:743
+Event: 345.413 Thread 0x00007ff04c0fd800 Threw 0x00000007649d4110 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 345.413 Thread 0x00007ff04c0fd800 Threw 0x00000007649d6578 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+Event: 346.416 Thread 0x00007ff042d2c800 Threw 0x000000075b730e88 at /HUDSON/workspace/7u-2-build-linux-amd64/jdk7u45/229/hotspot/src/share/vm/prims/jvm.cpp:1244
+
+Events (10 events):
+Event: 346.417 Thread 0x00007fefe800c800 Thread exited: 0x00007fefe800c800
+Event: 346.417 Thread 0x00007fefe800b000 Uncommon trap: trap_request=0xffffffde fr.pc=0x00007ff0d54391fc
+Event: 346.417 Thread 0x00007fefe800b000 DEOPT PACKING pc=0x00007ff0d54391fc sp=0x00007ff0c728d700
+Event: 346.417 Thread 0x00007fefe800b000 DEOPT UNPACKING pc=0x00007ff0d5039445 sp=0x00007ff0c728d6b0 mode 2
+Event: 346.417 Thread 0x00007fefe800b000 Uncommon trap: trap_request=0xffffffde fr.pc=0x00007ff0d54391fc
+Event: 346.417 Thread 0x00007fefe800b000 DEOPT PACKING pc=0x00007ff0d54391fc sp=0x00007ff0c728d700
+Event: 346.417 Thread 0x00007fefe800b000 DEOPT UNPACKING pc=0x00007ff0d5039445 sp=0x00007ff0c728d6b0 mode 2
+Event: 346.418 Thread 0x00007fefe800c000 Thread exited: 0x00007fefe800c000
+Event: 346.418 Thread 0x00007fefe800b000 Thread exited: 0x00007fefe800b000
+Event: 346.418 Executing VM operation: Exit
+
+
+Dynamic libraries:
+00400000-00401000 r-xp 00000000 08:04 1992509                            /home/everyan/jdk1.7.0_45/bin/java
+00600000-00601000 rw-p 00000000 08:04 1992509                            /home/everyan/jdk1.7.0_45/bin/java
+0092b000-01b9f000 rw-p 00000000 00:00 0                                  [heap]
+606e00000-60c000000 rw-p 00000000 00:00 0 
+60c000000-637900000 rw-p 00000000 00:00 0 
+637900000-6a0e00000 ---p 00000000 00:00 0 
+6a0e00000-759500000 rw-p 00000000 00:00 0 
+759500000-7ff980000 rw-p 00000000 00:00 0 
+7ff980000-800000000 ---p 00000000 00:00 0 
+7fefa4000000-7fefa4021000 rw-p 00000000 00:00 0 
+7fefa4021000-7fefa8000000 ---p 00000000 00:00 0 
+7fefa8000000-7fefa8021000 rw-p 00000000 00:00 0 
+7fefa8021000-7fefac000000 ---p 00000000 00:00 0 
+7fefac000000-7fefac021000 rw-p 00000000 00:00 0 
+7fefac021000-7fefb0000000 ---p 00000000 00:00 0 
+7fefb0000000-7fefb0021000 rw-p 00000000 00:00 0 
+7fefb0021000-7fefb4000000 ---p 00000000 00:00 0 
+7fefb4000000-7fefb405e000 rw-p 00000000 00:00 0 
+7fefb405e000-7fefb8000000 ---p 00000000 00:00 0 
+7fefb8000000-7fefb8021000 rw-p 00000000 00:00 0 
+7fefb8021000-7fefbc000000 ---p 00000000 00:00 0 
+7fefbc000000-7fefbc021000 rw-p 00000000 00:00 0 
+7fefbc021000-7fefc0000000 ---p 00000000 00:00 0 
+7fefc0000000-7fefc0021000 rw-p 00000000 00:00 0 
+7fefc0021000-7fefc4000000 ---p 00000000 00:00 0 
+7fefc4000000-7fefc4021000 rw-p 00000000 00:00 0 
+7fefc4021000-7fefc8000000 ---p 00000000 00:00 0 
+7fefc8000000-7fefc8021000 rw-p 00000000 00:00 0 
+7fefc8021000-7fefcc000000 ---p 00000000 00:00 0 
+7fefcc000000-7fefcc021000 rw-p 00000000 00:00 0 
+7fefcc021000-7fefd0000000 ---p 00000000 00:00 0 
+7fefd0000000-7fefd0021000 rw-p 00000000 00:00 0 
+7fefd0021000-7fefd4000000 ---p 00000000 00:00 0 
+7fefd4000000-7fefd4021000 rw-p 00000000 00:00 0 
+7fefd4021000-7fefd8000000 ---p 00000000 00:00 0 
+7fefd8000000-7fefd8200000 rw-p 00000000 00:00 0 
+7fefd8200000-7fefdc000000 ---p 00000000 00:00 0 
+7fefdc000000-7fefdc021000 rw-p 00000000 00:00 0 
+7fefdc021000-7fefe0000000 ---p 00000000 00:00 0 
+7fefe0000000-7fefe0051000 rw-p 00000000 00:00 0 
+7fefe0051000-7fefe4000000 ---p 00000000 00:00 0 
+7fefe4000000-7fefe4021000 rw-p 00000000 00:00 0 
+7fefe4021000-7fefe8000000 ---p 00000000 00:00 0 
+7fefe8000000-7fefe8021000 rw-p 00000000 00:00 0 
+7fefe8021000-7fefec000000 ---p 00000000 00:00 0 
+7fefec000000-7fefec021000 rw-p 00000000 00:00 0 
+7fefec021000-7feff0000000 ---p 00000000 00:00 0 
+7feff0000000-7feff0021000 rw-p 00000000 00:00 0 
+7feff0021000-7feff4000000 ---p 00000000 00:00 0 
+7feff4000000-7feff4021000 rw-p 00000000 00:00 0 
+7feff4021000-7feff8000000 ---p 00000000 00:00 0 
+7feff8000000-7feff8021000 rw-p 00000000 00:00 0 
+7feff8021000-7feffc000000 ---p 00000000 00:00 0 
+7feffc000000-7feffc021000 rw-p 00000000 00:00 0 
+7feffc021000-7ff000000000 ---p 00000000 00:00 0 
+7ff000000000-7ff000021000 rw-p 00000000 00:00 0 
+7ff000021000-7ff004000000 ---p 00000000 00:00 0 
+7ff004000000-7ff004021000 rw-p 00000000 00:00 0 
+7ff004021000-7ff008000000 ---p 00000000 00:00 0 
+7ff008000000-7ff008021000 rw-p 00000000 00:00 0 
+7ff008021000-7ff00c000000 ---p 00000000 00:00 0 
+7ff00c000000-7ff00c021000 rw-p 00000000 00:00 0 
+7ff00c021000-7ff010000000 ---p 00000000 00:00 0 
+7ff010000000-7ff010021000 rw-p 00000000 00:00 0 
+7ff010021000-7ff014000000 ---p 00000000 00:00 0 
+7ff014000000-7ff0140a5000 rw-p 00000000 00:00 0 
+7ff0140a5000-7ff018000000 ---p 00000000 00:00 0 
+7ff018000000-7ff018057000 rw-p 00000000 00:00 0 
+7ff018057000-7ff01c000000 ---p 00000000 00:00 0 
+7ff01c000000-7ff01c021000 rw-p 00000000 00:00 0 
+7ff01c021000-7ff020000000 ---p 00000000 00:00 0 
+7ff020000000-7ff0200af000 rw-p 00000000 00:00 0 
+7ff0200af000-7ff024000000 ---p 00000000 00:00 0 
+7ff024000000-7ff024021000 rw-p 00000000 00:00 0 
+7ff024021000-7ff028000000 ---p 00000000 00:00 0 
+7ff028000000-7ff0289e5000 rw-p 00000000 00:00 0 
+7ff0289e5000-7ff02c000000 ---p 00000000 00:00 0 
+7ff02c000000-7ff02c4bd000 rw-p 00000000 00:00 0 
+7ff02c4bd000-7ff030000000 ---p 00000000 00:00 0 
+7ff030000000-7ff030021000 rw-p 00000000 00:00 0 
+7ff030021000-7ff034000000 ---p 00000000 00:00 0 
+7ff034000000-7ff034421000 rw-p 00000000 00:00 0 
+7ff034421000-7ff038000000 ---p 00000000 00:00 0 
+7ff038000000-7ff038021000 rw-p 00000000 00:00 0 
+7ff038021000-7ff03c000000 ---p 00000000 00:00 0 
+7ff03c000000-7ff03c021000 rw-p 00000000 00:00 0 
+7ff03c021000-7ff040000000 ---p 00000000 00:00 0 
+7ff040000000-7ff043b4c000 rw-p 00000000 00:00 0 
+7ff043b4c000-7ff044000000 ---p 00000000 00:00 0 
+7ff044000000-7ff044021000 rw-p 00000000 00:00 0 
+7ff044021000-7ff048000000 ---p 00000000 00:00 0 
+7ff048000000-7ff048260000 rw-p 00000000 00:00 0 
+7ff048260000-7ff04c000000 ---p 00000000 00:00 0 
+7ff04c000000-7ff04c509000 rw-p 00000000 00:00 0 
+7ff04c509000-7ff050000000 ---p 00000000 00:00 0 
+7ff050000000-7ff050021000 rw-p 00000000 00:00 0 
+7ff050021000-7ff054000000 ---p 00000000 00:00 0 
+7ff054000000-7ff054021000 rw-p 00000000 00:00 0 
+7ff054021000-7ff058000000 ---p 00000000 00:00 0 
+7ff058000000-7ff058253000 rw-p 00000000 00:00 0 
+7ff058253000-7ff05c000000 ---p 00000000 00:00 0 
+7ff05c000000-7ff05c021000 rw-p 00000000 00:00 0 
+7ff05c021000-7ff060000000 ---p 00000000 00:00 0 
+7ff060000000-7ff060021000 rw-p 00000000 00:00 0 
+7ff060021000-7ff064000000 ---p 00000000 00:00 0 
+7ff064000000-7ff065481000 rw-p 00000000 00:00 0 
+7ff065481000-7ff068000000 ---p 00000000 00:00 0 
+7ff068000000-7ff068021000 rw-p 00000000 00:00 0 
+7ff068021000-7ff06c000000 ---p 00000000 00:00 0 
+7ff06c000000-7ff06c021000 rw-p 00000000 00:00 0 
+7ff06c021000-7ff070000000 ---p 00000000 00:00 0 
+7ff070000000-7ff0715f0000 rw-p 00000000 00:00 0 
+7ff0715f0000-7ff074000000 ---p 00000000 00:00 0 
+7ff074000000-7ff074021000 rw-p 00000000 00:00 0 
+7ff074021000-7ff078000000 ---p 00000000 00:00 0 
+7ff078000000-7ff078021000 rw-p 00000000 00:00 0 
+7ff078021000-7ff07c000000 ---p 00000000 00:00 0 
+7ff07c000000-7ff07c47d000 rw-p 00000000 00:00 0 
+7ff07c47d000-7ff080000000 ---p 00000000 00:00 0 
+7ff08026f000-7ff080272000 ---p 00000000 00:00 0 
+7ff080272000-7ff090000000 rw-p 00000000 00:00 0 
+7ff090000000-7ff09002f000 rw-p 00000000 00:00 0 
+7ff09002f000-7ff094000000 ---p 00000000 00:00 0 
+7ff098000000-7ff098021000 rw-p 00000000 00:00 0 
+7ff098021000-7ff09c000000 ---p 00000000 00:00 0 
+7ff0a0000000-7ff0a0021000 rw-p 00000000 00:00 0 
+7ff0a0021000-7ff0a4000000 ---p 00000000 00:00 0 
+7ff0a6878000-7ff0a687b000 ---p 00000000 00:00 0 
+7ff0a687b000-7ff0a6979000 rw-p 00000000 00:00 0 
+7ff0a6afa000-7ff0a6afd000 ---p 00000000 00:00 0 
+7ff0a6afd000-7ff0a6bfb000 rw-p 00000000 00:00 0 
+7ff0a6bfb000-7ff0a6bfe000 ---p 00000000 00:00 0 
+7ff0a6bfe000-7ff0a6cfc000 rw-p 00000000 00:00 0 
+7ff0a707a000-7ff0a707d000 ---p 00000000 00:00 0 
+7ff0a707d000-7ff0a717b000 rw-p 00000000 00:00 0 
+7ff0a74fc000-7ff0a74ff000 ---p 00000000 00:00 0 
+7ff0a74ff000-7ff0a75fd000 rw-p 00000000 00:00 0 
+7ff0a75fd000-7ff0a7600000 ---p 00000000 00:00 0 
+7ff0a7600000-7ff0a76fe000 rw-p 00000000 00:00 0 
+7ff0a76fe000-7ff0a7701000 ---p 00000000 00:00 0 
+7ff0a7701000-7ff0a77ff000 rw-p 00000000 00:00 0 
+7ff0a78fd000-7ff0a7900000 ---p 00000000 00:00 0 
+7ff0a7900000-7ff0a79fe000 rw-p 00000000 00:00 0 
+7ff0a7dfe000-7ff0a7e01000 ---p 00000000 00:00 0 
+7ff0a7e01000-7ff0a7eff000 rw-p 00000000 00:00 0 
+7ff0a7eff000-7ff0a7f02000 ---p 00000000 00:00 0 
+7ff0a7f02000-7ff0a8000000 rw-p 00000000 00:00 0 
+7ff0a8000000-7ff0a8021000 rw-p 00000000 00:00 0 
+7ff0a8021000-7ff0ac000000 ---p 00000000 00:00 0 
+7ff0ac0e9000-7ff0ac0ec000 ---p 00000000 00:00 0 
+7ff0ac0ec000-7ff0ac1ea000 rw-p 00000000 00:00 0 
+7ff0ac1ea000-7ff0ac1ed000 ---p 00000000 00:00 0 
+7ff0ac1ed000-7ff0ac2eb000 rw-p 00000000 00:00 0 
+7ff0ac2eb000-7ff0ac9eb000 rw-s 00006000 00:05 14643                      /dev/ati/card0
+7ff0ac9eb000-7ff0ac9ed000 r-xp 00000000 08:04 396777                     /usr/lib/x86_64-linux-gnu/libXinerama.so.1.0.0
+7ff0ac9ed000-7ff0acbec000 ---p 00002000 08:04 396777                     /usr/lib/x86_64-linux-gnu/libXinerama.so.1.0.0
+7ff0acbec000-7ff0acbed000 r--p 00001000 08:04 396777                     /usr/lib/x86_64-linux-gnu/libXinerama.so.1.0.0
+7ff0acbed000-7ff0acbee000 rw-p 00002000 08:04 396777                     /usr/lib/x86_64-linux-gnu/libXinerama.so.1.0.0
+7ff0acbee000-7ff0acc29000 r-xp 00000000 08:04 923823                     /usr/lib/fglrx/libatiadlxx.so
+7ff0acc29000-7ff0acd29000 ---p 0003b000 08:04 923823                     /usr/lib/fglrx/libatiadlxx.so
+7ff0acd29000-7ff0acd32000 rw-p 0003b000 08:04 923823                     /usr/lib/fglrx/libatiadlxx.so
+7ff0acd32000-7ff0acd43000 rw-p 00000000 00:00 0 
+7ff0acd43000-7ff0acd4a000 r-xp 00000000 08:04 923872                     /usr/lib/fglrx/libatiuki.so.1.0
+7ff0acd4a000-7ff0ace4a000 ---p 00007000 08:04 923872                     /usr/lib/fglrx/libatiuki.so.1.0
+7ff0ace4a000-7ff0ace4b000 rw-p 00007000 08:04 923872                     /usr/lib/fglrx/libatiuki.so.1.0
+7ff0ace4b000-7ff0ace4c000 rw-p 00000000 00:00 0 
+7ff0ace4c000-7ff0aeda6000 r-xp 00000000 08:04 923829                     /usr/lib/fglrx/dri/fglrx_dri.so
+7ff0aeda6000-7ff0aeea6000 ---p 01f5a000 08:04 923829                     /usr/lib/fglrx/dri/fglrx_dri.so
+7ff0aeea6000-7ff0aeff4000 rwxp 01f5a000 08:04 923829                     /usr/lib/fglrx/dri/fglrx_dri.so
+7ff0aeff4000-7ff0af11a000 rwxp 00000000 00:00 0 
+7ff0af11a000-7ff0af834000 r-xp 00000000 08:04 262575                     /tmp/jblas751062831911814203libjblas.so (deleted)
+7ff0af834000-7ff0afa33000 ---p 0071a000 08:04 262575                     /tmp/jblas751062831911814203libjblas.so (deleted)
+7ff0afa33000-7ff0afa40000 rw-p 00719000 08:04 262575                     /tmp/jblas751062831911814203libjblas.so (deleted)
+7ff0afa40000-7ff0afab3000 rw-p 00000000 00:00 0 
+7ff0afab3000-7ff0afae8000 r-xp 00000000 08:04 408382                     /usr/lib/x86_64-linux-gnu/libquadmath.so.0.0.0
+7ff0afae8000-7ff0afce7000 ---p 00035000 08:04 408382                     /usr/lib/x86_64-linux-gnu/libquadmath.so.0.0.0
+7ff0afce7000-7ff0afce8000 r--p 00034000 08:04 408382                     /usr/lib/x86_64-linux-gnu/libquadmath.so.0.0.0
+7ff0afce8000-7ff0afce9000 rw-p 00035000 08:04 408382                     /usr/lib/x86_64-linux-gnu/libquadmath.so.0.0.0
+7ff0afce9000-7ff0afdfd000 r-xp 00000000 08:04 393291                     /usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0
+7ff0afdfd000-7ff0afffd000 ---p 00114000 08:04 393291                     /usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0
+7ff0afffd000-7ff0afffe000 r--p 00114000 08:04 393291                     /usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0
+7ff0afffe000-7ff0b0000000 rw-p 00115000 08:04 393291                     /usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0
+7ff0b0000000-7ff0b0021000 rw-p 00000000 00:00 0 
+7ff0b0021000-7ff0b4000000 ---p 00000000 00:00 0 
+7ff0b4031000-7ff0b4032000 r-xp 00000000 08:04 262559                     /tmp/jblas6437487355034785101libjblas_arch_flavor.so (deleted)
+7ff0b4032000-7ff0b4231000 ---p 00001000 08:04 262559                     /tmp/jblas6437487355034785101libjblas_arch_flavor.so (deleted)
+7ff0b4231000-7ff0b4232000 rw-p 00000000 08:04 262559                     /tmp/jblas6437487355034785101libjblas_arch_flavor.so (deleted)
+7ff0b4232000-7ff0b4235000 ---p 00000000 00:00 0 
+7ff0b4235000-7ff0b4333000 rw-p 00000000 00:00 0 
+7ff0b4333000-7ff0b4334000 ---p 00000000 00:00 0 
+7ff0b4334000-7ff0b4b34000 rw-p 00000000 00:00 0 
+7ff0b4b34000-7ff0b4b35000 ---p 00000000 00:00 0 
+7ff0b4b35000-7ff0b5335000 rw-p 00000000 00:00 0 
+7ff0b5335000-7ff0b5336000 ---p 00000000 00:00 0 
+7ff0b5336000-7ff0b5b36000 rw-p 00000000 00:00 0 
+7ff0b5b36000-7ff0b5b60000 r-xp 00000000 08:04 1992226                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libdcpr.so
+7ff0b5b60000-7ff0b5d60000 ---p 0002a000 08:04 1992226                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libdcpr.so
+7ff0b5d60000-7ff0b5d63000 rw-p 0002a000 08:04 1992226                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libdcpr.so
+7ff0b5d63000-7ff0b5d66000 ---p 00000000 00:00 0 
+7ff0b5d66000-7ff0b5e64000 rw-p 00000000 00:00 0 
+7ff0b5e64000-7ff0b5e67000 ---p 00000000 00:00 0 
+7ff0b5e67000-7ff0b5f65000 rw-p 00000000 00:00 0 
+7ff0b5f65000-7ff0b5f68000 ---p 00000000 00:00 0 
+7ff0b5f68000-7ff0b6066000 rw-p 00000000 00:00 0 
+7ff0b6066000-7ff0b6069000 ---p 00000000 00:00 0 
+7ff0b6069000-7ff0b6167000 rw-p 00000000 00:00 0 
+7ff0b6167000-7ff0b616a000 ---p 00000000 00:00 0 
+7ff0b616a000-7ff0b6268000 rw-p 00000000 00:00 0 
+7ff0b6268000-7ff0b626b000 ---p 00000000 00:00 0 
+7ff0b626b000-7ff0b6369000 rw-p 00000000 00:00 0 
+7ff0b6369000-7ff0b636c000 ---p 00000000 00:00 0 
+7ff0b636c000-7ff0b646a000 rw-p 00000000 00:00 0 
+7ff0b646a000-7ff0b646d000 ---p 00000000 00:00 0 
+7ff0b646d000-7ff0b656b000 rw-p 00000000 00:00 0 
+7ff0b656b000-7ff0b656e000 ---p 00000000 00:00 0 
+7ff0b656e000-7ff0b666c000 rw-p 00000000 00:00 0 
+7ff0b666c000-7ff0b66c1000 r-xp 00000000 08:04 1992230                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libkcms.so
+7ff0b66c1000-7ff0b68c1000 ---p 00055000 08:04 1992230                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libkcms.so
+7ff0b68c1000-7ff0b68c3000 rw-p 00055000 08:04 1992230                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libkcms.so
+7ff0b68c3000-7ff0b68c6000 ---p 00000000 00:00 0 
+7ff0b68c6000-7ff0b69c4000 rw-p 00000000 00:00 0 
+7ff0b69c4000-7ff0b69c7000 ---p 00000000 00:00 0 
+7ff0b69c7000-7ff0b6ac5000 rw-p 00000000 00:00 0 
+7ff0b6ac5000-7ff0b6ac8000 ---p 00000000 00:00 0 
+7ff0b6ac8000-7ff0b6bc6000 rw-p 00000000 00:00 0 
+7ff0b6bc6000-7ff0b6bde000 r-xp 00000000 08:04 954723                     /lib/x86_64-linux-gnu/libresolv-2.15.so
+7ff0b6bde000-7ff0b6dde000 ---p 00018000 08:04 954723                     /lib/x86_64-linux-gnu/libresolv-2.15.so
+7ff0b6dde000-7ff0b6ddf000 r--p 00018000 08:04 954723                     /lib/x86_64-linux-gnu/libresolv-2.15.so
+7ff0b6ddf000-7ff0b6de0000 rw-p 00019000 08:04 954723                     /lib/x86_64-linux-gnu/libresolv-2.15.so
+7ff0b6de0000-7ff0b6de2000 rw-p 00000000 00:00 0 
+7ff0b6de2000-7ff0b6de9000 r-xp 00000000 08:04 954725                     /lib/x86_64-linux-gnu/libnss_dns-2.15.so
+7ff0b6de9000-7ff0b6fe8000 ---p 00007000 08:04 954725                     /lib/x86_64-linux-gnu/libnss_dns-2.15.so
+7ff0b6fe8000-7ff0b6fe9000 r--p 00006000 08:04 954725                     /lib/x86_64-linux-gnu/libnss_dns-2.15.so
+7ff0b6fe9000-7ff0b6fea000 rw-p 00007000 08:04 954725                     /lib/x86_64-linux-gnu/libnss_dns-2.15.so
+7ff0b6fea000-7ff0b6fec000 r-xp 00000000 08:04 917558                     /lib/libnss_mdns4_minimal.so.2
+7ff0b6fec000-7ff0b71eb000 ---p 00002000 08:04 917558                     /lib/libnss_mdns4_minimal.so.2
+7ff0b71eb000-7ff0b71ec000 r--p 00001000 08:04 917558                     /lib/libnss_mdns4_minimal.so.2
+7ff0b71ec000-7ff0b71ed000 rw-p 00002000 08:04 917558                     /lib/libnss_mdns4_minimal.so.2
+7ff0b71ed000-7ff0b721f000 r-xp 00000000 08:04 1992164                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libsunec.so
+7ff0b721f000-7ff0b741e000 ---p 00032000 08:04 1992164                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libsunec.so
+7ff0b741e000-7ff0b7424000 rw-p 00031000 08:04 1992164                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libsunec.so
+7ff0b7424000-7ff0b7434000 rw-p 00000000 00:00 0 
+7ff0b7434000-7ff0b7bb6000 rw-s 00000000 00:04 69435459                   /SYSV00000000 (deleted)
+7ff0b7bb6000-7ff0b7bbf000 r--s 00000000 08:04 2883809                    /var/cache/fontconfig/945677eb7aeaf62f1d50efc3fb3ec7d8-le64.cache-3
+7ff0b7c72000-7ff0b7c75000 ---p 00000000 00:00 0 
+7ff0b7c75000-7ff0b7d73000 rw-p 00000000 00:00 0 
+7ff0b7d73000-7ff0b7dc8000 rw-s 00000000 00:04 69468230                   /SYSV00000000 (deleted)
+7ff0b8000000-7ff0b8021000 rw-p 00000000 00:00 0 
+7ff0b8021000-7ff0bc000000 ---p 00000000 00:00 0 
+7ff0bc000000-7ff0bc021000 rw-p 00000000 00:00 0 
+7ff0bc021000-7ff0c0000000 ---p 00000000 00:00 0 
+7ff0c0000000-7ff0c0021000 rw-p 00000000 00:00 0 
+7ff0c0021000-7ff0c4000000 ---p 00000000 00:00 0 
+7ff0c4005000-7ff0c4006000 r--s 00000000 08:04 2889183                    /var/cache/fontconfig/c05880de57d1f5e948fdfacc138775d9-le64.cache-3
+7ff0c4006000-7ff0c400c000 r--s 00000000 08:04 2889126                    /var/cache/fontconfig/a755afe4a08bf5b97852ceb7400b47bc-le64.cache-3
+7ff0c400c000-7ff0c4015000 r--s 00000000 08:04 2889124                    /var/cache/fontconfig/6d41288fd70b0be22e8c3a91e032eec0-le64.cache-3
+7ff0c4015000-7ff0c4025000 r--s 00000000 08:04 2889117                    /var/cache/fontconfig/04aabc0a78ac019cf9454389977116d2-le64.cache-3
+7ff0c4025000-7ff0c4035000 r--s 00000000 08:04 2889005                    /var/cache/fontconfig/d52a8644073d54c13679302ca1180695-le64.cache-3
+7ff0c403e000-7ff0c4042000 r--s 0002d000 08:04 1991935                    /home/everyan/jdk1.7.0_45/jre/lib/ext/sunjce_provider.jar
+7ff0c4042000-7ff0c4043000 r--s 00003000 08:04 1992355                    /home/everyan/jdk1.7.0_45/jre/lib/ext/sunec.jar
+7ff0c4043000-7ff0c4046000 r--s 00037000 08:04 1992166                    /home/everyan/jdk1.7.0_45/jre/lib/ext/sunpkcs11.jar
+7ff0c4046000-7ff0c4048000 r--s 00019000 08:04 24249                      /home/everyan/jdk1.7.0_45/jre/lib/jce.jar
+7ff0c4103000-7ff0c4106000 ---p 00000000 00:00 0 
+7ff0c4106000-7ff0c4204000 rw-p 00000000 00:00 0 
+7ff0c4204000-7ff0c4207000 ---p 00000000 00:00 0 
+7ff0c4207000-7ff0c4305000 rw-p 00000000 00:00 0 
+7ff0c4305000-7ff0c4308000 ---p 00000000 00:00 0 
+7ff0c4308000-7ff0c4406000 rw-p 00000000 00:00 0 
+7ff0c4406000-7ff0c4409000 ---p 00000000 00:00 0 
+7ff0c4409000-7ff0c4507000 rw-p 00000000 00:00 0 
+7ff0c4507000-7ff0c450b000 r--s 00000000 08:04 2889181                    /var/cache/fontconfig/99e8ed0e538f840c565b6ed5dad60d56-le64.cache-3
+7ff0c450b000-7ff0c450f000 r--s 00000000 08:04 2889178                    /var/cache/fontconfig/2cd17615ca594fa2959ae173292e504c-le64.cache-3
+7ff0c450f000-7ff0c4510000 r--s 00000000 08:04 2889128                    /var/cache/fontconfig/e7071f4a29fa870f4323321c154eba04-le64.cache-3
+7ff0c4510000-7ff0c4513000 r--s 00000000 08:04 2889116                    /var/cache/fontconfig/385c0604a188198f04d133e54aba7fe7-le64.cache-3
+7ff0c4513000-7ff0c451f000 r--s 00000000 08:04 2888982                    /var/cache/fontconfig/089dead882dea3570ffc31a9898cfb69-le64.cache-3
+7ff0c4585000-7ff0c4588000 ---p 00000000 00:00 0 
+7ff0c4588000-7ff0c4686000 rw-p 00000000 00:00 0 
+7ff0c4686000-7ff0c4687000 r--s 00000000 08:04 2889127                    /var/cache/fontconfig/0d8c3b2ac0904cb8a57a757ad11a4a08-le64.cache-3
+7ff0c4687000-7ff0c4688000 r--s 00000000 08:04 2912131                    /var/cache/fontconfig/4794a0821666d79190d59a36cb4f44b5-le64.cache-3
+7ff0c4688000-7ff0c468b000 r--s 00000000 08:04 2889096                    /var/cache/fontconfig/8801497958630a81b71ace7c5f9b32a8-le64.cache-3
+7ff0c468b000-7ff0c4690000 r--s 00000000 08:04 2889091                    /var/cache/fontconfig/3047814df9a2f067bd2d96a2b9c36e5a-le64.cache-3
+7ff0c4690000-7ff0c469b000 r--s 00000000 08:04 2883805                    /var/cache/fontconfig/e13b20fdb08344e0e664864cc2ede53d-le64.cache-3
+7ff0c469b000-7ff0c469e000 ---p 00000000 00:00 0 
+7ff0c469e000-7ff0c479c000 rw-p 00000000 00:00 0 
+7ff0c479c000-7ff0c479f000 ---p 00000000 00:00 0 
+7ff0c479f000-7ff0c489d000 rw-p 00000000 00:00 0 
+7ff0c489d000-7ff0c48a0000 ---p 00000000 00:00 0 
+7ff0c48a0000-7ff0c499e000 rw-p 00000000 00:00 0 
+7ff0c499e000-7ff0c49a1000 ---p 00000000 00:00 0 
+7ff0c49a1000-7ff0c4a9f000 rw-p 00000000 00:00 0 
+7ff0c4a9f000-7ff0c4aa2000 ---p 00000000 00:00 0 
+7ff0c4aa2000-7ff0c4ba0000 rw-p 00000000 00:00 0 
+7ff0c4ba0000-7ff0c4ba8000 r-xp 00000000 08:04 1991953                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libmanagement.so
+7ff0c4ba8000-7ff0c4da7000 ---p 00008000 08:04 1991953                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libmanagement.so
+7ff0c4da7000-7ff0c4da8000 rw-p 00007000 08:04 1991953                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libmanagement.so
+7ff0c4da8000-7ff0c4da9000 r-xp 00000000 08:04 1992225                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libjawt.so
+7ff0c4da9000-7ff0c4fa8000 ---p 00001000 08:04 1992225                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libjawt.so
+7ff0c4fa8000-7ff0c4fa9000 rw-p 00000000 08:04 1992225                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libjawt.so
+7ff0c4fa9000-7ff0c4faa000 r--s 00000000 08:04 2889183                    /var/cache/fontconfig/c05880de57d1f5e948fdfacc138775d9-le64.cache-3
+7ff0c4faa000-7ff0c4fb3000 r--s 00000000 08:04 2883809                    /var/cache/fontconfig/945677eb7aeaf62f1d50efc3fb3ec7d8-le64.cache-3
+7ff0c4fb3000-7ff0c4fb7000 r--s 00000000 08:04 2889181                    /var/cache/fontconfig/99e8ed0e538f840c565b6ed5dad60d56-le64.cache-3
+7ff0c4fb7000-7ff0c4fbb000 r--s 00000000 08:04 2889178                    /var/cache/fontconfig/2cd17615ca594fa2959ae173292e504c-le64.cache-3
+7ff0c4fbb000-7ff0c4fbc000 r--s 00000000 08:04 2889128                    /var/cache/fontconfig/e7071f4a29fa870f4323321c154eba04-le64.cache-3
+7ff0c4fbc000-7ff0c4fbd000 r--s 00000000 08:04 2889127                    /var/cache/fontconfig/0d8c3b2ac0904cb8a57a757ad11a4a08-le64.cache-3
+7ff0c4fbd000-7ff0c4fc3000 r--s 00000000 08:04 2889126                    /var/cache/fontconfig/a755afe4a08bf5b97852ceb7400b47bc-le64.cache-3
+7ff0c4fc3000-7ff0c4fcc000 r--s 00000000 08:04 2889124                    /var/cache/fontconfig/6d41288fd70b0be22e8c3a91e032eec0-le64.cache-3
+7ff0c4fcc000-7ff0c4fdc000 r--s 00000000 08:04 2889117                    /var/cache/fontconfig/04aabc0a78ac019cf9454389977116d2-le64.cache-3
+7ff0c4fdc000-7ff0c4fdf000 r--s 00000000 08:04 2889116                    /var/cache/fontconfig/385c0604a188198f04d133e54aba7fe7-le64.cache-3
+7ff0c4fdf000-7ff0c4fe4000 r--s 00000000 08:04 2889036                    /var/cache/fontconfig/b47c4e1ecd0709278f4910c18777a504-le64.cache-3
+7ff0c4fe4000-7ff0c4ff4000 r--s 00000000 08:04 2889005                    /var/cache/fontconfig/d52a8644073d54c13679302ca1180695-le64.cache-3
+7ff0c4ff4000-7ff0c5000000 r--s 00000000 08:04 2888982                    /var/cache/fontconfig/089dead882dea3570ffc31a9898cfb69-le64.cache-3
+7ff0c5000000-7ff0c5001000 r--s 00000000 08:04 2889039                    /var/cache/fontconfig/b9d506c9ac06c20b433354fa67a72993-le64.cache-3
+7ff0c5001000-7ff0c5006000 r--s 00000000 08:04 2889036                    /var/cache/fontconfig/b47c4e1ecd0709278f4910c18777a504-le64.cache-3
+7ff0c509f000-7ff0c50b7000 rw-s 00000000 00:04 70582355                   /SYSV00000000 (deleted)
+7ff0c50b7000-7ff0c50d0000 rw-s 00000000 00:04 69697612                   /SYSV00000000 (deleted)
+7ff0c50d0000-7ff0c50f0000 rw-s f4e20000 00:05 14643                      /dev/ati/card0
+7ff0c50f0000-7ff0c50f2000 r-xp 00000000 08:04 20321                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/lib/linux-amd64/libjogl_awt.so
+7ff0c50f2000-7ff0c51f1000 ---p 00002000 08:04 20321                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/lib/linux-amd64/libjogl_awt.so
+7ff0c51f1000-7ff0c51f2000 rw-p 00001000 08:04 20321                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/lib/linux-amd64/libjogl_awt.so
+7ff0c51f2000-7ff0c51f6000 r-xp 00000000 08:04 396790                     /usr/lib/x86_64-linux-gnu/libXxf86vm.so.1.0.0
+7ff0c51f6000-7ff0c53f5000 ---p 00004000 08:04 396790                     /usr/lib/x86_64-linux-gnu/libXxf86vm.so.1.0.0
+7ff0c53f5000-7ff0c53f6000 r--p 00003000 08:04 396790                     /usr/lib/x86_64-linux-gnu/libXxf86vm.so.1.0.0
+7ff0c53f6000-7ff0c53f7000 rw-p 00004000 08:04 396790                     /usr/lib/x86_64-linux-gnu/libXxf86vm.so.1.0.0
+7ff0c53f7000-7ff0c54e6000 r-xp 00000000 08:04 20320                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/lib/linux-amd64/libjogl.so
+7ff0c54e6000-7ff0c55e6000 ---p 000ef000 08:04 20320                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/lib/linux-amd64/libjogl.so
+7ff0c55e6000-7ff0c55e7000 rw-p 000ef000 08:04 20320                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/lib/linux-amd64/libjogl.so
+7ff0c55e7000-7ff0c56aa000 r-xp 00000000 08:04 923836                     /usr/lib/fglrx/libGL.so.1.2
+7ff0c56aa000-7ff0c57a9000 ---p 000c3000 08:04 923836                     /usr/lib/fglrx/libGL.so.1.2
+7ff0c57a9000-7ff0c57d0000 rwxp 000c2000 08:04 923836                     /usr/lib/fglrx/libGL.so.1.2
+7ff0c57d0000-7ff0c57f0000 rwxp 00000000 00:00 0 
+7ff0c57f0000-7ff0c57f4000 r--s 00000000 08:04 2883788                    /var/cache/fontconfig/7ef2298fde41cc6eeb7af42e48b7d293-le64.cache-3
+7ff0c57f5000-7ff0c57fb000 rw-s 00000000 00:04 69861460                   /SYSV00000000 (deleted)
+7ff0c57fb000-7ff0c5800000 rw-s 00000000 00:04 70549586                   /SYSV00000000 (deleted)
+7ff0c5800000-7ff0c5801000 rw-s 00005000 00:05 14643                      /dev/ati/card0
+7ff0c5801000-7ff0c5803000 rw-s 00002000 00:05 14643                      /dev/ati/card0
+7ff0c5803000-7ff0c5808000 rw-s 00000000 00:04 70484043                   /SYSV00000000 (deleted)
+7ff0c5808000-7ff0c5809000 r-xp 00000000 08:04 20319                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/lib/linux-amd64/libgluegen-rt.so
+7ff0c5809000-7ff0c5908000 ---p 00001000 08:04 20319                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/lib/linux-amd64/libgluegen-rt.so
+7ff0c5908000-7ff0c5909000 rw-p 00000000 08:04 20319                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/lib/linux-amd64/libgluegen-rt.so
+7ff0c5909000-7ff0c5913000 r--s 00250000 08:04 24226                      /home/everyan/jdk1.7.0_45/jre/lib/resources.jar
+7ff0c5913000-7ff0c5914000 r--s 00000000 08:04 2912131                    /var/cache/fontconfig/4794a0821666d79190d59a36cb4f44b5-le64.cache-3
+7ff0c5914000-7ff0c5917000 r--s 00000000 08:04 2889096                    /var/cache/fontconfig/8801497958630a81b71ace7c5f9b32a8-le64.cache-3
+7ff0c5917000-7ff0c591c000 r--s 00000000 08:04 2889091                    /var/cache/fontconfig/3047814df9a2f067bd2d96a2b9c36e5a-le64.cache-3
+7ff0c591c000-7ff0c5927000 r--s 00000000 08:04 2883805                    /var/cache/fontconfig/e13b20fdb08344e0e664864cc2ede53d-le64.cache-3
+7ff0c5927000-7ff0c592b000 r--s 00000000 08:04 2883788                    /var/cache/fontconfig/7ef2298fde41cc6eeb7af42e48b7d293-le64.cache-3
+7ff0c592b000-7ff0c592e000 ---p 00000000 00:00 0 
+7ff0c592e000-7ff0c5a2c000 rw-p 00000000 00:00 0 
+7ff0c5a2c000-7ff0c5a2f000 ---p 00000000 00:00 0 
+7ff0c5a2f000-7ff0c5b2d000 rw-p 00000000 00:00 0 
+7ff0c5b2d000-7ff0c5b43000 r-xp 00000000 08:04 814295                     /tmp/jna/jna5726689756422294563.tmp (deleted)
+7ff0c5b43000-7ff0c5c42000 ---p 00016000 08:04 814295                     /tmp/jna/jna5726689756422294563.tmp (deleted)
+7ff0c5c42000-7ff0c5c44000 rw-p 00015000 08:04 814295                     /tmp/jna/jna5726689756422294563.tmp (deleted)
+7ff0c5c44000-7ff0c5c46000 r--s 00001000 08:04 1991984                    /home/everyan/jdk1.7.0_45/jre/lib/ext/dnsns.jar
+7ff0c5c46000-7ff0c5c4d000 r--s 0006f000 08:04 3246                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/ext/felix-4.0.2.jar
+7ff0c5c4d000-7ff0c5c4f000 r--s 00000000 08:04 3824768                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-libs-felix.jar
+7ff0c5c4f000-7ff0c5c8f000 r--s 0134d000 08:04 2889                       /home/everyan/NetBeansProjects/gephi-plugins/build/cluster/modules/ext/mtj-1.0-snapshot.jar
+7ff0c5c8f000-7ff0c5c92000 r--s 00727000 08:04 24300                      /home/everyan/NetBeansProjects/gephi-plugins/build/cluster/modules/ext/jblas-1.2.3.jar
+7ff0c5c92000-7ff0c5c93000 r--s 00016000 08:04 3824688                    /home/everyan/NetBeansProjects/gephi-plugins/build/cluster/modules/org-everyxs-test.jar
+7ff0c5c93000-7ff0c5c95000 r--s 0000d000 08:04 3824893                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-attributes.jar
+7ff0c5c95000-7ff0c5c97000 r--s 00009000 08:04 3824895                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-clustering-plugin.jar
+7ff0c5c97000-7ff0c5ca7000 r--s 00082000 08:04 3824899                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-datalab-plugin.jar
+7ff0c5ca7000-7ff0c5cac000 r--s 00020000 08:04 3824901                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-branding.jar
+7ff0c5cac000-7ff0c5cae000 r--s 0000b000 08:04 3824902                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-clustering.jar
+7ff0c5cae000-7ff0c5caf000 r--s 00003000 08:04 3824894                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-clustering-api.jar
+7ff0c5caf000-7ff0c5cb1000 r--s 00006000 08:04 3824944                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-context.jar
+7ff0c5cb1000-7ff0c5cb6000 r--s 0002e000 08:04 3824903                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-datalab.jar
+7ff0c5cb6000-7ff0c5cba000 r--s 0001a000 08:04 3824904                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-filters.jar
+7ff0c5cba000-7ff0c5cbc000 r--s 00004000 08:04 3824905                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-generate.jar
+7ff0c5cbc000-7ff0c5cbe000 r--s 0000c000 08:04 3824906                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-hierarchy.jar
+7ff0c5cbe000-7ff0c5cc0000 r--s 00010000 08:04 3824907                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-import.jar
+7ff0c5cc0000-7ff0c5cc2000 r--s 0000b000 08:04 3824909                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-layout.jar
+7ff0c5cc2000-7ff0c5cc4000 r--s 0000a000 08:04 3824910                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-partition.jar
+7ff0c5cc4000-7ff0c5cc7000 r--s 0001a000 08:04 3824912                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-preview.jar
+7ff0c5cc7000-7ff0c5cca000 r--s 0000f000 08:04 3824908                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-io-export.jar
+7ff0c5cca000-7ff0c5ccb000 r--s 00003000 08:04 3824913                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-progress.jar
+7ff0c5ccb000-7ff0c5cce000 r--s 0001b000 08:04 3824915                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-ranking.jar
+7ff0c5cce000-7ff0c5cd0000 r--s 00003000 08:04 3824945                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-recent-files.jar
+7ff0c5cd0000-7ff0c5cd1000 r--s 00006000 08:04 3824916                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-spigot.jar
+7ff0c5cd1000-7ff0c5cd4000 r--s 00015000 08:04 3824917                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-statistics.jar
+7ff0c5cd4000-7ff0c5cd7000 r--s 0001a000 08:04 3824918                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-timeline.jar
+7ff0c5cd7000-7ff0c5cd9000 r--s 0000b000 08:04 3824919                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-tools.jar
+7ff0c5cd9000-7ff0c5cdc000 r--s 00017000 08:04 3824920                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-directory-chooser.jar
+7ff0c5cdc000-7ff0c5cde000 r--s 00008000 08:04 3824922                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-dynamic-impl.jar
+7ff0c5cde000-7ff0c5ce1000 r--s 0000e000 08:04 3824923                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-export-plugin-ui.jar
+7ff0c5ce1000-7ff0c5ce3000 r--s 0000c000 08:04 3824925                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-filters-impl.jar
+7ff0c5ce3000-7ff0c5ce9000 r--s 0001c000 08:04 3824926                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-filters-plugin-ui.jar
+7ff0c5ce9000-7ff0c5ceb000 r--s 0000e000 08:04 3824911                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-perspective.jar
+7ff0c5ceb000-7ff0c5cf2000 r--s 0002d000 08:04 3824927                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-filters-plugin.jar
+7ff0c5cf2000-7ff0c5cf4000 r--s 00005000 08:04 3824924                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-filters-api.jar
+7ff0c5cf4000-7ff0c5cf6000 r--s 00003000 08:04 3824928                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-generator-plugin-ui.jar
+7ff0c5cf6000-7ff0c5cf8000 r--s 00000000 08:04 3824929                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-gephi-branding.jar
+7ff0c5cf8000-7ff0c5cfc000 r--s 0002a000 08:04 3824931                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-graph-dhns.jar
+7ff0c5cfc000-7ff0c5cff000 r--s 0000b000 08:04 3824932                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-import-plugin-ui.jar
+7ff0c5cff000-7ff0c5d02000 r--s 00014000 08:04 3824934                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-io-exporter-plugin.jar
+7ff0c5d02000-7ff0c5d03000 r--s 00004000 08:04 3824937                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-io-generator-plugin.jar
+7ff0c5d03000-7ff0c5d04000 r--s 00003000 08:04 3824936                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-io-generator-api.jar
+7ff0c5d04000-7ff0c5d07000 r--s 00028000 08:04 3824939                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-io-importer-plugin.jar
+7ff0c5d07000-7ff0c5d0f000 r--s 0003e000 08:04 3824942                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-layout-plugin.jar
+7ff0c5d0f000-7ff0c5d11000 r--s 00008000 08:04 3824941                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-layout-api.jar
+7ff0c5d11000-7ff0c5d14000 r--s 00009000 08:04 3824950                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-partition-plugin-ui.jar
+7ff0c5d14000-7ff0c5d16000 r--s 00003000 08:04 3824951                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-partition-plugin.jar
+7ff0c5d16000-7ff0c5d18000 r--s 00009000 08:04 3824949                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-partition-api.jar
+7ff0c5d18000-7ff0c5d1a000 r--s 00003000 08:04 3824952                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-perspective-api.jar
+7ff0c5d1a000-7ff0c5d1c000 r--s 00009000 08:04 3824954                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-preview-export-ui.jar
+7ff0c5d1c000-7ff0c5d1d000 r--s 00006000 08:04 3824935                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-io-exporter-preview.jar
+7ff0c5d1d000-7ff0c5d1f000 r--s 00006000 08:04 3824933                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-io-exporter-api.jar
+7ff0c5d1f000-7ff0c5d22000 r--s 00010000 08:04 3824955                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-preview-plugin.jar
+7ff0c5d22000-7ff0c5d26000 r--s 0002d000 08:04 3824953                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-preview-api.jar
+7ff0c5d26000-7ff0c5d28000 r--s 00006000 08:04 3824956                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-processor-plugin-ui.jar
+7ff0c5d28000-7ff0c5d29000 r--s 00008000 08:04 3824940                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-io-processor-plugin.jar
+7ff0c5d29000-7ff0c5d2b000 r--s 00003000 08:04 3824958                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-project-ui.jar
+7ff0c5d2b000-7ff0c5d2d000 r--s 0000a000 08:04 3824960                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-ranking-plugin-ui.jar
+7ff0c5d2d000-7ff0c5d2f000 r--s 0000a000 08:04 3824961                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-ranking-plugin.jar
+7ff0c5d2f000-7ff0c5d31000 r--s 00005000 08:04 3824962                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-settings-upgrader.jar
+7ff0c5d31000-7ff0c5d34000 r--s 0001c000 08:04 20350                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/com.toedter/jcalendar-1.3.3.jar
+7ff0c5d34000-7ff0c5d37000 r--s 00012000 08:04 3824948                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-spigot-plugin-ui.jar
+7ff0c5d37000-7ff0c5d39000 r--s 0000e000 08:04 20353                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/javax.activation/activation-1.1.jar
+7ff0c5d39000-7ff0c5d41000 r--s 00075000 08:04 20346                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/com.sun.mail/javax.mail-1.4.5.jar
+7ff0c5d41000-7ff0c5d43000 r--s 0000c000 08:04 3824963                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-spigot-plugin.jar
+7ff0c5d43000-7ff0c5d46000 r--s 00016000 08:04 3824964                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-spline-editor.jar
+7ff0c5d46000-7ff0c5d48000 r--s 00007000 08:04 3824959                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-ranking-api.jar
+7ff0c5d48000-7ff0c5d4b000 r--s 0001b000 08:04 3824966                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-statistics-plugin-ui.jar
+7ff0c5d4b000-7ff0c5d4f000 r--s 0001e000 08:04 3824967                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-statistics-plugin.jar
+7ff0c5d4f000-7ff0c5d51000 r--s 00008000 08:04 3824965                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-statistics-api.jar
+7ff0c5d51000-7ff0c5d53000 r--s 00006000 08:04 3824968                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-timeline.jar
+7ff0c5d53000-7ff0c5d57000 r--s 00020000 08:04 3824970                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-tools-plugin.jar
+7ff0c5d57000-7ff0c5d58000 r--s 00004000 08:04 3824892                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-algorithms-plugin.jar
+7ff0c5d58000-7ff0c5d5a000 r--s 00005000 08:04 3824973                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-ui-propertyeditor.jar
+7ff0c5d5a000-7ff0c5d65000 r--s 00108000 08:04 20347                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/com.sun.opengl/jogl-1.1.1-a.jar
+7ff0c5d65000-7ff0c5d66000 r--s 00004000 08:04 20345                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/com.sun.gluegen.runtime/gluegen-rt-1.1.1-a.jar
+7ff0c5d66000-7ff0c5d73000 r--s 0007b000 08:04 3824979                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-visualization.jar
+7ff0c5d73000-7ff0c5d75000 r--s 00009000 08:04 3824946                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-gleem.jar
+7ff0c5d75000-7ff0c5d77000 r--s 00006000 08:04 3824975                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-utils-collection.jar
+7ff0c5d77000-7ff0c5d79000 r--s 00003000 08:04 3824969                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-tools-api.jar
+7ff0c5d79000-7ff0c5d7b000 r--s 00003000 08:04 3824978                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-visualization-api.jar
+7ff0c5d7b000-7ff0c5d7e000 r--s 00015000 08:04 3824898                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-datalab-api.jar
+7ff0c5d7e000-7ff0c5d80000 r--s 00029000 08:04 3824980                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-welcome-screen.jar
+7ff0c5d80000-7ff0c5d82000 r--s 00008000 08:04 3824914                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-desktop-project.jar
+7ff0c5d82000-7ff0c5d83000 r--s 00003000 08:04 3824947                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-mostrecentfiles-api.jar
+7ff0c5d83000-7ff0c5d87000 r--s 00014000 08:04 3824938                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-io-importer-api.jar
+7ff0c5d87000-7ff0c5d89000 r--s 00005000 08:04 3824921                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-dynamic-api.jar
+7ff0c5d89000-7ff0c5d94000 r--s 000cb000 08:04 20349                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/com.teradata/teradata-jdbc-14.00.00.21.jar
+7ff0c5d94000-7ff0c5d9b000 r--s 000ba000 08:04 20357                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/mysql/mysql-connector-java-5.1.18.jar
+7ff0c5d9b000-7ff0c5da2000 r--s 0007d000 08:04 20343                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/com.microsoft.sqlserver/sqljdbc4-3.0.1301.101.jar
+7ff0c5da2000-7ff0c5da8000 r--s 00081000 08:04 20384                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/postgresql/postgresql-9.1-901-1.jdbc4.jar
+7ff0c5da8000-7ff0c5da9000 r--s 00000000 08:04 20348                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/com.teradata/teradata-config-14.00.00.21.jar
+7ff0c5da9000-7ff0c5dae000 r--s 00309000 08:04 20383                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.xerial/sqlite-jdbc-3.7.2.jar
+7ff0c5dae000-7ff0c5db0000 r--s 00004000 08:04 3824900                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-db-drivers.jar
+7ff0c5db0000-7ff0c5db2000 r--s 00006000 08:04 3824981                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-workspace-ui.jar
+7ff0c5db2000-7ff0c5db7000 r--s 00030000 08:04 3824971                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-ui-components.jar
+7ff0c5db7000-7ff0c5dba000 r--s 00019000 08:04 20360                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/net.java.dev/timingframework-1.1.jar
+7ff0c5dba000-7ff0c5dbc000 r--s 00005000 08:04 20339                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/com.connectina.swing/fontchooser-1.0.jar
+7ff0c5dbc000-7ff0c5dbf000 r--s 0002f000 08:04 20344                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/com.miglayout/miglayout-3.7.1.jar
+7ff0c5dbf000-7ff0c5dc1000 r--s 00002000 08:04 20381                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.swinglabs/swing-worker-1.1.jar
+7ff0c5dc1000-7ff0c5dce000 r--s 0008d000 08:04 20366                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.pushingpixels/flamingo-5.0-gephi.jar
+7ff0c5dce000-7ff0c5dd2000 r--s 00017000 08:04 20367                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.pushingpixels/trident-1.3.jar
+7ff0c5dd2000-7ff0c5ded000 r--s 00139000 08:04 20382                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.swinglabs/swingx-1.6.1.jar
+7ff0c5ded000-7ff0c5df4000 r--s 0004d000 08:04 20342                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/com.jhlabs/filters-2.0.235.jar
+7ff0c5df4000-7ff0c5dfb000 r--s 00094000 08:04 20363                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.jdesktop/beansbinding-1.2.1.jar
+7ff0c5dfb000-7ff0c5dfe000 r--s 00016000 08:04 20358                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/net.java.dev/colorchooser-1.0.jar
+7ff0c5dfe000-7ff0c5dff000 r--s 00000000 08:04 3824972                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-ui-library-wrapper.jar
+7ff0c5dff000-7ff0c5e01000 r--s 00009000 08:04 3824974                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-ui-utils.jar
+7ff0c5e01000-7ff0c5e04000 r--s 00017000 08:04 20364                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.netbeans/simple-validation-1.0.jar
+7ff0c5e04000-7ff0c5e06000 r--s 00003000 08:04 3824943                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-lib-validation.jar
+7ff0c5e06000-7ff0c5e09000 r--s 00018000 08:04 3824897                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-data-attributes-api.jar
+7ff0c5e09000-7ff0c5e0c000 r--s 00005000 08:04 3824930                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-graph-api.jar
+7ff0c5e0c000-7ff0c5e0e000 r--s 00008000 08:04 3824977                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-utils.jar
+7ff0c5e0e000-7ff0c5e16000 r--s 0005b000 08:04 20369                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.apache.xmlgraphics/batik-awt-util-1.7.jar
+7ff0c5e16000-7ff0c5e17000 r--s 00002000 08:04 20373                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.apache.xmlgraphics/batik-ext-1.7.jar
+7ff0c5e17000-7ff0c5e19000 r--s 00010000 08:04 20375                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.apache.xmlgraphics/batik-parser-1.7.jar
+7ff0c5e19000-7ff0c5e2a000 r--s 0014c000 08:04 20355                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/jfree/jfreechart-1.0.13.jar
+7ff0c5e2a000-7ff0c5e34000 r--s 0006e000 08:04 20354                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/jfree/jcommon-1.0.16.jar
+7ff0c5e34000-7ff0c5e3b000 r--s 00045000 08:04 20371                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.apache.xmlgraphics/batik-css-1.7.jar
+7ff0c5e3b000-7ff0c5e3e000 r--s 00015000 08:04 20368                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.apache.xmlgraphics/batik-anim-1.7.jar
+7ff0c5e3e000-7ff0c5e4e000 r--s 0007c000 08:04 20356                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/joda-time/joda-time-2.1.jar
+7ff0c5e4e000-7ff0c5e54000 r--s 00033000 08:04 20351                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/commons-codec/commons-codec-1.6.jar
+7ff0c5e54000-7ff0c5e57000 r--s 0001b000 08:04 20378                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.apache.xmlgraphics/batik-transcoder-1.7.jar
+7ff0c5e57000-7ff0c5e68000 r--s 00197000 08:04 20341                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/com.itextpdf/itextpdf-5.2.0.jar
+7ff0c5e68000-7ff0c5e6b000 r--s 0001d000 08:04 20379                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.apache.xmlgraphics/batik-util-1.7.jar
+7ff0c5e6b000-7ff0c5e7a000 r--s 000ba000 08:04 20352                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/gnu.trove/trove-2.1.0.jar
+7ff0c5e7a000-7ff0c5e7b000 r--s 00007000 08:04 20380                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.apache.xmlgraphics/batik-xml-1.7.jar
+7ff0c5e7b000-7ff0c5e7d000 r--s 0002b000 08:04 20365                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.processing/core-1.5.1.jar
+7ff0c5e7d000-7ff0c5ea2000 r--s 002dc000 08:04 20385                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/xalan/xalan-2.6.0.jar
+7ff0c5ea2000-7ff0c5ea4000 r--s 0000d000 08:04 20376                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.apache.xmlgraphics/batik-script-1.7.jar
+7ff0c5ea4000-7ff0c5ea6000 r--s 00002000 08:04 20361                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/net.sourceforge.javacsv/javacsv-2.0.jar
+7ff0c5ea6000-7ff0c5eab000 r--s 00010000 08:04 20386                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/xml-apis/xml-apis-ext-1.3.04.jar
+7ff0c5eab000-7ff0c5eae000 r--s 0001d000 08:04 20359                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/net.java.dev/stax-utils-snapshot-20100402.jar
+7ff0c5eae000-7ff0c5eb2000 r--s 00024000 08:04 20362                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.apache.commons/commons-compress-1.1.jar
+7ff0c5eb2000-7ff0c5eb6000 r--s 00038000 08:04 20374                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.apache.xmlgraphics/batik-gvt-1.7.jar
+7ff0c5eb6000-7ff0c5eba000 r--s 00027000 08:04 20372                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.apache.xmlgraphics/batik-dom-1.7.jar
+7ff0c5eba000-7ff0c5ec8000 r--s 0008f000 08:04 20340                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/com.google.collections/google-collections-1.0.jar
+7ff0c5ec8000-7ff0c5ed2000 r--s 0007f000 08:04 20370                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.apache.xmlgraphics/batik-bridge-1.7.jar
+7ff0c5ed2000-7ff0c5edf000 r--s 00086000 08:04 20377                      /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/ext/org.apache.xmlgraphics/batik-svg-dom-1.7.jar
+7ff0c5edf000-7ff0c5ee0000 r--s 00000000 08:04 3824896                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-core-library-wrapper.jar
+7ff0c5ee0000-7ff0c5ee3000 r--s 0000f000 08:04 3824957                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-project-api.jar
+7ff0c5ee3000-7ff0c5ee4000 r--s 00005000 08:04 3824976                    /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/org-gephi-utils-longtask.jar
+7ff0c5ee4000-7ff0c5ee5000 r--s 00009000 08:04 3824760                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-core-io-ui.jar
+7ff0c5ee5000-7ff0c5eef000 r--s 000d5000 08:04 3258                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/ext/platform-3.4.0.jar
+7ff0c5eef000-7ff0c5ef0000 r--s 00001000 08:04 3824762                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-core-nativeaccess.jar
+7ff0c5ef0000-7ff0c5ef2000 r--s 0000c000 08:04 3824763                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-core-netigso.jar
+7ff0c5ef2000-7ff0c5ef5000 r--s 00054000 08:04 3824814                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-core-output2.jar
+7ff0c5ef5000-7ff0c5ef6000 r--s 00000000 08:04 3824777                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-core-kit.jar
+7ff0c5ef6000-7ff0c5ef7000 r--s 00000000 08:04 3528                       /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/locale/org-netbeans-core-windows_gephi.jar
+7ff0c5ef7000-7ff0c5f06000 r--s 00205000 08:04 3824766                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-core-windows.jar
+7ff0c5f06000-7ff0c5f0d000 r--s 0004b000 08:04 3257                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/ext/osgi.core-4.3.jar
+7ff0c5f0d000-7ff0c5f14000 r--s 0002e000 08:04 3256                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/ext/osgi.cmpn-4.2.jar
+7ff0c5f14000-7ff0c5f15000 r--s 00000000 08:04 3824772                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-libs-osgi.jar
+7ff0c5f15000-7ff0c5f1d000 r--s 000ec000 08:04 3824776                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-autoupdate-ui.jar
+7ff0c5f1d000-7ff0c5f22000 r--s 0005a000 08:04 3824765                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-core-ui.jar
+7ff0c5f22000-7ff0c5f24000 r--s 0003c000 08:04 3264                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/ext/updater.jar
+7ff0c5f24000-7ff0c5f2a000 r--s 000af000 08:04 3824775                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-autoupdate-services.jar
+7ff0c5f2a000-7ff0c5f2c000 r--s 0000b000 08:04 3824815                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-editor-mimelookup-impl.jar
+7ff0c5f2c000-7ff0c5f30000 r--s 00038000 08:04 3824779                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-favorites.jar
+7ff0c5f30000-7ff0c5f32000 r--s 00010000 08:04 3824781                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-keyring-impl.jar
+7ff0c5f32000-7ff0c5f33000 r--s 00002000 08:04 3824783                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-masterfs-linux.jar
+7ff0c5f33000-7ff0c5f37000 r--s 000f1000 08:04 3248                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/ext/jna-3.4.0.jar
+7ff0c5f37000-7ff0c5f38000 r--s 00001000 08:04 3824769                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-libs-jna.jar
+7ff0c5f38000-7ff0c5f3d000 r--s 0006b000 08:04 3824787                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-masterfs.jar
+7ff0c5f3d000-7ff0c5f41000 r--s 00052000 08:04 3824790                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-options-keymap.jar
+7ff0c5f41000-7ff0c5f45000 r--s 00065000 08:04 3824789                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-options-api.jar
+7ff0c5f45000-7ff0c5f4b000 r--s 00094000 08:04 3824767                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-core.jar
+7ff0c5f4b000-7ff0c5f4d000 r--s 00003000 08:04 3824782                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-keyring.jar
+7ff0c5f4d000-7ff0c5f51000 r--s 0003e000 08:04 3824816                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-print.jar
+7ff0c5f51000-7ff0c5f54000 r--s 00020000 08:04 3824791                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-progress-ui.jar
+7ff0c5f54000-7ff0c5f56000 r--s 00019000 08:04 3824794                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-sendopts.jar
+7ff0c5f56000-7ff0c5f59000 r--s 0003e000 08:04 3824795                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-settings.jar
+7ff0c5f59000-7ff0c5fe4000 rw-s 00000000 00:04 69402688                   /SYSV00000000 (deleted)
+7ff0c5fe4000-7ff0c606f000 rw-s 00000000 00:04 69369905                   /SYSV00000000 (deleted)
+7ff0c606f000-7ff0c60d7000 r-xp 00000000 08:04 1992293                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libt2k.so
+7ff0c60d7000-7ff0c62d7000 ---p 00068000 08:04 1992293                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libt2k.so
+7ff0c62d7000-7ff0c62de000 rw-p 00068000 08:04 1992293                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libt2k.so
+7ff0c62de000-7ff0c62ee000 rw-p 00000000 00:00 0 
+7ff0c62ee000-7ff0c6303000 r-xp 00000000 08:04 921170                     /lib/x86_64-linux-gnu/libgcc_s.so.1
+7ff0c6303000-7ff0c6502000 ---p 00015000 08:04 921170                     /lib/x86_64-linux-gnu/libgcc_s.so.1
+7ff0c6502000-7ff0c6503000 r--p 00014000 08:04 921170                     /lib/x86_64-linux-gnu/libgcc_s.so.1
+7ff0c6503000-7ff0c6504000 rw-p 00015000 08:04 921170                     /lib/x86_64-linux-gnu/libgcc_s.so.1
+7ff0c6504000-7ff0c6564000 r-xp 00000000 08:04 1991934                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libfontmanager.so
+7ff0c6564000-7ff0c6763000 ---p 00060000 08:04 1991934                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libfontmanager.so
+7ff0c6763000-7ff0c6767000 rw-p 0005f000 08:04 1991934                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libfontmanager.so
+7ff0c6767000-7ff0c6778000 rw-p 00000000 00:00 0 
+7ff0c6778000-7ff0c677b000 ---p 00000000 00:00 0 
+7ff0c677b000-7ff0c6879000 rw-p 00000000 00:00 0 
+7ff0c6879000-7ff0c687c000 ---p 00000000 00:00 0 
+7ff0c687c000-7ff0c697a000 rw-p 00000000 00:00 0 
+7ff0c697a000-7ff0c697d000 ---p 00000000 00:00 0 
+7ff0c697d000-7ff0c6a7b000 rw-p 00000000 00:00 0 
+7ff0c6a7b000-7ff0c6a80000 r-xp 00000000 08:04 394113                     /usr/lib/x86_64-linux-gnu/libXfixes.so.3.1.0
+7ff0c6a80000-7ff0c6c7f000 ---p 00005000 08:04 394113                     /usr/lib/x86_64-linux-gnu/libXfixes.so.3.1.0
+7ff0c6c7f000-7ff0c6c80000 r--p 00004000 08:04 394113                     /usr/lib/x86_64-linux-gnu/libXfixes.so.3.1.0
+7ff0c6c80000-7ff0c6c81000 rw-p 00005000 08:04 394113                     /usr/lib/x86_64-linux-gnu/libXfixes.so.3.1.0
+7ff0c6c81000-7ff0c6c8a000 r-xp 00000000 08:04 396770                     /usr/lib/x86_64-linux-gnu/libXcursor.so.1.0.2
+7ff0c6c8a000-7ff0c6e89000 ---p 00009000 08:04 396770                     /usr/lib/x86_64-linux-gnu/libXcursor.so.1.0.2
+7ff0c6e89000-7ff0c6e8a000 r--p 00008000 08:04 396770                     /usr/lib/x86_64-linux-gnu/libXcursor.so.1.0.2
+7ff0c6e8a000-7ff0c6e8b000 rw-p 00009000 08:04 396770                     /usr/lib/x86_64-linux-gnu/libXcursor.so.1.0.2
+7ff0c6e8b000-7ff0c6e8e000 ---p 00000000 00:00 0 
+7ff0c6e8e000-7ff0c6f8c000 rw-p 00000000 00:00 0 
+7ff0c6f8c000-7ff0c6f8f000 ---p 00000000 00:00 0 
+7ff0c6f8f000-7ff0c708d000 rw-p 00000000 00:00 0 
+7ff0c708d000-7ff0c7090000 ---p 00000000 00:00 0 
+7ff0c7090000-7ff0c718e000 rw-p 00000000 00:00 0 
+7ff0c718e000-7ff0c7191000 ---p 00000000 00:00 0 
+7ff0c7191000-7ff0c728f000 rw-p 00000000 00:00 0 
+7ff0c728f000-7ff0c7294000 r-xp 00000000 08:04 400788                     /usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0
+7ff0c7294000-7ff0c7493000 ---p 00005000 08:04 400788                     /usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0
+7ff0c7493000-7ff0c7494000 r--p 00004000 08:04 400788                     /usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0
+7ff0c7494000-7ff0c7495000 rw-p 00005000 08:04 400788                     /usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0
+7ff0c7495000-7ff0c7497000 r-xp 00000000 08:04 400777                     /usr/lib/x86_64-linux-gnu/libXau.so.6.0.0
+7ff0c7497000-7ff0c7696000 ---p 00002000 08:04 400777                     /usr/lib/x86_64-linux-gnu/libXau.so.6.0.0
+7ff0c7696000-7ff0c7697000 r--p 00001000 08:04 400777                     /usr/lib/x86_64-linux-gnu/libXau.so.6.0.0
+7ff0c7697000-7ff0c7698000 rw-p 00002000 08:04 400777                     /usr/lib/x86_64-linux-gnu/libXau.so.6.0.0
+7ff0c7698000-7ff0c76b5000 r-xp 00000000 08:04 393663                     /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7ff0c76b5000-7ff0c78b4000 ---p 0001d000 08:04 393663                     /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7ff0c78b4000-7ff0c78b5000 r--p 0001c000 08:04 393663                     /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7ff0c78b5000-7ff0c78b6000 rw-p 0001d000 08:04 393663                     /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7ff0c78b6000-7ff0c78c4000 r-xp 00000000 08:04 396775                     /usr/lib/x86_64-linux-gnu/libXi.so.6.1.0
+7ff0c78c4000-7ff0c7ac3000 ---p 0000e000 08:04 396775                     /usr/lib/x86_64-linux-gnu/libXi.so.6.1.0
+7ff0c7ac3000-7ff0c7ac4000 r--p 0000d000 08:04 396775                     /usr/lib/x86_64-linux-gnu/libXi.so.6.1.0
+7ff0c7ac4000-7ff0c7ac5000 rw-p 0000e000 08:04 396775                     /usr/lib/x86_64-linux-gnu/libXi.so.6.1.0
+7ff0c7ac5000-7ff0c7aca000 r-xp 00000000 08:04 396785                     /usr/lib/x86_64-linux-gnu/libXtst.so.6.1.0
+7ff0c7aca000-7ff0c7cc9000 ---p 00005000 08:04 396785                     /usr/lib/x86_64-linux-gnu/libXtst.so.6.1.0
+7ff0c7cc9000-7ff0c7cca000 r--p 00004000 08:04 396785                     /usr/lib/x86_64-linux-gnu/libXtst.so.6.1.0
+7ff0c7cca000-7ff0c7ccb000 rw-p 00005000 08:04 396785                     /usr/lib/x86_64-linux-gnu/libXtst.so.6.1.0
+7ff0c7ccb000-7ff0c7dfb000 r-xp 00000000 08:04 394364                     /usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+7ff0c7dfb000-7ff0c7ffb000 ---p 00130000 08:04 394364                     /usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+7ff0c7ffb000-7ff0c7ffc000 r--p 00130000 08:04 394364                     /usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+7ff0c7ffc000-7ff0c8000000 rw-p 00131000 08:04 394364                     /usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+7ff0c8000000-7ff0c8021000 rw-p 00000000 00:00 0 
+7ff0c8021000-7ff0cc000000 ---p 00000000 00:00 0 
+7ff0cc000000-7ff0cc001000 r--s 00000000 08:04 2889040                    /var/cache/fontconfig/56cf4f4769d0f4abc89a4895d7bd3ae1-le64.cache-3
+7ff0cc001000-7ff0cc002000 r--s 00000000 08:04 2889040                    /var/cache/fontconfig/56cf4f4769d0f4abc89a4895d7bd3ae1-le64.cache-3
+7ff0cc002000-7ff0cc004000 r--s 00022000 08:04 3824797                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-spi-quicksearch.jar
+7ff0cc004000-7ff0cc007000 r--s 00037000 08:04 3824799                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-swing-plaf.jar
+7ff0cc007000-7ff0cc011000 r--s 00149000 08:04 3824808                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-openide-loaders.jar
+7ff0cc011000-7ff0cc01e000 r--s 001af000 08:04 3824806                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-openide-explorer.jar
+7ff0cc01e000-7ff0cc027000 r-xp 00000000 08:04 396767                     /usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0
+7ff0cc027000-7ff0cc226000 ---p 00009000 08:04 396767                     /usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0
+7ff0cc226000-7ff0cc227000 r--p 00008000 08:04 396767                     /usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0
+7ff0cc227000-7ff0cc228000 rw-p 00009000 08:04 396767                     /usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0
+7ff0cc228000-7ff0cc238000 r-xp 00000000 08:04 396243                     /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0
+7ff0cc238000-7ff0cc437000 ---p 00010000 08:04 396243                     /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0
+7ff0cc437000-7ff0cc438000 r--p 0000f000 08:04 396243                     /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0
+7ff0cc438000-7ff0cc439000 rw-p 00010000 08:04 396243                     /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0
+7ff0cc439000-7ff0cc489000 r-xp 00000000 08:04 1991981                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/xawt/libmawt.so
+7ff0cc489000-7ff0cc689000 ---p 00050000 08:04 1991981                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/xawt/libmawt.so
+7ff0cc689000-7ff0cc68d000 rw-p 00050000 08:04 1991981                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/xawt/libmawt.so
+7ff0cc68d000-7ff0cc68e000 rw-p 00000000 00:00 0 
+7ff0cc68e000-7ff0cc730000 r-xp 00000000 08:04 1992294                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libawt.so
+7ff0cc730000-7ff0cc930000 ---p 000a2000 08:04 1992294                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libawt.so
+7ff0cc930000-7ff0cc93c000 rw-p 000a2000 08:04 1992294                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libawt.so
+7ff0cc93c000-7ff0cc960000 rw-p 00000000 00:00 0 
+7ff0cc960000-7ff0cc963000 ---p 00000000 00:00 0 
+7ff0cc963000-7ff0cca61000 rw-p 00000000 00:00 0 
+7ff0cca61000-7ff0cca64000 ---p 00000000 00:00 0 
+7ff0cca64000-7ff0ccb62000 rw-p 00000000 00:00 0 
+7ff0ccb62000-7ff0ccbcd000 r--s 00e19000 08:04 3825870                    /home/everyan/jdk1.7.0_45/lib/tools.jar
+7ff0ccbcd000-7ff0ccbe3000 r-xp 00000000 08:04 1992292                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libnet.so
+7ff0ccbe3000-7ff0ccde3000 ---p 00016000 08:04 1992292                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libnet.so
+7ff0ccde3000-7ff0ccde4000 rw-p 00016000 08:04 1992292                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libnet.so
+7ff0ccde4000-7ff0ccdf4000 r-xp 00000000 08:04 1992291                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libnio.so
+7ff0ccdf4000-7ff0ccff4000 ---p 00010000 08:04 1992291                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libnio.so
+7ff0ccff4000-7ff0ccff5000 rw-p 00010000 08:04 1992291                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libnio.so
+7ff0ccff5000-7ff0ccff6000 ---p 00000000 00:00 0 
+7ff0ccff6000-7ff0cd0f6000 rw-p 00000000 00:00 0 
+7ff0cd0f6000-7ff0cd0f9000 ---p 00000000 00:00 0 
+7ff0cd0f9000-7ff0cd1f7000 rw-p 00000000 00:00 0 
+7ff0cd1f7000-7ff0cd1fa000 ---p 00000000 00:00 0 
+7ff0cd1fa000-7ff0cd2f8000 rw-p 00000000 00:00 0 
+7ff0cd2f8000-7ff0cd2fb000 ---p 00000000 00:00 0 
+7ff0cd2fb000-7ff0cd3f9000 rw-p 00000000 00:00 0 
+7ff0cd3f9000-7ff0cd3fc000 ---p 00000000 00:00 0 
+7ff0cd3fc000-7ff0cd4fa000 rw-p 00000000 00:00 0 
+7ff0cd4fa000-7ff0cd96b000 r--p 00000000 08:04 399569                     /usr/lib/locale/locale-archive
+7ff0cd96b000-7ff0cd96e000 ---p 00000000 00:00 0 
+7ff0cd96e000-7ff0cda6c000 rw-p 00000000 00:00 0 
+7ff0cda6c000-7ff0cda6d000 ---p 00000000 00:00 0 
+7ff0cda6d000-7ff0cfe44000 rw-p 00000000 00:00 0 
+7ff0cfe44000-7ff0d0000000 r--s 039b2000 08:04 24250                      /home/everyan/jdk1.7.0_45/jre/lib/rt.jar
+7ff0d0000000-7ff0d0021000 rw-p 00000000 00:00 0 
+7ff0d0021000-7ff0d4000000 ---p 00000000 00:00 0 
+7ff0d4000000-7ff0d4001000 r--s 00000000 08:04 2889039                    /var/cache/fontconfig/b9d506c9ac06c20b433354fa67a72993-le64.cache-3
+7ff0d4001000-7ff0d4003000 r--s 0000a000 08:04 3824807                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-openide-io.jar
+7ff0d4003000-7ff0d4005000 r--s 0000c000 08:04 3824792                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-queries.jar
+7ff0d4005000-7ff0d4009000 r--s 00032000 08:04 3824801                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-openide-actions.jar
+7ff0d4009000-7ff0d400c000 r--s 00042000 08:04 3824798                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-swing-outline.jar
+7ff0d400c000-7ff0d401a000 r--s 00109000 08:04 3824800                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-swing-tabcontrol.jar
+7ff0d401a000-7ff0d401e000 r--s 00063000 08:04 3824811                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-openide-text.jar
+7ff0d401e000-7ff0d4020000 r--s 0000b000 08:04 3824778                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-editor-mimelookup.jar
+7ff0d4020000-7ff0d4022000 r--s 00028000 08:04 3824813                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-openide-windows.jar
+7ff0d4022000-7ff0d4027000 r--s 00085000 08:04 3824809                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-openide-nodes.jar
+7ff0d4027000-7ff0d4029000 r--s 00031000 08:04 3824804                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-openide-dialogs.jar
+7ff0d4029000-7ff0d402b000 r--s 00014000 08:04 3824756                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-api-progress.jar
+7ff0d402b000-7ff0d4032000 r--s 0009b000 08:04 3824802                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-openide-awt.jar
+7ff0d4032000-7ff0d4033000 r--s 00004000 08:04 3824755                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-api-annotations-common.jar
+7ff0d4033000-7ff0d4037000 r--s 0008a000 08:04 24241                      /home/everyan/jdk1.7.0_45/jre/lib/jsse.jar
+7ff0d4037000-7ff0d5000000 rw-p 00000000 00:00 0 
+7ff0d5000000-7ff0d57a0000 rwxp 00000000 00:00 0 
+7ff0d57a0000-7ff0d81d9000 rw-p 00000000 00:00 0 
+7ff0d81d9000-7ff0dc000000 ---p 00000000 00:00 0 
+7ff0dc000000-7ff0dc001000 r--s 00000000 08:04 3531                       /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/modules/locale/org-netbeans-core_gephi.jar
+7ff0dc001000-7ff0dc005000 r--s 000f7000 08:04 1991885                    /home/everyan/jdk1.7.0_45/jre/lib/ext/localedata.jar
+7ff0dc005000-7ff0dc00c000 r--s 000dc000 08:04 3824721                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/core/org-openide-filesystems.jar
+7ff0dc00c000-7ff0dc011000 r--s 000c7000 08:04 3824720                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/core/core.jar
+7ff0dc011000-7ff0dc1d9000 rw-p 00000000 00:00 0 
+7ff0dc1d9000-7ff0dc1da000 ---p 00000000 00:00 0 
+7ff0dc1da000-7ff0dc2da000 rw-p 00000000 00:00 0 
+7ff0dc2da000-7ff0dc2db000 ---p 00000000 00:00 0 
+7ff0dc2db000-7ff0dc3db000 rw-p 00000000 00:00 0 
+7ff0dc3db000-7ff0dc3dc000 ---p 00000000 00:00 0 
+7ff0dc3dc000-7ff0dc4dc000 rw-p 00000000 00:00 0 
+7ff0dc4dc000-7ff0dc4dd000 ---p 00000000 00:00 0 
+7ff0dc4dd000-7ff0dc5dd000 rw-p 00000000 00:00 0 
+7ff0dc5dd000-7ff0dc5de000 ---p 00000000 00:00 0 
+7ff0dc5de000-7ff0dc6de000 rw-p 00000000 00:00 0 
+7ff0dc6de000-7ff0dc6df000 ---p 00000000 00:00 0 
+7ff0dc6df000-7ff0dc7df000 rw-p 00000000 00:00 0 
+7ff0dc7df000-7ff0dc7e0000 ---p 00000000 00:00 0 
+7ff0dc7e0000-7ff0dc8e0000 rw-p 00000000 00:00 0 
+7ff0dc8e0000-7ff0dc8e1000 ---p 00000000 00:00 0 
+7ff0dc8e1000-7ff0dc9e1000 rw-p 00000000 00:00 0 
+7ff0dc9e1000-7ff0dc9e2000 ---p 00000000 00:00 0 
+7ff0dc9e2000-7ff0dcae2000 rw-p 00000000 00:00 0 
+7ff0dcae2000-7ff0dcae3000 ---p 00000000 00:00 0 
+7ff0dcae3000-7ff0dcc0c000 rw-p 00000000 00:00 0 
+7ff0dcc0c000-7ff0dcd69000 rw-p 00000000 00:00 0 
+7ff0dcd69000-7ff0dd0b3000 ---p 00000000 00:00 0 
+7ff0dd0b3000-7ff0dd677000 rw-p 00000000 00:00 0 
+7ff0dd677000-7ff0dd6a0000 rw-p 00000000 00:00 0 
+7ff0dd6a0000-7ff0dd7fd000 rw-p 00000000 00:00 0 
+7ff0dd7fd000-7ff0ddb47000 ---p 00000000 00:00 0 
+7ff0ddb47000-7ff0de10a000 rw-p 00000000 00:00 0 
+7ff0de10a000-7ff0de63d000 rw-p 00000000 00:00 0 
+7ff0de63d000-7ff0de640000 ---p 00000000 00:00 0 
+7ff0de640000-7ff0de641000 rw-p 00000000 00:00 0 
+7ff0de641000-7ff0de65b000 r-xp 00000000 08:04 1992290                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libzip.so
+7ff0de65b000-7ff0de85b000 ---p 0001a000 08:04 1992290                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libzip.so
+7ff0de85b000-7ff0de85c000 rw-p 0001a000 08:04 1992290                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libzip.so
+7ff0de85c000-7ff0de868000 r-xp 00000000 08:04 954712                     /lib/x86_64-linux-gnu/libnss_files-2.15.so
+7ff0de868000-7ff0dea67000 ---p 0000c000 08:04 954712                     /lib/x86_64-linux-gnu/libnss_files-2.15.so
+7ff0dea67000-7ff0dea68000 r--p 0000b000 08:04 954712                     /lib/x86_64-linux-gnu/libnss_files-2.15.so
+7ff0dea68000-7ff0dea69000 rw-p 0000c000 08:04 954712                     /lib/x86_64-linux-gnu/libnss_files-2.15.so
+7ff0dea69000-7ff0dea73000 r-xp 00000000 08:04 954731                     /lib/x86_64-linux-gnu/libnss_nis-2.15.so
+7ff0dea73000-7ff0dec73000 ---p 0000a000 08:04 954731                     /lib/x86_64-linux-gnu/libnss_nis-2.15.so
+7ff0dec73000-7ff0dec74000 r--p 0000a000 08:04 954731                     /lib/x86_64-linux-gnu/libnss_nis-2.15.so
+7ff0dec74000-7ff0dec75000 rw-p 0000b000 08:04 954731                     /lib/x86_64-linux-gnu/libnss_nis-2.15.so
+7ff0dec75000-7ff0dec8c000 r-xp 00000000 08:04 954810                     /lib/x86_64-linux-gnu/libnsl-2.15.so
+7ff0dec8c000-7ff0dee8b000 ---p 00017000 08:04 954810                     /lib/x86_64-linux-gnu/libnsl-2.15.so
+7ff0dee8b000-7ff0dee8c000 r--p 00016000 08:04 954810                     /lib/x86_64-linux-gnu/libnsl-2.15.so
+7ff0dee8c000-7ff0dee8d000 rw-p 00017000 08:04 954810                     /lib/x86_64-linux-gnu/libnsl-2.15.so
+7ff0dee8d000-7ff0dee8f000 rw-p 00000000 00:00 0 
+7ff0dee8f000-7ff0dee97000 r-xp 00000000 08:04 936036                     /lib/x86_64-linux-gnu/libnss_compat-2.15.so
+7ff0dee97000-7ff0df096000 ---p 00008000 08:04 936036                     /lib/x86_64-linux-gnu/libnss_compat-2.15.so
+7ff0df096000-7ff0df097000 r--p 00007000 08:04 936036                     /lib/x86_64-linux-gnu/libnss_compat-2.15.so
+7ff0df097000-7ff0df098000 rw-p 00008000 08:04 936036                     /lib/x86_64-linux-gnu/libnss_compat-2.15.so
+7ff0df098000-7ff0df0c1000 r-xp 00000000 08:04 1992228                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libjava.so
+7ff0df0c1000-7ff0df2c1000 ---p 00029000 08:04 1992228                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libjava.so
+7ff0df2c1000-7ff0df2c3000 rw-p 00029000 08:04 1992228                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libjava.so
+7ff0df2c3000-7ff0df2d0000 r-xp 00000000 08:04 1992118                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libverify.so
+7ff0df2d0000-7ff0df4cf000 ---p 0000d000 08:04 1992118                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libverify.so
+7ff0df4cf000-7ff0df4d1000 rw-p 0000c000 08:04 1992118                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/libverify.so
+7ff0df4d1000-7ff0df4d8000 r-xp 00000000 08:04 954727                     /lib/x86_64-linux-gnu/librt-2.15.so
+7ff0df4d8000-7ff0df6d7000 ---p 00007000 08:04 954727                     /lib/x86_64-linux-gnu/librt-2.15.so
+7ff0df6d7000-7ff0df6d8000 r--p 00006000 08:04 954727                     /lib/x86_64-linux-gnu/librt-2.15.so
+7ff0df6d8000-7ff0df6d9000 rw-p 00007000 08:04 954727                     /lib/x86_64-linux-gnu/librt-2.15.so
+7ff0df6d9000-7ff0df7d4000 r-xp 00000000 08:04 954765                     /lib/x86_64-linux-gnu/libm-2.15.so
+7ff0df7d4000-7ff0df9d3000 ---p 000fb000 08:04 954765                     /lib/x86_64-linux-gnu/libm-2.15.so
+7ff0df9d3000-7ff0df9d4000 r--p 000fa000 08:04 954765                     /lib/x86_64-linux-gnu/libm-2.15.so
+7ff0df9d4000-7ff0df9d5000 rw-p 000fb000 08:04 954765                     /lib/x86_64-linux-gnu/libm-2.15.so
+7ff0df9d5000-7ff0e0537000 r-xp 00000000 08:04 1991948                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/server/libjvm.so
+7ff0e0537000-7ff0e0737000 ---p 00b62000 08:04 1991948                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/server/libjvm.so
+7ff0e0737000-7ff0e07fa000 rw-p 00b62000 08:04 1991948                    /home/everyan/jdk1.7.0_45/jre/lib/amd64/server/libjvm.so
+7ff0e07fa000-7ff0e083b000 rw-p 00000000 00:00 0 
+7ff0e083b000-7ff0e09f0000 r-xp 00000000 08:04 936025                     /lib/x86_64-linux-gnu/libc-2.15.so
+7ff0e09f0000-7ff0e0bf0000 ---p 001b5000 08:04 936025                     /lib/x86_64-linux-gnu/libc-2.15.so
+7ff0e0bf0000-7ff0e0bf4000 r--p 001b5000 08:04 936025                     /lib/x86_64-linux-gnu/libc-2.15.so
+7ff0e0bf4000-7ff0e0bf6000 rw-p 001b9000 08:04 936025                     /lib/x86_64-linux-gnu/libc-2.15.so
+7ff0e0bf6000-7ff0e0bfb000 rw-p 00000000 00:00 0 
+7ff0e0bfb000-7ff0e0bfd000 r-xp 00000000 08:04 954783                     /lib/x86_64-linux-gnu/libdl-2.15.so
+7ff0e0bfd000-7ff0e0dfd000 ---p 00002000 08:04 954783                     /lib/x86_64-linux-gnu/libdl-2.15.so
+7ff0e0dfd000-7ff0e0dfe000 r--p 00002000 08:04 954783                     /lib/x86_64-linux-gnu/libdl-2.15.so
+7ff0e0dfe000-7ff0e0dff000 rw-p 00003000 08:04 954783                     /lib/x86_64-linux-gnu/libdl-2.15.so
+7ff0e0dff000-7ff0e0e15000 r-xp 00000000 08:04 1992298                    /home/everyan/jdk1.7.0_45/lib/amd64/jli/libjli.so
+7ff0e0e15000-7ff0e1015000 ---p 00016000 08:04 1992298                    /home/everyan/jdk1.7.0_45/lib/amd64/jli/libjli.so
+7ff0e1015000-7ff0e1016000 rw-p 00016000 08:04 1992298                    /home/everyan/jdk1.7.0_45/lib/amd64/jli/libjli.so
+7ff0e1016000-7ff0e102e000 r-xp 00000000 08:04 954732                     /lib/x86_64-linux-gnu/libpthread-2.15.so
+7ff0e102e000-7ff0e122d000 ---p 00018000 08:04 954732                     /lib/x86_64-linux-gnu/libpthread-2.15.so
+7ff0e122d000-7ff0e122e000 r--p 00017000 08:04 954732                     /lib/x86_64-linux-gnu/libpthread-2.15.so
+7ff0e122e000-7ff0e122f000 rw-p 00018000 08:04 954732                     /lib/x86_64-linux-gnu/libpthread-2.15.so
+7ff0e122f000-7ff0e1233000 rw-p 00000000 00:00 0 
+7ff0e1233000-7ff0e1255000 r-xp 00000000 08:04 954775                     /lib/x86_64-linux-gnu/ld-2.15.so
+7ff0e1255000-7ff0e1256000 r--s 00009000 08:04 3824793                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/modules/org-netbeans-modules-sampler.jar
+7ff0e1256000-7ff0e125c000 r--s 0001d000 08:04 3825872                    /home/everyan/jdk1.7.0_45/lib/dt.jar
+7ff0e125c000-7ff0e125d000 r--s 00001000 08:04 3089                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/org-openide-util_zh_CN.jar
+7ff0e125d000-7ff0e125e000 r--s 00001000 08:04 3087                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/org-openide-util_ru.jar
+7ff0e125e000-7ff0e125f000 r--s 00001000 08:04 3085                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/org-openide-util_pt_BR.jar
+7ff0e125f000-7ff0e1260000 r--s 00001000 08:04 3081                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/org-openide-util_ja.jar
+7ff0e1260000-7ff0e1261000 r--s 00000000 08:04 3079                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/org-openide-util-lookup_zh_CN.jar
+7ff0e1261000-7ff0e1262000 r--s 00000000 08:04 3077                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/org-openide-util-lookup_ru.jar
+7ff0e1262000-7ff0e1263000 r--s 00000000 08:04 3073                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/org-openide-util-lookup_pt_BR.jar
+7ff0e1263000-7ff0e1264000 r--s 00000000 08:04 3071                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/org-openide-util-lookup_ja.jar
+7ff0e1264000-7ff0e1265000 r--s 00000000 08:04 3069                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/org-openide-modules_zh_CN.jar
+7ff0e1265000-7ff0e1266000 r--s 00000000 08:04 3067                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/org-openide-modules_ru.jar
+7ff0e1266000-7ff0e1267000 r--s 00000000 08:04 3064                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/org-openide-modules_pt_BR.jar
+7ff0e1267000-7ff0e1268000 r--s 00000000 08:04 3062                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/org-openide-modules_ja.jar
+7ff0e1268000-7ff0e1269000 r--s 00000000 08:04 3060                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/boot_zh_CN.jar
+7ff0e1269000-7ff0e126a000 r--s 00000000 08:04 3055                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/boot_ru.jar
+7ff0e126a000-7ff0e126b000 r--s 00000000 08:04 3052                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/boot_pt_BR.jar
+7ff0e126b000-7ff0e126c000 r--s 00000000 08:04 3050                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/locale/boot_ja.jar
+7ff0e126c000-7ff0e126e000 r--s 00008000 08:04 2967                       /home/everyan/NetBeansProjects/gephi-plugins/platform/gephi/core/locale/core_gephi.jar
+7ff0e126e000-7ff0e126f000 r--s 00001000 08:04 3008                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/core/locale/core_pt_BR.jar
+7ff0e126f000-7ff0e1270000 r--s 00001000 08:04 3047                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/core/locale/org-openide-filesystems_zh_CN.jar
+7ff0e1270000-7ff0e1271000 r--s 00001000 08:04 3004                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/core/locale/core_ja.jar
+7ff0e1271000-7ff0e1272000 r--s 00001000 08:04 3039                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/core/locale/org-openide-filesystems_ru.jar
+7ff0e1272000-7ff0e1273000 r--s 00001000 08:04 3017                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/core/locale/core_zh_CN.jar
+7ff0e1273000-7ff0e1274000 r--s 00001000 08:04 3022                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/core/locale/org-openide-filesystems_ja.jar
+7ff0e1274000-7ff0e1275000 r--s 00001000 08:04 3011                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/core/locale/core_ru.jar
+7ff0e1275000-7ff0e1276000 r--s 00001000 08:04 3032                       /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/core/locale/org-openide-filesystems_pt_BR.jar
+7ff0e1276000-7ff0e1295000 rw-p 00000000 00:00 0 
+7ff0e1295000-7ff0e1336000 rw-p 00000000 00:00 0 
+7ff0e1336000-7ff0e1339000 ---p 00000000 00:00 0 
+7ff0e1339000-7ff0e143b000 rw-p 00000000 00:00 0 
+7ff0e143b000-7ff0e1442000 r--s 000ab000 08:04 3824733                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/org-openide-util.jar
+7ff0e1442000-7ff0e1445000 r--s 00052000 08:04 3824732                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/org-openide-util-lookup.jar
+7ff0e1445000-7ff0e1447000 r--s 00009000 08:04 3824731                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/org-openide-modules.jar
+7ff0e1447000-7ff0e1449000 r--s 0006c000 08:04 3824725                    /home/everyan/NetBeansProjects/gephi-plugins/platform/platform/lib/boot.jar
+7ff0e1449000-7ff0e1451000 rw-s 00000000 08:04 791658                     /tmp/hsperfdata_everyan/21172 (deleted)
+7ff0e1451000-7ff0e1452000 rw-p 00000000 00:00 0 
+7ff0e1452000-7ff0e1453000 ---p 00000000 00:00 0 
+7ff0e1453000-7ff0e1455000 rw-p 00000000 00:00 0 
+7ff0e1455000-7ff0e1456000 r--p 00022000 08:04 954775                     /lib/x86_64-linux-gnu/ld-2.15.so
+7ff0e1456000-7ff0e1458000 rw-p 00023000 08:04 954775                     /lib/x86_64-linux-gnu/ld-2.15.so
+7fff3cbcb000-7fff3cbed000 rw-p 00000000 00:00 0                          [stack]
+7fff3cbff000-7fff3cc00000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+
+VM Arguments:
+jvm_args: -Djdk.home=/home/everyan/jdk1.7.0_45 -Dnetbeans.dirs=/home/everyan/NetBeansProjects/gephi-plugins/build/cluster:/home/everyan/NetBeansProjects/gephi-plugins/platform/platform:/home/everyan/NetBeansProjects/gephi-plugins/platform/gephi -Dnetbeans.home=/home/everyan/NetBeansProjects/gephi-plugins/platform/platform -Dnetbeans.logger.console=true -ea -Xms256m -Xmx8000m -Dsun.java2d.noddraw=true -Dsun.awt.noerasebackground=true -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/home/everyan/NetBeansProjects/gephi-plugins/moduleTest/../build/testuserdir/var/log/heapdump.hprof 
+java_command: org.netbeans.Main --userdir /home/everyan/NetBeansProjects/gephi-plugins/moduleTest/../build/testuserdir --branding gephi
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+LD_LIBRARY_PATH=/home/everyan/jdk1.7.0_45/jre/lib/amd64:/home/everyan/jdk1.7.0_45/jre/lib/i386:/home/everyan/jdk1.7.0_45/jre/lib/amd64:/home/everyan/jdk1.7.0_45/jre/lib/i386:
+SHELL=/bin/bash
+DISPLAY=:0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0x9935b0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGBUS: [libjvm.so+0x9935b0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGFPE: [libjvm.so+0x810330], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGPIPE: [libjvm.so+0x810330], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGXFSZ: [libjvm.so+0x810330], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGILL: [libjvm.so+0x810330], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGUSR1: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGUSR2: [libjvm.so+0x811820], sa_mask[0]=0x00000004, sa_flags=0x10000004
+SIGHUP: [libjvm.so+0x812790], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGINT: SIG_IGN, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGTERM: [libjvm.so+0x812790], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGQUIT: [libjvm.so+0x812790], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+
+
+---------------  S Y S T E M  ---------------
+
+OS:wheezy/sid
+
+uname:Linux 3.2.0-57-generic #87-Ubuntu SMP Tue Nov 12 21:35:10 UTC 2013 x86_64
+libc:glibc 2.15 NPTL 2.15 
+rlimit: STACK 8192k, CORE 0k, NPROC 160088, NOFILE 4096, AS infinity
+load average:0.25 0.45 0.39
+
+/proc/meminfo:
+MemTotal:       20515288 kB
+MemFree:         6572696 kB
+Buffers:          591712 kB
+Cached:          5429312 kB
+SwapCached:            0 kB
+Active:          8184804 kB
+Inactive:        4633372 kB
+Active(anon):    6798232 kB
+Inactive(anon):   114676 kB
+Active(file):    1386572 kB
+Inactive(file):  4518696 kB
+Unevictable:           0 kB
+Mlocked:               0 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Dirty:              7300 kB
+Writeback:             0 kB
+AnonPages:       6797476 kB
+Mapped:           618000 kB
+Shmem:            115628 kB
+Slab:             388348 kB
+SReclaimable:     334368 kB
+SUnreclaim:        53980 kB
+KernelStack:        4936 kB
+PageTables:        50744 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    10257644 kB
+Committed_AS:    9563352 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      629528 kB
+VmallocChunk:   34359102552 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:      479232 kB
+DirectMap2M:    15208448 kB
+DirectMap1G:     5242880 kB
+
+
+CPU:total 12 (6 cores per cpu, 2 threads per core) family 6 model 45 stepping 7, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, aes, ht, tsc, tscinvbit, tscinv
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 45
+model name	: Intel(R) Core(TM) i7-3930K CPU @ 3.20GHz
+stepping	: 7
+microcode	: 0x70b
+cpu MHz		: 3359.781
+cache size	: 12288 KB
+physical id	: 0
+siblings	: 12
+core id		: 0
+cpu cores	: 6
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6719.56
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 46 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 45
+model name	: Intel(R) Core(TM) i7-3930K CPU @ 3.20GHz
+stepping	: 7
+microcode	: 0x70b
+cpu MHz		: 3359.781
+cache size	: 12288 KB
+physical id	: 0
+siblings	: 12
+core id		: 1
+cpu cores	: 6
+apicid		: 2
+initial apicid	: 2
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6719.78
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 46 bits physical, 48 bits virtual
+power management:
+
+processor	: 2
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 45
+model name	: Intel(R) Core(TM) i7-3930K CPU @ 3.20GHz
+stepping	: 7
+microcode	: 0x70b
+cpu MHz		: 3359.781
+cache size	: 12288 KB
+physical id	: 0
+siblings	: 12
+core id		: 2
+cpu cores	: 6
+apicid		: 4
+initial apicid	: 4
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6719.78
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 46 bits physical, 48 bits virtual
+power management:
+
+processor	: 3
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 45
+model name	: Intel(R) Core(TM) i7-3930K CPU @ 3.20GHz
+stepping	: 7
+microcode	: 0x70b
+cpu MHz		: 3359.781
+cache size	: 12288 KB
+physical id	: 0
+siblings	: 12
+core id		: 3
+cpu cores	: 6
+apicid		: 6
+initial apicid	: 6
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6719.78
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 46 bits physical, 48 bits virtual
+power management:
+
+processor	: 4
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 45
+model name	: Intel(R) Core(TM) i7-3930K CPU @ 3.20GHz
+stepping	: 7
+microcode	: 0x70b
+cpu MHz		: 3359.781
+cache size	: 12288 KB
+physical id	: 0
+siblings	: 12
+core id		: 4
+cpu cores	: 6
+apicid		: 8
+initial apicid	: 8
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6719.77
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 46 bits physical, 48 bits virtual
+power management:
+
+processor	: 5
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 45
+model name	: Intel(R) Core(TM) i7-3930K CPU @ 3.20GHz
+stepping	: 7
+microcode	: 0x70b
+cpu MHz		: 3359.781
+cache size	: 12288 KB
+physical id	: 0
+siblings	: 12
+core id		: 5
+cpu cores	: 6
+apicid		: 10
+initial apicid	: 10
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6719.78
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 46 bits physical, 48 bits virtual
+power management:
+
+processor	: 6
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 45
+model name	: Intel(R) Core(TM) i7-3930K CPU @ 3.20GHz
+stepping	: 7
+microcode	: 0x70b
+cpu MHz		: 3359.781
+cache size	: 12288 KB
+physical id	: 0
+siblings	: 12
+core id		: 0
+cpu cores	: 6
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6719.77
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 46 bits physical, 48 bits virtual
+power management:
+
+processor	: 7
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 45
+model name	: Intel(R) Core(TM) i7-3930K CPU @ 3.20GHz
+stepping	: 7
+microcode	: 0x70b
+cpu MHz		: 3359.781
+cache size	: 12288 KB
+physical id	: 0
+siblings	: 12
+core id		: 1
+cpu cores	: 6
+apicid		: 3
+initial apicid	: 3
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6719.77
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 46 bits physical, 48 bits virtual
+power management:
+
+processor	: 8
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 45
+model name	: Intel(R) Core(TM) i7-3930K CPU @ 3.20GHz
+stepping	: 7
+microcode	: 0x70b
+cpu MHz		: 3359.781
+cache size	: 12288 KB
+physical id	: 0
+siblings	: 12
+core id		: 2
+cpu cores	: 6
+apicid		: 5
+initial apicid	: 5
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6719.77
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 46 bits physical, 48 bits virtual
+power management:
+
+processor	: 9
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 45
+model name	: Intel(R) Core(TM) i7-3930K CPU @ 3.20GHz
+stepping	: 7
+microcode	: 0x70b
+cpu MHz		: 3359.781
+cache size	: 12288 KB
+physical id	: 0
+siblings	: 12
+core id		: 3
+cpu cores	: 6
+apicid		: 7
+initial apicid	: 7
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6719.78
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 46 bits physical, 48 bits virtual
+power management:
+
+processor	: 10
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 45
+model name	: Intel(R) Core(TM) i7-3930K CPU @ 3.20GHz
+stepping	: 7
+microcode	: 0x70b
+cpu MHz		: 3359.781
+cache size	: 12288 KB
+physical id	: 0
+siblings	: 12
+core id		: 4
+cpu cores	: 6
+apicid		: 9
+initial apicid	: 9
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6719.78
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 46 bits physical, 48 bits virtual
+power management:
+
+processor	: 11
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 45
+model name	: Intel(R) Core(TM) i7-3930K CPU @ 3.20GHz
+stepping	: 7
+microcode	: 0x70b
+cpu MHz		: 3359.781
+cache size	: 12288 KB
+physical id	: 0
+siblings	: 12
+core id		: 5
+cpu cores	: 6
+apicid		: 11
+initial apicid	: 11
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6719.78
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 46 bits physical, 48 bits virtual
+power management:
+
+
+
+Memory: 4k page, physical 20515288k(6572696k free), swap 0k(0k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (24.45-b08) for linux-amd64 JRE (1.7.0_45-b18), built on Oct  8 2013 05:44:25 by "java_re" with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)
+
+time: Tue Feb 18 03:04:42 2014
+elapsed time: 346 seconds
+
