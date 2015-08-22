@@ -60,7 +60,7 @@ public final class DynamicPanelTopComponent extends TopComponent {
     double interType = 0;
     double[] layerWeights = new double[5];
     int[] layerDelayType = new int[5];
-    BuildLayers builder;
+    BuildBrain builder;
     
     public DynamicPanelTopComponent() {
         initComponents();
@@ -125,6 +125,7 @@ public final class DynamicPanelTopComponent extends TopComponent {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         jTextField1.setText(org.openide.util.NbBundle.getMessage(DynamicPanelTopComponent.class, "DynamicPanelTopComponent.jTextField1.text")); // NOI18N
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
@@ -469,6 +470,13 @@ public final class DynamicPanelTopComponent extends TopComponent {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(jButton4, org.openide.util.NbBundle.getMessage(DynamicPanelTopComponent.class, "DynamicPanelTopComponent.jButton4.text")); // NOI18N
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -521,7 +529,8 @@ public final class DynamicPanelTopComponent extends TopComponent {
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jButton2)
                                             .addComponent(jButton1)
-                                            .addComponent(jButton3))
+                                            .addComponent(jButton3)
+                                            .addComponent(jButton4))
                                         .addGap(0, 0, Short.MAX_VALUE))
                                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addContainerGap())))
@@ -572,12 +581,14 @@ public final class DynamicPanelTopComponent extends TopComponent {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)
-                        .addGap(9, 9, 9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton4)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jTabbedPane1))
                 .addContainerGap())
@@ -705,7 +716,7 @@ public final class DynamicPanelTopComponent extends TopComponent {
     }//GEN-LAST:event_jTextField10ActionPerformed
 
     private void jRadioButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton8ActionPerformed
-        interType = -1.0;        // TODO add your handling code here:
+        interType = 2.0;        // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButton8ActionPerformed
 
     private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
@@ -718,7 +729,15 @@ public final class DynamicPanelTopComponent extends TopComponent {
     }//GEN-LAST:event_jRadioButton3ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        //Get the current graph model
+        GraphController gc = Lookup.getDefault().lookup(GraphController.class);
+        GraphModel graphModel = gc.getModel();
+        
+        //See if graph is well imported
+        Graph graph = graphModel.getGraph();
+        System.out.println("Nodes: " + graph.getNodeCount());
+        System.out.println("Edges: " + graph.getEdgeCount());
+        builder.merge(graphModel);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jRadioButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton7ActionPerformed
@@ -726,7 +745,7 @@ public final class DynamicPanelTopComponent extends TopComponent {
     }//GEN-LAST:event_jRadioButton7ActionPerformed
 
     private void jRadioButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton9ActionPerformed
-        interType = -2.0;
+        interType = -1.0;
     }//GEN-LAST:event_jRadioButton9ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
@@ -755,7 +774,7 @@ public final class DynamicPanelTopComponent extends TopComponent {
         Graph graph = graphModel.getGraph();
         System.out.println("Nodes: " + graph.getNodeCount());
         System.out.println("Edges: " + graph.getEdgeCount());
-        builder = new BuildLayers(layerWeights, layerDelayType, interType, graphModel);
+        builder = new BuildBrain(layerWeights, layerDelayType, interType, graphModel);
         builder.build(graphModel);
         System.out.println("Nodes: " + graph.getNodeCount());
         System.out.println("Edges: " + graph.getEdgeCount());
@@ -772,6 +791,10 @@ public final class DynamicPanelTopComponent extends TopComponent {
         System.out.println("Edges: " + graph.getEdgeCount());
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton NLaplacian;
     private javax.swing.JRadioButton UnbiasedAdj;
@@ -783,6 +806,7 @@ public final class DynamicPanelTopComponent extends TopComponent {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButtonGlobal;
     private javax.swing.JButton jButtonLocal;
     private javax.swing.JLabel jLabel1;
