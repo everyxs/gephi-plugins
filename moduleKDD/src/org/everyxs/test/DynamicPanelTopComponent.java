@@ -372,7 +372,7 @@ public final class DynamicPanelTopComponent extends TopComponent {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel13))
                     .addComponent(jLabel14)
@@ -726,7 +726,7 @@ public final class DynamicPanelTopComponent extends TopComponent {
     }//GEN-LAST:event_jTextField10ActionPerformed
 
     private void jRadioButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton8ActionPerformed
-        interType = 2.0;        // TODO add your handling code here:
+        interType = 3.0;        // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButton8ActionPerformed
 
     private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
@@ -795,8 +795,11 @@ public final class DynamicPanelTopComponent extends TopComponent {
         GraphModel graphModel = gc.getModel();
         
         //See if graph is well imported
-        builder.reset(graphModel);
         Graph graph = graphModel.getGraph();
+        System.out.println("Nodes: " + graph.getNodeCount());
+        System.out.println("Edges: " + graph.getEdgeCount());
+        builder = new BuildRoad(layerWeights, layerDelayType, interType, graphModel);
+        builder.reset(graphModel);
         System.out.println("Nodes: " + graph.getNodeCount());
         System.out.println("Edges: " + graph.getEdgeCount());
     }//GEN-LAST:event_jButton2ActionPerformed
