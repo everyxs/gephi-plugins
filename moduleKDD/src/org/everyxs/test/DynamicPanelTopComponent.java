@@ -60,7 +60,7 @@ public final class DynamicPanelTopComponent extends TopComponent {
     double interType = 0;
     double[] layerWeights = new double[5];
     int[] layerDelayType = new int[5];
-    BuildWireless builder;
+    BuildUKtraffic builder;
     
     public DynamicPanelTopComponent() {
         initComponents();
@@ -784,7 +784,7 @@ public final class DynamicPanelTopComponent extends TopComponent {
         Graph graph = graphModel.getGraph();
         System.out.println("Nodes: " + graph.getNodeCount());
         System.out.println("Edges: " + graph.getEdgeCount());
-        builder = new BuildWireless(layerWeights, layerDelayType, interType, graphModel);
+        builder = new BuildUKtraffic(layerWeights, layerDelayType, interType, graphModel);
         builder.build(graphModel);
         System.out.println("Nodes: " + graph.getNodeCount());
         System.out.println("Edges: " + graph.getEdgeCount());
@@ -798,7 +798,7 @@ public final class DynamicPanelTopComponent extends TopComponent {
         Graph graph = graphModel.getGraph();
         System.out.println("Nodes: " + graph.getNodeCount());
         System.out.println("Edges: " + graph.getEdgeCount());
-        builder = new BuildRoad(layerWeights, layerDelayType, interType, graphModel);
+        builder = new BuildUKtraffic(layerWeights, layerDelayType, interType, graphModel);
         builder.reset(graphModel);
         System.out.println("Nodes: " + graph.getNodeCount());
         System.out.println("Edges: " + graph.getEdgeCount());

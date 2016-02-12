@@ -102,7 +102,7 @@ public class BuildWireless {
                     newGraph.removeEdge(e);
                     Edge e2 = graphModel.factory().newEdge(s, t, (float) 1/60, false);
                     newGraph.addEdge(e2);
-                }
+                }/*
                 if (name.equals(t.getNodeData().getLabel())) { //only diagonal entries are considered     
                     main = true;
                     if (layer2 - layer == 1) {
@@ -117,14 +117,14 @@ public class BuildWireless {
                             Edge e = graphModel.factory().newEdge(s, t, (float) (degreeWeight*0.005), false);
                             //Edge e = graphModel.factory().newEdge(s, t, (float) 1, false);
                             newGraph.addEdge(e);
-                        }/*
+                        }
                         if (layer==0) {
                             t.getNodeData().setX(s.getNodeData().x());
                             t.getNodeData().setY(s.getNodeData().y());
-                        }*/
+                        }
                     }
                     //graphModel.setVisibleView(newView);       //Set the view as current visible view
-                }
+                }*/
             }
             if (layer==0 && main == false) {//node s dose not show up in other layers
                 mergeCandidates.add(s);

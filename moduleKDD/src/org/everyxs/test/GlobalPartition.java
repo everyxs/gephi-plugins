@@ -84,10 +84,10 @@ class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.
         graph.readLock();
         DynamicOperator dynamics = null;
         switch (inputMatrix) {
-            case 0: //straight up Laplacian
+            case 2: //straight up Laplacian
                 dynamics = new Laplacian(graph, false);
                 break;
-            case 2: //reweight by eigenvectors
+            case 3: //reweight by eigenvectors
                 try {
                     dynamics = new Replicator(graph);
                 } catch (NotConvergedException ex) {
