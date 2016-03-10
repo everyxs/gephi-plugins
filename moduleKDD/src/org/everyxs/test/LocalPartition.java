@@ -32,7 +32,7 @@ import org.openide.util.Lookup;
  *
  * @author everyan
  */
-class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.utils.longtask.spi.LongTask {
+public class LocalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.utils.longtask.spi.LongTask {
     private ProgressTicket progress;
     private boolean isCanceled;
     private boolean isDirected;

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.everyxs.test;
+package org.everyxs.transform;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ import org.openide.util.Lookup;
  *
  * @author everyan
  */
-public class BuildRoad {
+public class BuildBrain {
     double[] layerWeight;
     int[] delayType;
     double interType;
@@ -40,7 +40,7 @@ public class BuildRoad {
     ArrayList<Node> mergeCandidates = new ArrayList<Node>();
     ArrayList<Node> mergeCenters = new ArrayList<Node>();
     
-    BuildRoad(double[] layerWeights, int[] layerDelayType, double interType, GraphModel graphModel) {
+    BuildBrain(double[] layerWeights, int[] layerDelayType, double interType, GraphModel graphModel) {
         layerWeight = layerWeights;
         delayType = layerDelayType;
         interType = interType;
@@ -58,12 +58,7 @@ public class BuildRoad {
     }
 
     void build(GraphModel graphModel) {
-        GraphController graphController = Lookup.getDefault().lookup(GraphController.class);
-        Boolean isDirected = false;
-        if (graphController != null && graphController.getModel() != null) {
-            isDirected = graphController.getModel().isDirected();
-        }
-        //GraphView newView = graphModel.newView();     //Duplicate main view
+
         Graph newGraph = graphModel.getGraph();
         AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
         AttributeTable nodeTable = attributeModel.getNodeTable();
@@ -75,57 +70,66 @@ public class BuildRoad {
         //Adding inter-layer edges
         for (int i=0; i<newGraph.getNodeCount(); i++){
             Node s = indicies.get(i); //picking a source node
+            AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
+            int layer = Integer.parseInt(row.getValue(Layer).toString());
+            if (layer == 0) {
+                    for (Edge e:newGraph.getEdges(s))
+                        e.setWeight((float) (e.getWeight()/3.04*3.6));
+                }
+        }
+        
+        for (int i=0; i<newGraph.getNodeCount(); i++){
+            Node s = indicies.get(i); //picking a source node
             String name = s.getNodeData().getLabel();
             boolean main = false;
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
             int layer = Integer.parseInt(row.getValue(Layer).toString());
             
-            if (layer == 0) {
-                double degree = 0;
-                for (Edge e1: newGraph.getEdges(s))
-                    degree += e1.getWeight();
-                Edge e0 = graphModel.factory().newEdge(s, s, (float) (degree*1.0-1), false);
-                newGraph.addEdge(e0);
-            }
-            
             for (int j=i+1; j<newGraph.getNodeCount(); j++){
                 Node t = indicies.get(j); //picking a target node
                 AttributeRow row2 = (AttributeRow) t.getNodeData().getAttributes();   
                 int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
-                if (layer2 == 1 && layer == 1) {
-                    Edge e = newGraph.getEdge(s, t);
-                    if (e!=null) {
-                        Edge e2 = graphModel.factory().newEdge(s, t, e.getWeight()*2, false);
-                        newGraph.removeEdge(e);
-                        newGraph.addEdge(e2);
-                    }
-                }
+                
                 if (name.equals(t.getNodeData().getLabel())) { //only diagonal entries are considered     
                     main = true;
                     /*
                     if (layer2 != layer) {
                         Edge e = newGraph.getEdge(s, t);
                         newGraph.removeEdge(e);
+                    }
+                    if (layer2 == 3 && layer == 3) {
+                        Edge e = newGraph.getEdge(s, t);
+                        Edge e2 = graphModel.factory().newEdge(s, t, 2*e.getWeight(), false);
+                        newGraph.removeEdge(e);
+                        newGraph.addEdge(e2);
                     }*/
-                    if (layer2 - layer == 1) {
+                    if (layer2==1 && layer==0) {
                         if (layer==0)
                             mergeCenters.add(s);
-                        if (isDirected) {
-                            double degree = 0;
-                            for (Edge e1: newGraph.getEdges(t))
-                                degree += e1.getWeight();
-                            Edge e = graphModel.factory().newEdge(s, t, (float) (degree*2), true);
-                            //Edge e = graphModel.factory().newEdge(s, t, (float) 1, true);
-                            newGraph.addEdge(e);
+                        
+                        Node[] neighbors1 = newGraph.getNeighbors(s).toArray();
+                        Node[] neighbors2 = newGraph.getNeighbors(t).toArray();
+                        float distance= 0;
+                        for (Node n1 : neighbors1){
+                            for (Node n2 : neighbors2) {
+                                if (n2.getNodeData().getLabel().equals(n1.getNodeData().getLabel())) {
+                                    Edge e1 = newGraph.getEdge(s, n1);
+                                    if (e1 == null)
+                                        e1 = newGraph.getEdge(n1, s);
+                                    Edge e2 = newGraph.getEdge(t, n2);
+                                    if (e2 == null)
+                                        e2 = newGraph.getEdge(n2, t);
+                                    distance += Math.abs(e1.getWeight() - e2.getWeight());
+                                }
+                                else
+                                    distance += 0.01;
+                            }
                         }
-                        else {
-                            double degree = 0;
-                            for (Edge e1: newGraph.getEdges(t))
-                                degree += e1.getWeight();
-                            Edge e = graphModel.factory().newEdge(s, t, (float) (degree*2), false);
-                            //Edge e = graphModel.factory().newEdge(s, t, (float) 1, false);
-                            newGraph.addEdge(e);
-                        }/*
+                        
+                        //Edge e = graphModel.factory().newEdge(s, t, (float) (newGraph.getDegree(t)*0.2), false);
+                        Edge e = graphModel.factory().newEdge(s, t, (float) 0.5/distance, false);
+                        newGraph.addEdge(e);
+                        /*
                         if (layer==0) {
                             t.getNodeData().setX(s.getNodeData().x());
                             t.getNodeData().setY(s.getNodeData().y());

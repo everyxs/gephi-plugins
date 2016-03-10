@@ -1,10 +1,13 @@
-package org.everyxs.test;
+package org.everyxs.sbm;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import no.uib.cipr.matrix.DenseMatrix;
 import no.uib.cipr.matrix.EVD;
 import no.uib.cipr.matrix.NotConvergedException;
+import org.everyxs.test.Laplacian;
+import org.everyxs.test.LinearTransforms;
+import org.everyxs.test.NodeCompare;
 import org.gephi.data.attributes.api.AttributeColumn;
 import org.gephi.data.attributes.api.AttributeController;
 import org.gephi.data.attributes.api.AttributeModel;
@@ -32,11 +35,11 @@ import org.openide.util.Lookup;
  *
  * @author everyan
  */
-class Centrality implements org.gephi.statistics.spi.Statistics, org.gephi.utils.longtask.spi.LongTask {
+class Blockmodeling implements org.gephi.statistics.spi.Statistics, org.gephi.utils.longtask.spi.LongTask {
     private ProgressTicket progress;
     private boolean isCanceled;
     private boolean isDirected;
-    public Centrality() {
+    public Blockmodeling() {
         GraphController graphController = Lookup.getDefault().lookup(GraphController.class);
         if (graphController != null && graphController.getModel() != null) {
             isDirected = graphController.getModel().isDirected();

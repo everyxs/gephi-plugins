@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.everyxs.test;
+package org.everyxs.sbm;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,14 +27,14 @@ import org.openide.util.NbBundle.Messages;
 
 @ActionID(
         category = "Edit",
-        id = "org.everyxs.test.CentralityButton"
+        id = "org.everyxs.test.SBMcluster"
 )
 @ActionRegistration(
-        displayName = "#CTL_CentralityButton"
+        displayName = "#CTL_SBMcluster"
 )
 @ActionReference(path = "Menu/Plugins", position = 2833)
-@Messages("CTL_CentralityButton=centrality")
-public final class CentralityButton implements ActionListener {
+@Messages("CTL_SBMcluster=SBMcluster")
+public final class SBMcluster implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -65,7 +65,7 @@ public final class CentralityButton implements ActionListener {
         }*/
 
         //Run modularity algorithm - community detection
-        Centrality lPart = new Centrality();
+        Blockmodeling lPart = new Blockmodeling();
         lPart.execute(graphModel, attributeModel);
 
         //Export

@@ -31,7 +31,7 @@ import org.openide.util.Lookup;
  *
  * @author everyan
  */
-class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.utils.longtask.spi.LongTask {
+public class GlobalPartition implements org.gephi.statistics.spi.Statistics, org.gephi.utils.longtask.spi.LongTask {
     private ProgressTicket progress;
     private boolean isCanceled;
     private boolean isDirected;
