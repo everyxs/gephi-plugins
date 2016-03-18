@@ -26,21 +26,16 @@ import org.openide.util.Lookup;
  * @author everyan
  */
 public class Transformer {
+    int transformType = 0;
     private boolean isDirected;
-    private double scalePower;
-    private double reweightPower;
-    int specialCase = 0;
     GraphView oldView;
     HashMap<Integer, Node> indicies = new HashMap<Integer, Node>();
     HashMap<Node, Integer> invIndicies = new HashMap<Node, Integer>();
-    
-    Transformer(GraphModel graphModel, double scaleP, double reweightP, int inputMatrix) {
+
+    Transformer(GraphModel graphModel, int transformType) {
         oldView = graphModel.getVisibleView();
         Graph graph = graphModel.getGraph(oldView);
         isDirected = graphModel.isDirected();
-        scalePower = scaleP;
-        reweightPower = reweightP;
-        specialCase = inputMatrix;
                 
         indicies = new HashMap<Integer, Node>();
         invIndicies = new HashMap<Node, Integer>();
@@ -52,7 +47,7 @@ public class Transformer {
         }
     }
 
-    void rebuild(GraphModel graphModel) {
+    public void rebuild(GraphModel graphModel) {
 
         Graph newGraph = graphModel.getGraph();
         AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
@@ -77,7 +72,7 @@ public class Transformer {
         
     
     
-    void reset(GraphModel graphModel) {
+    public void reset(GraphModel graphModel) {
         graphModel.setVisibleView(oldView);       //Set the view as current visible view
     }
 }
