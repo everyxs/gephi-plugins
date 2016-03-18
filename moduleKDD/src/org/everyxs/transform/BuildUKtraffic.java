@@ -31,8 +31,7 @@ import org.openide.util.Lookup;
  * @author everyan
  */
 public class BuildUKtraffic {
-    double[] layerWeight;
-    int[] delayType;
+
     double interType;
     GraphView oldView;
     HashMap<Integer, Node> indicies = new HashMap<Integer, Node>();
@@ -40,9 +39,7 @@ public class BuildUKtraffic {
     ArrayList<Node> mergeCandidates = new ArrayList<Node>();
     ArrayList<Node> mergeCenters = new ArrayList<Node>();
     
-    BuildUKtraffic(double[] layerWeights, int[] layerDelayType, double interType, GraphModel graphModel) {
-        layerWeight = layerWeights;
-        delayType = layerDelayType;
+    public BuildUKtraffic(double interType, GraphModel graphModel) {
         interType = interType;
         oldView = graphModel.getVisibleView();
         Graph graph = graphModel.getGraph(oldView);
@@ -57,7 +54,7 @@ public class BuildUKtraffic {
         }
     }
 
-    void build(GraphModel graphModel) {
+    public void build(GraphModel graphModel) {
         GraphController graphController = Lookup.getDefault().lookup(GraphController.class);
         Boolean isDirected = false;
         if (graphController != null && graphController.getModel() != null) {
@@ -168,11 +165,11 @@ public class BuildUKtraffic {
         }
     }
     
-    void reset(GraphModel graphModel) {
+    public void reset(GraphModel graphModel) {
         graphModel.setVisibleView(oldView);       //Set the view as current visible view
     }
 
-    void merge(GraphModel graphModel) {
+    public void merge(GraphModel graphModel) {
         //GraphView newView = graphModel.newView();     //Duplicate main view
         Graph newGraph = graphModel.getGraph();
         AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
