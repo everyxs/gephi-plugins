@@ -20,6 +20,8 @@ import org.gephi.data.attributes.api.AttributeOrigin;
 import org.gephi.data.attributes.api.AttributeRow;
 import org.gephi.data.attributes.api.AttributeTable;
 import org.gephi.data.attributes.api.AttributeType;
+import org.gephi.graph.api.Edge;
+import org.gephi.graph.api.EdgeIterable;
 import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
@@ -69,8 +71,10 @@ public final class TransformPanelTopComponent extends TopComponent {
     Transformer transformer;
     double interType = 0;
     int transformType = 0;
-    String baseLayer;
-    String inputLayer;
+    int baseLayer;
+    int inputLayer;
+    String inputAttribute;
+    int inputType = 0; //input from node attributes
     BuildUKtraffic builder;
     GraphModel graphModel;
     
@@ -90,6 +94,7 @@ public final class TransformPanelTopComponent extends TopComponent {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
+        buttonGroup3 = new javax.swing.ButtonGroup();
         topComponent1 = new org.openide.windows.TopComponent();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
@@ -116,13 +121,14 @@ public final class TransformPanelTopComponent extends TopComponent {
         jTextField11 = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         jToggleButton1 = new javax.swing.JToggleButton();
+        jRadioButton5 = new javax.swing.JRadioButton();
         jPanel3 = new javax.swing.JPanel();
         jTextField10 = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jButton8 = new javax.swing.JButton();
         jToggleButton2 = new javax.swing.JToggleButton();
         jTextField7 = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
+        jButton9 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         jRadioButton7 = new javax.swing.JRadioButton();
@@ -279,6 +285,7 @@ public final class TransformPanelTopComponent extends TopComponent {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel11, org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jLabel11.text")); // NOI18N
 
+        buttonGroup3.add(jRadioButton4);
         org.openide.awt.Mnemonics.setLocalizedText(jRadioButton4, org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jRadioButton4.text")); // NOI18N
         jRadioButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -288,6 +295,7 @@ public final class TransformPanelTopComponent extends TopComponent {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jLabel10.text")); // NOI18N
 
+        buttonGroup3.add(jRadioButton3);
         org.openide.awt.Mnemonics.setLocalizedText(jRadioButton3, org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jRadioButton3.text")); // NOI18N
         jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -325,6 +333,14 @@ public final class TransformPanelTopComponent extends TopComponent {
             }
         });
 
+        buttonGroup3.add(jRadioButton5);
+        org.openide.awt.Mnemonics.setLocalizedText(jRadioButton5, org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jRadioButton5.text")); // NOI18N
+        jRadioButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton5ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -348,9 +364,10 @@ public final class TransformPanelTopComponent extends TopComponent {
                             .addComponent(jRadioButton4)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel17)))
-                        .addGap(0, 39, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel17))
+                            .addComponent(jRadioButton5))
+                        .addGap(0, 50, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -360,21 +377,23 @@ public final class TransformPanelTopComponent extends TopComponent {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel17))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jRadioButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jRadioButton4)
-                .addGap(61, 61, 61)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jRadioButton5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(55, 55, 55)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jToggleButton1)
                     .addComponent(jButton6))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
@@ -404,7 +423,12 @@ public final class TransformPanelTopComponent extends TopComponent {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jLabel7.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton9, org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jButton9.text")); // NOI18N
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -414,21 +438,19 @@ public final class TransformPanelTopComponent extends TopComponent {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 62, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton8)
-                        .addGap(18, 18, 18)
-                        .addComponent(jToggleButton2))
+                        .addGap(27, 27, 27)
+                        .addComponent(jButton9))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel13))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel7)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jToggleButton2)
+                            .addComponent(jLabel13))
+                        .addGap(0, 35, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -438,15 +460,15 @@ public final class TransformPanelTopComponent extends TopComponent {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13))
-                .addGap(80, 80, 80)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
-                .addGap(56, 56, 56)
+                    .addComponent(jToggleButton2))
+                .addGap(49, 49, 49)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jToggleButton2)
-                    .addComponent(jButton8))
-                .addContainerGap(148, Short.MAX_VALUE))
+                    .addComponent(jButton8)
+                    .addComponent(jButton9))
+                .addContainerGap(221, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jPanel3.TabConstraints.tabTitle"), jPanel3); // NOI18N
@@ -569,10 +591,10 @@ public final class TransformPanelTopComponent extends TopComponent {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        //Get the current graph model      
+        //Get the current graph model     
         GraphController gc = Lookup.getDefault().lookup(GraphController.class);
-        graphModel = gc.getModel();    
-        Graph graph = graphModel.getGraph();
+        graphModel = gc.getModel(); 
+        Graph graph = graphModel.getGraphVisible();
         
         System.out.println("Nodes: " + graph.getNodeCount());
         System.out.println("Edges: " + graph.getEdgeCount());
@@ -583,11 +605,10 @@ public final class TransformPanelTopComponent extends TopComponent {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //Get the current graph model      
+        //Get the current graph model   
         GraphController gc = Lookup.getDefault().lookup(GraphController.class);
-        graphModel = gc.getModel();    
-        
-        Graph graph = graphModel.getGraph();
+        graphModel = gc.getModel();
+        Graph graph = graphModel.getGraphVisible();
         System.out.println("Nodes: " + graph.getNodeCount());
         System.out.println("Edges: " + graph.getEdgeCount());
         builder = new BuildUKtraffic(interType, graphModel);
@@ -609,7 +630,8 @@ public final class TransformPanelTopComponent extends TopComponent {
     }//GEN-LAST:event_jRadioButton7ActionPerformed
 
     private void jTextField10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField10ActionPerformed
-        baseLayer = jTextField10.getText();
+        String temp = jTextField10.getText();
+        baseLayer = Integer.parseInt(temp);
     }//GEN-LAST:event_jTextField10ActionPerformed
 
     private void jRadioButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton16ActionPerformed
@@ -641,15 +663,14 @@ public final class TransformPanelTopComponent extends TopComponent {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        //Get the current graph model      
+        //Get the current graph model     
         GraphController gc = Lookup.getDefault().lookup(GraphController.class);
-        graphModel = gc.getModel();       
-        
-        Graph graph = graphModel.getGraph();
+        graphModel = gc.getModel(); 
+        transformer = new Transformer(graphModel);
+        Graph graph = graphModel.getGraphVisible();
         System.out.println("Nodes: " + graph.getNodeCount());
         System.out.println("Edges: " + graph.getEdgeCount());
-        transformer = new Transformer(graphModel);
-        transformer.rebuild(graphModel, transformType);
+        transformer.rebuild(graphModel, transformType, baseLayer);
         System.out.println("Nodes: " + graph.getNodeCount());
         System.out.println("Edges: " + graph.getEdgeCount());
     }//GEN-LAST:event_jButton5ActionPerformed
@@ -675,11 +696,11 @@ public final class TransformPanelTopComponent extends TopComponent {
         AttributeTable nodeTable = attributeModel.getNodeTable();
         
         AttributeColumn Layer = nodeTable.getColumn("Layer[Z]");
-                if (Layer == null) {
-                        Layer = nodeTable.addColumn("Layer[Z]", "Layer[Z]", AttributeType.DOUBLE, AttributeOrigin.DATA, new Integer(1));
-                        JOptionPane.showMessageDialog(null, "'Layer[Z]' attribute has been added, please edit in the Data laboratory ", 
-                                "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
-                   }
+        if (Layer == null) {
+                Layer = nodeTable.addColumn("Layer[Z]", "Layer[Z]", AttributeType.DOUBLE, AttributeOrigin.DATA, new Integer(1));
+                JOptionPane.showMessageDialog(null, "'Layer[Z]' attribute has been added, please edit in the Data laboratory ", 
+                        "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+           }
         NodeIterable nodelist;
         if (graphModel.isDirected()) {
             nodelist = ((HierarchicalDirectedGraph) subGraph).getNodes(); 
@@ -690,53 +711,102 @@ public final class TransformPanelTopComponent extends TopComponent {
         Node[] nodeArray = nodelist.toArray();
         for (int i=0; i<nodeArray.length; i++) {
             AttributeRow row = (AttributeRow) nodeArray[i].getNodeData().getAttributes(); //get custom delay input   
-            String layerName = row.getValue(Layer).toString();
-            if (!layerName.equals(baseLayer))
+            int layerName = Integer.parseInt(row.getValue(Layer).toString());
+            if (layerName!=baseLayer)
                 subGraph.removeNode(nodeArray[i]);
         }
         graphModel.setVisibleView(newView);       //Set the view as current visible view
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jTextField11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField11ActionPerformed
-        // TODO add your handling code here:
+        inputAttribute =   jTextField11.getText(); //Attribute name for input
     }//GEN-LAST:event_jTextField11ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+        AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
+        AttributeTable nodeTable = attributeModel.getNodeTable();
+        AttributeColumn Layer = nodeTable.getColumn("layer[Z]");
+        if (Layer == null) {
+                Layer = nodeTable.addColumn("Layer[Z]", "Layer[Z]", AttributeType.DOUBLE, AttributeOrigin.DATA, new Integer(1));
+                JOptionPane.showMessageDialog(null, "'Layer[Z]' attribute has been added, please edit in the Data laboratory ", 
+                        "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+           }
+        if (inputType == 0) {
+            AttributeColumn nodeInput = nodeTable.getColumn(inputAttribute);
+            if (nodeInput == null) {
+                    JOptionPane.showMessageDialog(null, "Node attribute '" + inputAttribute + "' attribute does not exist, please check in the Data laboratory ", 
+                            "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+               }
+        }
+        if (inputType == 1) {
+            AttributeTable edgeTable = attributeModel.getEdgeTable();
+            AttributeColumn edgeInput = edgeTable.getColumn(inputAttribute);
+            if (edgeInput == null) {
+                    JOptionPane.showMessageDialog(null, "Edge attribute '" + inputAttribute + "' attribute does not exist, please check in the Data laboratory ",
+                            "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+               }
+        }
+        if (inputType == 2) {
+            AttributeColumn Longitude = nodeTable.getColumn("longitude");
+            if (Longitude == null) {
+                    Longitude = nodeTable.addColumn("longitude", "longitude", AttributeType.DOUBLE, AttributeOrigin.DATA, new Integer(1));
+                    JOptionPane.showMessageDialog(null, "'longitude' attribute has been added, please edit in the Data laboratory ", 
+                            "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+               }
+            AttributeColumn Latitude = nodeTable.getColumn("latitude");
+            if (Latitude == null) {
+                    Latitude = nodeTable.addColumn("latitude", "latitude", AttributeType.DOUBLE, AttributeOrigin.DATA, new Integer(1));
+                    JOptionPane.showMessageDialog(null, "'latitude' attribute has been added, please edit in the Data laboratory ", 
+                            "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+               }
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
-        String text = jTextField9.getText();
+        String temp = jTextField9.getText();
+        inputLayer = Integer.parseInt(temp);
     }//GEN-LAST:event_jTextField9ActionPerformed
 
     private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
-
+        inputType = 1; //input from edge attributes
     }//GEN-LAST:event_jRadioButton4ActionPerformed
 
     private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
-
+        inputType = 0; //input from node attributes
     }//GEN-LAST:event_jRadioButton3ActionPerformed
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        // TODO add your handling code here:
+        GraphController gc = Lookup.getDefault().lookup(GraphController.class);
+        graphModel = gc.getModel(); 
+        transformer = new Transformer(graphModel);
+        transformer.map(inputLayer, baseLayer);
     }//GEN-LAST:event_jToggleButton1ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        graphModel.setVisibleView(null);       //Reset the full as current visible view        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jRadioButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton5ActionPerformed
+        inputType = 2; //input using geo-coordinates
+    }//GEN-LAST:event_jRadioButton5ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.ButtonGroup buttonGroup3;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -753,6 +823,7 @@ public final class TransformPanelTopComponent extends TopComponent {
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
+    private javax.swing.JRadioButton jRadioButton5;
     private javax.swing.JRadioButton jRadioButton7;
     private javax.swing.JRadioButton jRadioButton8;
     private javax.swing.JRadioButton jRadioButton9;
