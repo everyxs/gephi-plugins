@@ -146,6 +146,32 @@ public abstract class DynamicOperator implements Statistics, LongTask {
         }
         return laplacian;
     }
+    
+    public double[][] laplacianGeneral(double[][] reWeightedMatrix, AttributeColumn repFactor) {
+        double[] sum = new double[size];
+        double[] replicate = new double[size];
+        for (int i=0; i<size; i++) {
+            Node u = indicies.get(i);
+            AttributeRow row = (AttributeRow) u.getNodeData().getAttributes(); //get custom delay input    
+            replicate[i] = Double.parseDouble(row.getValue(repFactor).toString());
+            sum[i] = 0;
+            for (int j=0; j<size; j++)
+                sum[i] += reWeightedMatrix[i][j];
+            degrees[i] = sum[i];
+        }
+        double[][] laplacian = new double[size][size];
+        for (int i=0; i<laplacian.length; i++) {
+            for (int j=0; j<laplacian.length; j++){
+                if (j==i)
+                    laplacian[i][j] = 1- Math.sqrt(replicate[i]*replicate[j])* reWeightedMatrix[i][j] / Math.sqrt(sum[i]*sum[i]);
+                else //if (sum[i]*sum[j] >= 0)
+                    laplacian[i][j] = -  Math.sqrt(replicate[i]*replicate[j])* reWeightedMatrix[i][j] / Math.sqrt(sum[i]*sum[j]);
+                //else
+                    //laplacian[i][j] = reWeightedMatrix[i][j] / Math.sqrt(-sum[i]*sum[j]);
+                }
+        }
+        return laplacian;
+    }
          
     public double[][] reweight(double[][] inputMatrix) {
         double[][] outputMatrix = new double[size][size];

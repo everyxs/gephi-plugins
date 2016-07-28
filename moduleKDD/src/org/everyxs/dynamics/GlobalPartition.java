@@ -97,6 +97,9 @@ public class GlobalPartition implements org.gephi.statistics.spi.Statistics, org
             case 4: //reweight by sqrt of degrees
                 dynamics = new UnbiasedAdj(graph);
                 break;
+            case 5: //reweight by sqrt of degrees
+                dynamics = new GeneralFilter(graph);
+                break;
             default: //normalized Laplacian
                 dynamics = new Laplacian(graph, true);
                 break;                

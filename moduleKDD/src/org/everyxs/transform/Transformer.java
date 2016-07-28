@@ -29,8 +29,8 @@ import org.gephi.graph.api.NodeIterable;
 import org.openide.util.Lookup;
 
 /**
- *
- * @author everyan
+ * Graph transformer for intra- and inter-layer connections
+ * @author everyxs
  */
 public class Transformer {
     private boolean isDirected;
@@ -54,8 +54,13 @@ public class Transformer {
             count++;
         }
     }
-
-    public void rebuild(GraphModel graphModel, int type, int baseLayer) {
+    /**
+     * Global transformations for smaller graphs. 
+     * @param graphModel
+     * @param type
+     * @param baseLayer 
+     */
+    public void globalTransform(GraphModel graphModel, int type, int baseLayer, double power) {
         
         Graph newGraph = graphModel.getGraphVisible();
         AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
@@ -123,6 +128,7 @@ public class Transformer {
                     for (Edge e : iter) {
                         degree += e.getWeight();
                     }
+                    degree = Math.pow(degree, power); //raising to the bias power
                     if (isDirected) {
                             iter = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(s);
                             for (Edge e : iter) {
@@ -145,7 +151,7 @@ public class Transformer {
                 for (int i=0; i<newGraph.getNodeCount(); i++){
                     Node s = indicies.get(i); //picking a source node
                     AttributeRow row = (AttributeRow) s.getNodeData().getAttributes(); //get bias delay input    
-                    double bias = Double.parseDouble(row.getValue(Bias).toString());
+                    double bias = Math.pow(Double.parseDouble(row.getValue(Bias).toString()), power); //raising to the bias power
                     
                     EdgeIterable iter;
                     if (isDirected) {
@@ -168,70 +174,71 @@ public class Transformer {
                     JOptionPane.showMessageDialog(null, "'Layer[Z]' attribute has been added, please edit in the Data laboratory ", 
                             "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
                 }
-                AttributeColumn Longitude = nodeTable.getColumn("longitude");
-                if (Longitude == null) {
-                        Longitude = nodeTable.addColumn("longitude", "longitude", AttributeType.DOUBLE, AttributeOrigin.DATA, new Integer(1));
-                        JOptionPane.showMessageDialog(null, "'longitude' attribute has been added, please edit in the Data laboratory ", 
-                                "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
-                   }
-                AttributeColumn Latitude = nodeTable.getColumn("latitude");
-                if (Latitude == null) {
-                        Latitude = nodeTable.addColumn("latitude", "latitude", AttributeType.DOUBLE, AttributeOrigin.DATA, new Integer(1));
-                        JOptionPane.showMessageDialog(null, "'latitude' attribute has been added, please edit in the Data laboratory ", 
-                            "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
-                   }
                 for (int i=0; i<newGraph.getNodeCount(); i++){
                     Node s = indicies.get(i); //picking a source node
-                    AttributeRow row = (AttributeRow) s.getNodeData().getAttributes(); //get bias delay input    
-                    int layer = Integer.parseInt(row.getValue(Layer).toString());
-                    if (layer == baseLayer) {
+                    AttributeRow row1 = (AttributeRow) s.getNodeData().getAttributes(); //get bias delay input    
+                    int layer = Integer.parseInt(row1.getValue(Layer).toString());
+                    if (layer == baseLayer) { //only transform the base layer
                         EdgeIterable iter;
-                        if (isDirected) 
+                        if (isDirected)
                             iter = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(s);
                         else 
                             iter = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(s);
                         
+                        Edge[] edgeList = iter.toArray();
                         boolean map = false;
-                        for (Edge e : iter) {
-                            Node input1 = e.getTarget();
-                            if (e.getEdgeData().getLabel()=="interEdge") {
-                                input1 = e.getTarget();
-                                map = true;
+                        Node input1 = indicies.get(i+1);
+                        
+                        for (int j=0; j<edgeList.length; j++) {
+                            if (edgeList[j].getEdgeData().getLabel()=="interEdge") { // get the inter-layer connection
+                                input1 = edgeList[j].getSource();
+                                AttributeRow row2 = (AttributeRow) input1.getNodeData().getAttributes(); 
+                                int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
+                                if (layer2 ==2) //make sure the mapping is to the input layer
+                                    map = true;
                             }
                         }
-                       
                         double reweigh = 1;
-                        if (map == true) { // if there is a geo map for s
-                            for (Edge e : iter) {
-                                if (e.getEdgeData().getLabel()!="interEdge") { // for base layer connections
-                                    Node t = e.getTarget();
+                        if (map == true) { // if there is a geo interLayerMap for s
+                            for (int j=0; j<edgeList.length; j++) {
+                                if (edgeList[j].getEdgeData().getLabel()!="interEdge") { // only for base layer connections
+                                    Node t = edgeList[j].getTarget();
                                     EdgeIterable iter2;
                                     if (isDirected) 
                                         iter2 = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(t);
                                     else 
                                         iter2 = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(t);
                                     for (Edge e2 : iter2) {
-                                        if (e2.getEdgeData().getLabel()=="interEdge") {
-                                            Node input2 = e2.getTarget();
-                                            AttributeRow row2 = (AttributeRow) input2.getNodeData().getAttributes(); //get bias delay input    
-                                            //AttributeRow row3 = (AttributeRow) input1.getNodeData().getAttributes(); //get bias delay input    
-                                            double longtitude1 = Double.parseDouble(row.getValue(Longitude).toString());
-
-                                            //reweigh = input2.getNodeData().
-                                        }
+                                        if (e2.getEdgeData().getLabel()=="interEdge") { // get the inter-layer connection at the target
+                                            Node input2 = e2.getSource();  
+                                            AttributeRow row2 = (AttributeRow) input2.getNodeData().getAttributes(); 
+                                            int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
+                                            if (layer2 ==2) {//make sure the mapping is to the input layer
+                                                if (input2.getId() == input1.getId())
+                                                    reweigh = 2; //same geolicaion boost
+                                                else {
+                                                    Edge eInput = newGraph.getEdge(input1, input2);
+                                                    reweigh = Math.pow(eInput.getWeight(), power); //raising to the bias power
+                                                }
+                                            }
+                                        }   
+                                        edgeList[j].setWeight((float) (edgeList[j].getWeight() * reweigh));
                                     }
-                                    e.setWeight((float) (e.getWeight() * reweigh));
                                 }
                             }
                         }
-                        
                     } 
                 }
             break;
         }
     }
-        
-    public void map(int inputLayer, int baseLayer) {
+    
+    /**
+     * Connecting base layer with input layer by interLayerMapping the inter-layer correspondence.
+     * @param inputLayer
+     * @param baseLayer 
+     */
+    public void interLayerMap(int inputLayer, int baseLayer) {
         Graph newGraph = graphModel.getGraphVisible();
         AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
         AttributeTable nodeTable = attributeModel.getNodeTable();
@@ -251,7 +258,7 @@ public class Transformer {
                     AttributeRow row2 = (AttributeRow) t.getNodeData().getAttributes();   
                     int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
                     if ((layer==inputLayer && layer2==baseLayer)||(layer2==inputLayer && layer==baseLayer)) {
-                        System.out.println(layer + layer2 - baseLayer - inputLayer);
+                        //System.out.println(layer + layer2 - baseLayer - inputLayer);
                         Edge e = graphModel.factory().newEdge(s, t, (float) 3.1415926, false);
                         e.getEdgeData().setLabel("interEdge");
                         newGraph.addEdge(e);
@@ -261,8 +268,160 @@ public class Transformer {
         }
     }
     
+    /**
+     * This function converts decimal degrees to radians	
+     * @param deg double
+     * @return double
+     */
+    private static double deg2rad(double deg) {
+            return (deg * Math.PI / 180.0);
+    }
+
+    /**
+     * This function converts radians to decimal degrees
+     * @param rad double
+     * @return double
+     */
+    private static double rad2deg(double rad) {
+            return (rad * 180 / Math.PI);
+    }
+    
+    /**
+     * This function calculates geo distances based on longitudes and latitudes
+     * need local node mergers conditioned on resolution
+     * @param inputLayer 
+     */
+    public void distance(int inputLayer) {
+        Graph newGraph = graphModel.getGraphVisible();
+        AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
+        AttributeTable nodeTable = attributeModel.getNodeTable();
+        AttributeColumn Layer = nodeTable.getColumn("Layer[Z]");
+        AttributeColumn Longitude = nodeTable.getColumn("Lng");
+        if (Longitude == null) {
+                Longitude = nodeTable.addColumn("Lng", "Lng", AttributeType.DOUBLE, AttributeOrigin.DATA, new Integer(1));
+                JOptionPane.showMessageDialog(null, "'Lng' attribute has been added, please edit in the Data laboratory ", 
+                        "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+           }
+        AttributeColumn Latitude = nodeTable.getColumn("Lat");
+        if (Latitude == null) {
+                Latitude = nodeTable.addColumn("Lat", "Lat", AttributeType.DOUBLE, AttributeOrigin.DATA, new Integer(1));
+                JOptionPane.showMessageDialog(null, "'Lat' attribute has been added, please edit in the Data laboratory ", 
+                        "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+           }
+        
+        for (int i=0; i<newGraph.getNodeCount(); i++){
+            Node s = indicies.get(i); //picking a source node
+            AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
+            int layer = Integer.parseInt(row.getValue(Layer).toString());
+            
+            if (layer == inputLayer) { //only input layer pairs are considered    
+                for (int j=i+1; j<newGraph.getNodeCount(); j++){
+                    Node t = indicies.get(j); //picking a source node
+                    AttributeRow row2 = (AttributeRow) t.getNodeData().getAttributes();   
+                    int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
+                    if (layer2 == inputLayer) { //only input layer pairs are considered    
+                        double long1 = Double.parseDouble(row.getValue(Longitude).toString());
+                        double long2 = Double.parseDouble(row2.getValue(Longitude).toString());
+                        double lati1 = Double.parseDouble(row.getValue(Latitude).toString());
+                        double lati2 = Double.parseDouble(row2.getValue(Latitude).toString());
+                        
+                        double theta = long1 - long2;
+                        double dist = Math.sin(deg2rad(lati1)) * Math.sin(deg2rad(lati2)) 
+                                + Math.cos(deg2rad(lati1)) * Math.cos(deg2rad(lati2)) * Math.cos(deg2rad(theta));
+                        dist = Math.acos(dist);
+                        dist = rad2deg(dist);
+                        dist = dist * 60 * 1.1515;
+                        if (dist > 20000) //check if the distance is over half quator length
+                            dist = 20000;
+                        if (dist < 1) //need local node mergers conditioned on resolution
+                            dist = 1;
+                        dist = 1.0/dist;
+                        
+                        Edge e = graphModel.factory().newEdge(s, t, (float) dist, false);
+                        //if (isDirected) 
+                          //  e = graphModel.factory().newEdge(s, t, (float) dist, true);
+                        e.getEdgeData().setLabel("geoDistance");
+                        newGraph.addEdge(e);
+                        //if (isDirected) {
+                          //  e = graphModel.factory().newEdge(t, s, (float) dist, true);
+                            //e.getEdgeData().setLabel("geoDistance");
+                            //newGraph.addEdge(e);
+                        //}
+                    }
+                }
+            }
+        }
+    }
+    
     public void reset(GraphModel graphModel) {
        JOptionPane.showMessageDialog(null, "Under construction...", "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
        //Set the view as current visible view
+    }
+
+    void cooccur(int baseLayer, AttributeColumn entity, AttributeColumn venue) {
+        Graph newGraph = graphModel.getGraphVisible();
+        AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
+        AttributeTable nodeTable = attributeModel.getNodeTable();
+        AttributeColumn Layer = nodeTable.getColumn("Layer[Z]");
+        if (Layer == null) {
+                Layer = nodeTable.addColumn("Layer[Z]", "Layer[Z]", AttributeType.DOUBLE, AttributeOrigin.DATA, new Integer(1));
+                JOptionPane.showMessageDialog(null, "'Layer[Z]' attribute has been added, please edit in the Data laboratory ", 
+                        "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+           }
+        AttributeColumn Longitude = nodeTable.getColumn("Lng");
+        if (Longitude == null) {
+                Longitude = nodeTable.addColumn("Lng", "Lng", AttributeType.DOUBLE, AttributeOrigin.DATA, new Integer(1));
+                JOptionPane.showMessageDialog(null, "'Lng' attribute has been added, please edit in the Data laboratory ", 
+                        "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+           }
+        AttributeColumn Latitude = nodeTable.getColumn("Lat");
+        if (Latitude == null) {
+                Latitude = nodeTable.addColumn("Lat", "Lat", AttributeType.DOUBLE, AttributeOrigin.DATA, new Integer(1));
+                JOptionPane.showMessageDialog(null, "'Lat' attribute has been added, please edit in the Data laboratory ", 
+                        "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+           }
+        
+        for (int i=0; i<newGraph.getNodeCount(); i++){
+            Node s = indicies.get(i); //picking a source entity
+            AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
+            int layer = Integer.parseInt(row.getValue(Layer).toString());
+            
+            if (layer == baseLayer) { //only input layer pairs are considered    
+                for (int j=i+1; j<newGraph.getNodeCount(); j++){
+                    Node t = indicies.get(j); //picking a source entity
+                    AttributeRow row2 = (AttributeRow) t.getNodeData().getAttributes();   
+                    int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
+                    String paper1 = row.getValue(venue).toString();
+                    String paper2 = row2.getValue(venue).toString();
+                    if (paper1 == paper2) { //paper match
+                        if (layer2 == baseLayer) { //only input layer pairs are considered    
+                            double long1 = Double.parseDouble(row.getValue(Longitude).toString());
+                            double long2 = Double.parseDouble(row2.getValue(Longitude).toString());
+                            double lati1 = Double.parseDouble(row.getValue(Latitude).toString());
+                            double lati2 = Double.parseDouble(row2.getValue(Latitude).toString());
+
+                            double theta = long1 - long2;
+                            double dist = Math.sin(deg2rad(lati1)) * Math.sin(deg2rad(lati2)) 
+                                    + Math.cos(deg2rad(lati1)) * Math.cos(deg2rad(lati2)) * Math.cos(deg2rad(theta));
+                            if (Math.abs(dist)>1) //handling numeric error
+                                dist = 1;
+                            else {
+                                dist = Math.acos(dist);
+                                dist = rad2deg(dist);
+                                dist = dist * 60 * 1.1515; //miles
+                                if (dist > 20000) //check if the distance is over half quator length
+                                    dist = 20000;
+                                if (dist < 1) //need local node mergers conditioned on resolution
+                                    dist = 1;
+                            }
+                            //dist = 1.0/dist;
+                            Edge e = graphModel.factory().newEdge(s, t, (float) dist, false);
+                            e.getEdgeData().setLabel("geoDistance");
+                            newGraph.addEdge(e);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
