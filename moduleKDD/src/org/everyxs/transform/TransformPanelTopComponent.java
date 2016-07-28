@@ -891,13 +891,13 @@ public final class TransformPanelTopComponent extends TopComponent {
         String geoFile = "/home/everyan/Dropbox/backups/data/WoSdata/cityListState.csv";
         GraphController gc = Lookup.getDefault().lookup(GraphController.class);
         graphModel = gc.getModel(); 
-        Geocoder cityMap = new Geocoder(graphModel, geoFile);
+        GeocoderOld cityMap = new GeocoderOld(graphModel, geoFile);
         cityMap.map();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         String geoFile = "/home/everyan/Dropbox/backups/data/WoSdata/cityListState.csv";
-        Geocoder cityMap = new Geocoder(graphModel, geoFile);
+        GeocoderOld cityMap = new GeocoderOld(graphModel, geoFile);
         cityMap.countryGather();
     }//GEN-LAST:event_jButton11ActionPerformed
 
