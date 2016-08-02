@@ -82,6 +82,7 @@ public final class TransformPanelTopComponent extends TopComponent {
     int inputType = 0; //input from node attributes
     BuildUKtraffic builder;
     GraphModel graphModel;
+    Geocoder cityMap;
     
     public TransformPanelTopComponent() {
         initComponents();
@@ -100,6 +101,7 @@ public final class TransformPanelTopComponent extends TopComponent {
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
         buttonGroup3 = new javax.swing.ButtonGroup();
+        jToggleButton3 = new javax.swing.JToggleButton();
         topComponent1 = new org.openide.windows.TopComponent();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
@@ -137,7 +139,7 @@ public final class TransformPanelTopComponent extends TopComponent {
         jButton9 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
+        jToggleButton4 = new javax.swing.JToggleButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         jRadioButton7 = new javax.swing.JRadioButton();
@@ -145,6 +147,8 @@ public final class TransformPanelTopComponent extends TopComponent {
         jRadioButton9 = new javax.swing.JRadioButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+
+        org.openide.awt.Mnemonics.setLocalizedText(jToggleButton3, org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jToggleButton3.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jLabel8.text")); // NOI18N
 
@@ -469,10 +473,10 @@ public final class TransformPanelTopComponent extends TopComponent {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton11, org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jButton11.text")); // NOI18N
-        jButton11.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(jToggleButton4, org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jToggleButton4.text")); // NOI18N
+        jToggleButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton11ActionPerformed(evt);
+                jToggleButton4ActionPerformed(evt);
             }
         });
 
@@ -490,20 +494,18 @@ public final class TransformPanelTopComponent extends TopComponent {
                         .addComponent(jButton9))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jToggleButton2)
-                                    .addComponent(jLabel13)
-                                    .addComponent(jButton3)))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jButton4)
-                                .addGap(22, 22, 22)
-                                .addComponent(jButton11)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jToggleButton2)
+                            .addComponent(jLabel13)
+                            .addComponent(jButton3))
+                        .addGap(0, 25, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jButton4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jToggleButton4)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -526,7 +528,7 @@ public final class TransformPanelTopComponent extends TopComponent {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton4)
-                    .addComponent(jButton11))
+                    .addComponent(jToggleButton4))
                 .addContainerGap())
         );
 
@@ -888,18 +890,24 @@ public final class TransformPanelTopComponent extends TopComponent {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        String geoFile = "/home/everyan/Dropbox/backups/data/WoSdata/cityListState.csv";
+        String geoFile = "/home/everyan/Dropbox/slides/WoSdata/cityListState.csv";
         GraphController gc = Lookup.getDefault().lookup(GraphController.class);
         graphModel = gc.getModel(); 
-        Geocoder cityMap = new Geocoder(graphModel, geoFile);
+        cityMap = new Geocoder(graphModel, geoFile);
         cityMap.map();
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-        String geoFile = "/home/everyan/Dropbox/backups/data/WoSdata/cityListState.csv";
-        Geocoder cityMap = new Geocoder(graphModel, geoFile);
-        cityMap.countryGather();
-    }//GEN-LAST:event_jButton11ActionPerformed
+    private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
+        if (jToggleButton4.isSelected()) {
+           String geoFile = "/home/everyan/Dropbox/slides/WoSdata/cityListState.csv";
+           GraphController gc = Lookup.getDefault().lookup(GraphController.class);
+           graphModel = gc.getModel(); 
+           cityMap = new Geocoder(graphModel, geoFile);
+           cityMap.countryGather(graphModel);
+        }
+        else
+           cityMap.countryReset(graphModel);
+    }//GEN-LAST:event_jToggleButton4ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
@@ -907,7 +915,6 @@ public final class TransformPanelTopComponent extends TopComponent {
     private javax.swing.ButtonGroup buttonGroup3;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -949,6 +956,8 @@ public final class TransformPanelTopComponent extends TopComponent {
     private javax.swing.JTextField jTextField9;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JToggleButton jToggleButton2;
+    private javax.swing.JToggleButton jToggleButton3;
+    private javax.swing.JToggleButton jToggleButton4;
     private org.openide.windows.TopComponent topComponent1;
     // End of variables declaration//GEN-END:variables
     @Override

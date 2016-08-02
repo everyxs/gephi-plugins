@@ -27,6 +27,7 @@ import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.GraphView;
+import org.gephi.graph.api.HierarchicalGraph;
 import org.gephi.graph.api.Node;
 import org.openide.util.Lookup;
 
@@ -37,9 +38,9 @@ import org.openide.util.Lookup;
 public class Geocoder {
     
     GraphView oldView;
+    HierarchicalGraph graph;
     HashMap<Integer, Node> indicies = new HashMap<Integer, Node>();
     HashMap<Node, Integer> invIndicies = new HashMap<Node, Integer>();
-    ArrayList<Node> mergeCandidates = new ArrayList<Node>();
     ArrayList<Node> mergeCenters = new ArrayList<Node>();
     
     class City { //inner class Country
@@ -72,7 +73,11 @@ public class Geocoder {
 	 */	
 	public Geocoder(GraphModel graphModel, String dir) {
             oldView = graphModel.getVisibleView();
-            Graph graph = graphModel.getGraph(oldView);
+            if (graphModel.isDirected()) {
+                graph = graphModel.getHierarchicalDirectedGraphVisible();
+            } else {
+                graph = graphModel.getHierarchicalUndirectedGraphVisible();
+            }
             indicies = new HashMap<Integer, Node>();
             invIndicies = new HashMap<Node, Integer>();
             int count = 0;
@@ -195,13 +200,10 @@ public class Geocoder {
             }
         }
         
-        void countryGather () {
-            GraphController gc = Lookup.getDefault().lookup(GraphController.class);
-            GraphModel graphModel = gc.getModel();
-            Graph newGraph = graphModel.getGraph();
+        void countryGather (GraphModel graphModel) {
             AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
             AttributeTable nodeTable = attributeModel.getNodeTable();
-            AttributeColumn degree = nodeTable.getColumn("Lng");
+            AttributeColumn degree = nodeTable.getColumn("Weighted degree");
             if (degree == null) {
                     degree = nodeTable.addColumn("Weighted degree", "Weighted degree", AttributeType.DOUBLE, AttributeOrigin.DATA, new Double(0));
                     JOptionPane.showMessageDialog(null, "'Weighted degree' attribute has been added, please edit in the Data laboratory ", 
@@ -214,32 +216,30 @@ public class Geocoder {
                             "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
                }
             AttributeColumn Layer = nodeTable.getColumn("layer[Z]");
+            ArrayList<Double> maxDegree = new ArrayList<Double>();
+            ArrayList<String> countryList = new ArrayList<String>();
+            ArrayList<Double> totalDegree = new ArrayList<Double>();
             
             for (int i=0; i<indicies.size(); i++){
                 Node s = indicies.get(i); //picking a source node
-                String matchName = s.getNodeData().getLabel().replace(" ", "");
                 AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
                 int layer = Integer.parseInt(row.getValue(Layer).toString());
-                ArrayList<Double> maxDegree = new ArrayList<Double>();
                 if (layer == 0) {
-                    String count =  row.getValue(Country).toString();
-                    if (mergeCenters.contains(count)) {
-                        int idx = maxDegree.indexOf(count);
-                        if ((Double)row.getValue(degree) > maxDegree.get(idx)){
+                    String countryName =  row.getValue(Country).toString();
+                    if (countryList.contains(countryName)) {
+                        int idx = countryList.indexOf(countryName);
+                        double temp = (Double)row.getValue(degree);
+                        totalDegree.set(idx, totalDegree.get(idx)+temp);
+                        if (temp > maxDegree.get(idx)){
                             mergeCenters.set(idx,s);
-                            maxDegree.set(idx, (Double)row.getValue(degree));
-                        }
-                                
+                            maxDegree.set(idx, temp);
+                        }    
                     }
                     else {
-                        
-                    }
-                    for (int j=0; j<cityList.size(); j++) {
-                        if (cityList.get(j).standardName.replace(" ", "").equalsIgnoreCase(matchName)) {
-                            row.setValue(degree, cityList.get(j).longitude);
-                            row.setValue(Country, cityList.get(j).country);
-                            
-                        }
+                        mergeCenters.add(s);
+                        countryList.add(countryName);
+                        maxDegree.add((Double)row.getValue(degree));
+                        totalDegree.add((Double)row.getValue(degree));
                     }
 
                 }
@@ -247,39 +247,50 @@ public class Geocoder {
             
         //GraphView newView = graphModel.newView();     //Duplicate main view
         
-        GraphElementsController GEController = Lookup.getDefault().lookup(GraphElementsController.class);
         for (Node c : mergeCenters) {
-            Node[] neighbors = newGraph.getNeighbors(c).toArray();
+            AttributeRow row = (AttributeRow) c.getNodeData().getAttributes();
+            String countryName =  row.getValue(Country).toString();
             ArrayList<Node> mergeList = new ArrayList<Node>();
             mergeList.add(c);
-            for (Node n : neighbors) {
-                AttributeRow row2 = (AttributeRow) n.getNodeData().getAttributes();         
+            for (int i=0; i<indicies.size(); i++){
+                Node s = indicies.get(i); //picking a source node
+                AttributeRow row2 = (AttributeRow) s.getNodeData().getAttributes();   
+                String countryName2 =  row2.getValue(Country).toString();
                 int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
-                if (layer2==0 && !mergeCenters.contains(n)) {
-                    mergeList.add(n);
+                if (layer2==0 && countryName.equals(countryName2) && !mergeCenters.contains(s)) {
+                    mergeList.add(s);
                 }
             }
             Node[] mergeArray = new Node[mergeList.size()];
             mergeArray = mergeList.toArray(mergeArray);
-            GEController.groupNodes(mergeArray);
-            for (Node n : mergeArray)
-                mergeCandidates.remove(n);
+            Node group = graph.groupNodes(mergeArray); 
+            AttributeColumn Longitude = nodeTable.getColumn("Lng");
+            if (Longitude == null) {
+                    Longitude = nodeTable.addColumn("Lng", "Lng", AttributeType.DOUBLE, AttributeOrigin.DATA, new Double(0));
+                    JOptionPane.showMessageDialog(null, "'Lng' attribute has been added, please edit in the Data laboratory ", 
+                            "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+               }
+            AttributeColumn Latitude = nodeTable.getColumn("Lat");
+            if (Latitude == null) {
+                    Latitude = nodeTable.addColumn("Lat", "Lat", AttributeType.DOUBLE, AttributeOrigin.DATA, new Double(0));
+                    JOptionPane.showMessageDialog(null, "'Lat' attribute has been added, please edit in the Data laboratory ", 
+                            "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+               }
+            
+            c.getNodeData().setLabel(countryName);
+            AttributeRow row3 = (AttributeRow) group.getNodeData().getAttributes(); 
+            row3.setValue(Country, countryName);
+            row3.setValue(Longitude, row.getValue(Longitude));
+            row3.setValue(Latitude, row.getValue(Latitude));
+            row3.setValue(degree, totalDegree.get(mergeCenters.indexOf(c)));
         }
-        for (Node m : mergeCandidates) {
-            Node[] neighbors = newGraph.getNeighbors(m).toArray();
-            ArrayList<Node> mergeList = new ArrayList<Node>();
-            mergeList.add(m);
-            for (Node n : neighbors) {
-                AttributeRow row2 = (AttributeRow) n.getNodeData().getAttributes();         
-                int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
-                if (layer2==0) {
-                    mergeList.add(n);
-                }
-            }
-            Node[] mergeArray = new Node[mergeList.size()];
-            mergeArray = mergeList.toArray(mergeArray);
-            GEController.groupNodes(mergeArray);
-        }
+    }
+        
+    void countryReset(GraphModel graphModel) {
+        Graph merged = graphModel.getGraphVisible();
+        Node[] mergedL = merged.getNodes().toArray();
+        for (Node u : mergedL) 
+            graph.ungroupNodes(u);
     }
         
 }
