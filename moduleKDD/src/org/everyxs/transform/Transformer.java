@@ -174,60 +174,65 @@ public class Transformer {
                     JOptionPane.showMessageDialog(null, "'Layer[Z]' attribute has been added, please edit in the Data laboratory ", 
                             "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
                 }
-                for (int i=0; i<newGraph.getNodeCount(); i++){
-                    Node s = indicies.get(i); //picking a source node
-                    AttributeRow row1 = (AttributeRow) s.getNodeData().getAttributes(); //get bias delay input    
-                    int layer = Integer.parseInt(row1.getValue(Layer).toString());
-                    if (layer == baseLayer) { //only transform the base layer
-                        EdgeIterable iter;
-                        if (isDirected)
-                            iter = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(s);
-                        else 
-                            iter = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(s);
-                        
-                        Edge[] edgeList = iter.toArray();
+                EdgeIterable iter;
+                if (isDirected)
+                    iter = ((HierarchicalDirectedGraph) newGraph).getEdgesAndMetaEdges();
+                else 
+                    iter = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges();
+                Edge[] edgeList = iter.toArray();
+                for (int i=0; i<edgeList.length; i++){
+                    if (edgeList[i].getEdgeData().getLabel().equals("coauthor")) {
+                        Node s = edgeList[i].getSource();
+                        Node t = edgeList[i].getTarget();
+                        Node s2 = indicies.get(i);
+                        Node t2 = indicies.get(i+1);
+                        AttributeRow row1 = (AttributeRow) s.getNodeData().getAttributes(); 
+                        AttributeRow row2 = (AttributeRow) t.getNodeData().getAttributes(); 
                         boolean map = false;
-                        Node input1 = indicies.get(i+1);
                         
-                        for (int j=0; j<edgeList.length; j++) {
-                            if (edgeList[j].getEdgeData().getLabel()=="interEdge") { // get the inter-layer connection
-                                input1 = edgeList[j].getSource();
-                                AttributeRow row2 = (AttributeRow) input1.getNodeData().getAttributes(); 
-                                int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
-                                if (layer2 ==2) //make sure the mapping is to the input layer
-                                    map = true;
+                        EdgeIterable iter2;
+                        if (isDirected) 
+                            iter2 = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(s);
+                        else 
+                            iter2 = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(s);
+                        
+                        for (Edge e2 : iter2) {
+                            if ("interEdge".equals(e2.getEdgeData().getLabel())) {
+                                map = true;
+                                s2 = e2.getTarget();
                             }
                         }
+                        if (map) {
+                            map = false;
+                            if (isDirected) 
+                                iter2 = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(t);
+                            else 
+                                iter2 = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(t);
+
+                            for (Edge e2 : iter2) {
+                                if ("interEdge".equals(e2.getEdgeData().getLabel())) {
+                                    map = true;
+                                    t2 = e2.getTarget();
+                                }
+                            }
+                        }
+                        
                         double reweigh = 1;
-                        if (map == true) { // if there is a geo interLayerMap for s
-                            for (int j=0; j<edgeList.length; j++) {
-                                if (edgeList[j].getEdgeData().getLabel()!="interEdge") { // only for base layer connections
-                                    Node t = edgeList[j].getTarget();
-                                    EdgeIterable iter2;
-                                    if (isDirected) 
-                                        iter2 = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(t);
-                                    else 
-                                        iter2 = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(t);
-                                    for (Edge e2 : iter2) {
-                                        if (e2.getEdgeData().getLabel()=="interEdge") { // get the inter-layer connection at the target
-                                            Node input2 = e2.getSource();  
-                                            AttributeRow row2 = (AttributeRow) input2.getNodeData().getAttributes(); 
-                                            int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
-                                            if (layer2 ==2) {//make sure the mapping is to the input layer
-                                                if (input2.getId() == input1.getId())
-                                                    reweigh = 2; //same geolicaion boost
-                                                else {
-                                                    Edge eInput = newGraph.getEdge(input1, input2);
-                                                    reweigh = Math.pow(eInput.getWeight(), power); //raising to the bias power
-                                                }
-                                            }
-                                        }   
-                                        edgeList[j].setWeight((float) (edgeList[j].getWeight() * reweigh));
+                        if (map == true) { // if there is a complete multi-affliate map
+                            if (newGraph.getEdge(s2, t2)!=null) {
+                                if ("multiAffli".equals(newGraph.getEdge(s2, t2).getEdgeData().getLabel())) { // get the multi-affliate edge\
+                                    if (s2.getId() == t2.getId())
+                                        reweigh = 0.001; //same geolicaion boost
+                                    else {
+                                        Edge eInput = newGraph.getEdge(s2, t2);
+                                        if (eInput != null)
+                                            reweigh = 0.5; //raising to the bias power
                                     }
                                 }
                             }
                         }
-                    } 
+                        edgeList[i].setWeight((float) (edgeList[i].getWeight() * reweigh));
+                    }
                 }
             break;
         }

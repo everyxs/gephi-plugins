@@ -23,11 +23,15 @@ import org.gephi.data.attributes.api.AttributeRow;
 import org.gephi.data.attributes.api.AttributeTable;
 import org.gephi.data.attributes.api.AttributeType;
 import org.gephi.datalab.api.GraphElementsController;
+import org.gephi.graph.api.Edge;
+import org.gephi.graph.api.EdgeIterable;
 import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.GraphView;
+import org.gephi.graph.api.HierarchicalDirectedGraph;
 import org.gephi.graph.api.HierarchicalGraph;
+import org.gephi.graph.api.HierarchicalUndirectedGraph;
 import org.gephi.graph.api.Node;
 import org.openide.util.Lookup;
 
@@ -36,7 +40,7 @@ import org.openide.util.Lookup;
  * @author everyan
  */
 public class Geocoder {
-    
+    boolean directed;
     GraphView oldView;
     HierarchicalGraph graph;
     HashMap<Integer, Node> indicies = new HashMap<Integer, Node>();
@@ -73,7 +77,8 @@ public class Geocoder {
 	 */	
 	public Geocoder(GraphModel graphModel, String dir) {
             oldView = graphModel.getVisibleView();
-            if (graphModel.isDirected()) {
+            directed = graphModel.isDirected();
+            if (directed) {
                 graph = graphModel.getHierarchicalDirectedGraphVisible();
             } else {
                 graph = graphModel.getHierarchicalUndirectedGraphVisible();
@@ -154,6 +159,23 @@ public class Geocoder {
                     ex.printStackTrace();
             }
         }
+       /**
+        * This function converts decimal degrees to radians	
+        * @param deg double
+        * @return double
+        */
+       private static double deg2rad(double deg) {
+               return (deg * Math.PI / 180.0);
+       }
+
+       /**
+        * This function converts radians to decimal degrees
+        * @param rad double
+        * @return double
+        */
+       private static double rad2deg(double rad) {
+               return (rad * 180 / Math.PI);
+       }
         
         void map () {
             AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
@@ -198,6 +220,39 @@ public class Geocoder {
 
                 }
             }
+            EdgeIterable iter;
+                if (directed) {
+                        iter = ((HierarchicalDirectedGraph) graph).getEdgesAndMetaEdges();
+                    } else {
+                        iter = ((HierarchicalUndirectedGraph) graph).getEdgesAndMetaEdges();
+                    }
+                Edge[] eList = iter.toArray();
+                for (Edge e : eList) {
+                    Node source = e.getSource();
+                    Node target = e.getTarget();
+                    AttributeRow row = (AttributeRow) source.getNodeData().getAttributes();  
+                    AttributeRow row2 = (AttributeRow) target.getNodeData().getAttributes();    
+                    Double lat1 = Double.parseDouble(row.getValue(Latitude).toString());
+                    Double lng1 = Double.parseDouble(row.getValue(Longitude).toString());
+                    Double lat2 = Double.parseDouble(row2.getValue(Latitude).toString());
+                    Double lng2 = Double.parseDouble(row2.getValue(Longitude).toString());
+                    int layer1 = Integer.parseInt(row.getValue(Layer).toString());
+                    int layer2 = Integer.parseInt(row2.getValue(Layer).toString());                    
+                    
+                    if (layer1==0&&layer2==0) {
+                        double theta = lng1 - lng2;
+                        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
+                                + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+                        dist = Math.acos(dist);
+                        dist = rad2deg(dist);
+                        dist = dist * 60 * 1.1515;
+                        if (dist > 20000) //check if the distance is over half quator length
+                            dist = 20000;
+                        if (dist < 1) //need local node mergers conditioned on resolution
+                            dist = 1;
+                        e.setWeight((float) dist); 
+                    }
+                }
         }
         
         void countryGather (GraphModel graphModel) {
