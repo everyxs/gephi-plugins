@@ -319,16 +319,16 @@ public class Geocoder {
             Node[] mergeArray = new Node[mergeList.size()];
             mergeArray = mergeList.toArray(mergeArray);
             Node group = graph.groupNodes(mergeArray); 
-            AttributeColumn Longitude = nodeTable.getColumn("Lng");
-            if (Longitude == null) {
-                    Longitude = nodeTable.addColumn("Lng", "Lng", AttributeType.DOUBLE, AttributeOrigin.DATA, new Double(0));
-                    JOptionPane.showMessageDialog(null, "'Lng' attribute has been added, please edit in the Data laboratory ", 
-                            "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
-               }
             AttributeColumn Latitude = nodeTable.getColumn("Lat");
             if (Latitude == null) {
                     Latitude = nodeTable.addColumn("Lat", "Lat", AttributeType.DOUBLE, AttributeOrigin.DATA, new Double(0));
                     JOptionPane.showMessageDialog(null, "'Lat' attribute has been added, please edit in the Data laboratory ", 
+                            "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+               }
+            AttributeColumn Longitude = nodeTable.getColumn("Lng");
+            if (Longitude == null) {
+                    Longitude = nodeTable.addColumn("Lng", "Lng", AttributeType.DOUBLE, AttributeOrigin.DATA, new Double(0));
+                    JOptionPane.showMessageDialog(null, "'Lng' attribute has been added, please edit in the Data laboratory ", 
                             "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
                }
             
