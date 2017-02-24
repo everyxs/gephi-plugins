@@ -22,6 +22,8 @@ import org.gephi.data.attributes.api.AttributeOrigin;
 import org.gephi.data.attributes.api.AttributeRow;
 import org.gephi.data.attributes.api.AttributeTable;
 import org.gephi.data.attributes.api.AttributeType;
+import static org.gephi.data.attributes.api.AttributeType.DOUBLE;
+import org.gephi.datalab.api.AttributeColumnsController;
 import org.gephi.datalab.api.GraphElementsController;
 import org.gephi.graph.api.Edge;
 import org.gephi.graph.api.EdgeIterable;
@@ -46,6 +48,10 @@ public class Geocoder {
     HashMap<Integer, Node> indicies = new HashMap<Integer, Node>();
     HashMap<Node, Integer> invIndicies = new HashMap<Node, Integer>();
     ArrayList<Node> mergeCenters = new ArrayList<Node>();
+
+    private void copyColumnDataToOtherColumn(AttributeTable edgeTable, AttributeColumn Weight, AttributeColumn Count) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     class City { //inner class Country
 		String standardName;
@@ -95,6 +101,7 @@ public class Geocoder {
             String line="";
             String word="";
             String word2 = "";
+            String word3 = "";
             double[] coordinates = new double[2];
             //Build the standard city properties from GIS lists
             FileReader cityReader = null;
@@ -105,56 +112,50 @@ public class Geocoder {
                     ex.printStackTrace();
             }
 
-            count = 0;
-            BufferedReader cityBuffer =  new BufferedReader(cityReader);
-            final Pattern p = Pattern.compile("(?:\"(?:[^\"\\\\]++|\\\\.)*+\"|[^\",]++)++|,"); //csv tokenizer
-            try {
-                    line = cityBuffer.readLine(); //skip header row
-                    while ((line = cityBuffer.readLine()) != null) { //Read each row
-                        Matcher m = p.matcher(line);
-                        m.find();m.find();//Paper ID
-                        m.find();m.find();//Pub year
-                        m.find();m.find();//IU address
-                        m.find();m.find();//city IU
-                        m.find();m.find();//full address
-                        m.find();m.find();//WoS city
-                        m.find();//WoS state
-                        word2 = m.group();
-                        if (! word2.equals(",")) {
-                            m.find();
-                        }
-                        else;
-                        m.find();
-                        word2 = m.group(); //WoS Country
-                        m.find();
-                        m.find();m.find();//skip address
-                        m.find();//Latitude
-                        try {
-                                coordinates[0] = Double.parseDouble(m.group());
-                        } catch (NumberFormatException e) {
-                            System.out.println(count + " row error");
-                        }
-                        coordinates[0] = Double.parseDouble(m.group());
-                        m.find();
-                        m.find();//Longitude
-                        coordinates[1] = Double.parseDouble(m.group());
-                        m.find();m.find();
-                        word = m.group();//Standard name
-                        boolean exist = false;
-                        for (int i=0; i<cityList.size(); i++) {
-                            if (cityList.get(i).standardName.equals(m.group())) {
-                                    exist = true;
-                                    cityList.get(i).matchName.add(word);
-                            }
-                        }
-                        if (!exist) {
-                                City newCity = new City(word, word2, coordinates);
-				newCity.matchName.add(word);
-                                cityList.add(newCity);
-                                count++;
-                        }
-                    }
-            }
+                count = 0;
+		int rowCount = 0;
+		BufferedReader cityBuffer =  new BufferedReader(cityReader);
+		final Pattern p = Pattern.compile("(?:\"(?:[^\"\\\\]++|\\\\.)*+\"|[^\",]++)++|,"); //csv tokenizer
+		try {
+			line = cityBuffer.readLine(); //skip header row
+			while ((line = cityBuffer.readLine()) != null) { //Read each row
+				rowCount++;
+			    Matcher m = p.matcher(line);
+			    m.find();m.find();//full address
+			    m.find();//Latitude
+			    if (!m.group().equals(",")) {
+				    coordinates[0] = Double.parseDouble(m.group());
+				    m.find();
+			    }
+			    else //if no geocoding
+			        coordinates[0] = 500;
+			    m.find();//Longitude
+			    if (!m.group().equals(",")) {
+				    coordinates[1] = Double.parseDouble(m.group());
+				    m.find();
+			    }
+			    else  //if no geocoding
+			        coordinates[1] = 500;
+			    m.find();//standard name
+			    word = m.group();
+			    m.find();
+			    m.find();//country
+			    word2 = m.group();
+			    m.find();
+			    m.find();m.find();//number of affiliations
+			    m.find();m.find();//merged city IDs
+			    m.find();//merged city List
+			    word3 = m.group();
+			    City newCity = new City(word, word2, coordinates);
+			    String matchStrings[] = word3.split("\\|"); //all cities for each author
+			    for (int i=0; i<matchStrings.length; i++)
+			    	newCity.matchName.add(matchStrings[i]);
+			    cityList.add(newCity);
+			    count++;
+			}
+			System.out.println(rowCount +" cities read.");
+			System.out.println(count +" cities added.");
+		}
             catch (IOException ex) {
                     ex.printStackTrace();
             }
@@ -180,16 +181,17 @@ public class Geocoder {
         void map () {
             AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
             AttributeTable nodeTable = attributeModel.getNodeTable();
-            AttributeColumn Longitude = nodeTable.getColumn("Lng");
-            if (Longitude == null) {
-                    Longitude = nodeTable.addColumn("Lng", "Lng", AttributeType.DOUBLE, AttributeOrigin.DATA, new Double(0));
-                    JOptionPane.showMessageDialog(null, "'Lng' attribute has been added, please edit in the Data laboratory ", 
-                            "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
-               }
+
             AttributeColumn Latitude = nodeTable.getColumn("Lat");
             if (Latitude == null) {
                     Latitude = nodeTable.addColumn("Lat", "Lat", AttributeType.DOUBLE, AttributeOrigin.DATA, new Double(0));
                     JOptionPane.showMessageDialog(null, "'Lat' attribute has been added, please edit in the Data laboratory ", 
+                            "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+               }
+            AttributeColumn Longitude = nodeTable.getColumn("Lng");
+            if (Longitude == null) {
+                    Longitude = nodeTable.addColumn("Lng", "Lng", AttributeType.DOUBLE, AttributeOrigin.DATA, new Double(0));
+                    JOptionPane.showMessageDialog(null, "'Lng' attribute has been added, please edit in the Data laboratory ", 
                             "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
                }
             AttributeColumn Country = nodeTable.getColumn("Country");
@@ -199,6 +201,14 @@ public class Geocoder {
                             "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
                }
             AttributeColumn Layer = nodeTable.getColumn("layer[Z]");
+            
+            AttributeTable edgeTable = attributeModel.getEdgeTable();
+            AttributeColumnsController impl = Lookup.getDefault().lookup(AttributeColumnsController.class);
+            AttributeColumn Weight = edgeTable.getColumn("Weight");
+            AttributeColumn Count = impl.duplicateColumn(edgeTable, Weight, "Count", DOUBLE);
+            JOptionPane.showMessageDialog(null, "'Count' attribute has been copied to the edges, please edit in the Data laboratory ", 
+                    "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+               
             
             for (int i=0; i<indicies.size(); i++){
                 Node s = indicies.get(i); //picking a source node
@@ -334,9 +344,9 @@ public class Geocoder {
             
             c.getNodeData().setLabel(countryName);
             AttributeRow row3 = (AttributeRow) group.getNodeData().getAttributes(); 
-            row3.setValue(Country, countryName);
-            row3.setValue(Longitude, row.getValue(Longitude));
             row3.setValue(Latitude, row.getValue(Latitude));
+            row3.setValue(Longitude, row.getValue(Longitude));
+            row3.setValue(Country, countryName);
             row3.setValue(degree, totalDegree.get(mergeCenters.indexOf(c)));
         }
     }

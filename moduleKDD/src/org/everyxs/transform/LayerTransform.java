@@ -8,11 +8,14 @@ package org.everyxs.transform;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.JOptionPane;
 import org.gephi.data.attributes.api.AttributeColumn;
 import org.gephi.data.attributes.api.AttributeController;
 import org.gephi.data.attributes.api.AttributeModel;
+import org.gephi.data.attributes.api.AttributeOrigin;
 import org.gephi.data.attributes.api.AttributeRow;
 import org.gephi.data.attributes.api.AttributeTable;
+import org.gephi.data.attributes.api.AttributeType;
 import org.gephi.datalab.api.GraphElementsController;
 import org.gephi.datalab.spi.rows.merge.AttributeRowsMergeStrategy;
 import org.gephi.graph.api.Edge;
@@ -51,7 +54,25 @@ public class LayerTransform {
             count++;
         }
     }
+    
+    /**
+     * This function converts decimal degrees to radians	
+     * @param deg double
+     * @return double
+     */
+    private static double deg2rad(double deg) {
+            return (deg * Math.PI / 180.0);
+    }
 
+    /**
+     * This function converts radians to decimal degrees
+     * @param rad double
+     * @return double
+     */
+    private static double rad2deg(double rad) {
+            return (rad * 180 / Math.PI);
+    }
+    
     public void build(GraphModel graphModel, int interType, int inputLayer, int baseLayer) {
         GraphController graphController = Lookup.getDefault().lookup(GraphController.class);
         Boolean isDirected = false;
@@ -68,7 +89,12 @@ public class LayerTransform {
             case 3:
                 AttributeColumn Longitude = nodeTable.getColumn("Lng");
                 AttributeColumn Latitude = nodeTable.getColumn("Lat");
-
+                AttributeColumn dist2Air = nodeTable.getColumn("Dist2Air");
+                if (dist2Air == null) {
+                        dist2Air = nodeTable.addColumn("Dist2Air", "Dist2Air", AttributeType.DOUBLE, AttributeOrigin.DATA, new Double(0));
+                        JOptionPane.showMessageDialog(null, "'Dist2Air' attribute has been added, please edit in the Data laboratory ", 
+                                "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+                }
                 //AttributeColumn names = nodeTable.getColumn("Label"); //for the same node in different layers
                 //PartitionController partitionController = Lookup.getDefault().lookup(PartitionController.class);
                 //Partition group = partitionController.buildPartition(names, newGraph); //node instances group
@@ -80,8 +106,6 @@ public class LayerTransform {
                     AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
                     int layer = Integer.parseInt(row.getValue(Layer).toString());
                     if (layer == 0) {
-                        double longitude = Double.parseDouble(row.getValue(Longitude).toString());
-                        double latitude = Double.parseDouble(row.getValue(Latitude).toString());
                         double[] tempDist = new double[2];
                         tempDist[0] = Double.MAX_VALUE;
                         tempDist[1] = Double.MAX_VALUE;
@@ -90,26 +114,40 @@ public class LayerTransform {
                             Node t = indicies.get(j); //picking a target node
                             AttributeRow row2 = (AttributeRow) t.getNodeData().getAttributes();   
                             int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
-                            double longitude2 = Double.parseDouble(row2.getValue(Longitude).toString());
-                            double latitude2 = Double.parseDouble(row2.getValue(Latitude).toString());
                             if (layer2 == 2) {
-                                double distance = Math.abs(longitude2 - longitude) + Math.abs(latitude2 - latitude);
-                                if (distance < tempDist[0]){
-                                    tempDist[0] = distance;
+                                double long1 = Double.parseDouble(row.getValue(Longitude).toString());
+                                double long2 = Double.parseDouble(row2.getValue(Longitude).toString());
+                                double lati1 = Double.parseDouble(row.getValue(Latitude).toString());
+                                double lati2 = Double.parseDouble(row2.getValue(Latitude).toString());
+
+                                double theta = long1 - long2;
+                                double dist = Math.sin(deg2rad(lati1)) * Math.sin(deg2rad(lati2)) 
+                                        + Math.cos(deg2rad(lati1)) * Math.cos(deg2rad(lati2)) * Math.cos(deg2rad(theta));
+                                dist = Math.acos(dist);
+                                dist = rad2deg(dist);
+                                dist = dist * 60 * 1.1515;
+                                if (dist > 20000) //check if the distance is over half quator length
+                                    dist = 20000;
+                                if (dist < 1) //need local node mergers conditioned on resolution
+                                    dist = 1;
+                                if (dist < tempDist[0]){
+                                    tempDist[0] = dist;
                                     tempNodes[0] = t;
                                 }
                             }
+                            /*
                             if (layer2 == 1) {
                                 double distance = Math.abs(longitude2 - longitude) + Math.abs(latitude2 - latitude);
                                 if (distance < tempDist[1]){
                                     tempDist[1] = distance;
                                     tempNodes[1] = t;
                                 }
-                            }
+                            }*/
                         }
                         Edge e2 = graphModel.factory().newEdge(s, tempNodes[0], (float) tempDist[0], false);
                         e2.getEdgeData().setLabel("interEdge");
                         newGraph.addEdge(e2);
+                        row.setValue(dist2Air, tempDist[0]);
                     }
                 }
             break;
