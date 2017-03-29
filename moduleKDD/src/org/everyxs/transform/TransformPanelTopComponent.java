@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import no.uib.cipr.matrix.NotConvergedException;
 import org.everyxs.dynamics.GlobalPartition;
 import org.everyxs.dynamics.LocalPartition;
 import org.everyxs.transform.LayerTransform;
@@ -42,6 +43,7 @@ import org.gephi.partition.plugin.NodeColorTransformer;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
@@ -143,7 +145,6 @@ public final class TransformPanelTopComponent extends TopComponent {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jToggleButton4 = new javax.swing.JToggleButton();
-        jToggleButton1 = new javax.swing.JToggleButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         jRadioButton7 = new javax.swing.JRadioButton();
@@ -487,13 +488,6 @@ public final class TransformPanelTopComponent extends TopComponent {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jToggleButton1, org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jToggleButton1.text")); // NOI18N
-        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -512,16 +506,13 @@ public final class TransformPanelTopComponent extends TopComponent {
                         .addComponent(jButton9))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jToggleButton2)
-                                    .addComponent(jLabel13)
-                                    .addComponent(jButton3)))
-                            .addComponent(jToggleButton1))
+                            .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jToggleButton2)
+                            .addComponent(jLabel13)
+                            .addComponent(jButton3))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -542,9 +533,7 @@ public final class TransformPanelTopComponent extends TopComponent {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton8)
                     .addComponent(jButton9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
-                .addComponent(jToggleButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton4)
                     .addComponent(jToggleButton4))
@@ -747,7 +736,11 @@ public final class TransformPanelTopComponent extends TopComponent {
         Graph graph = graphModel.getGraphVisible();
         System.out.println("Nodes: " + graph.getNodeCount());
         System.out.println("Edges: " + graph.getEdgeCount());
-        transformer.globalTransform(graphModel, transformType, baseLayer, inputLayer, 1);
+        try {
+            transformer.globalTransform(graphModel, transformType, baseLayer, inputLayer, 1);
+        } catch (NotConvergedException ex) {
+            Exceptions.printStackTrace(ex);
+        }
         System.out.println("Nodes: " + graph.getNodeCount());
         System.out.println("Edges: " + graph.getEdgeCount());
     }//GEN-LAST:event_jButton5ActionPerformed
@@ -852,10 +845,6 @@ public final class TransformPanelTopComponent extends TopComponent {
         inputType = 0; //input from node attributes
     }//GEN-LAST:event_jRadioButton3ActionPerformed
 
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        transformer.flightFlow(inputLayer, baseLayer);
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
-
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         graphModel.setVisibleView(null);       //Reset the full as current visible view        // TODO add your handling code here:
     }//GEN-LAST:event_jButton9ActionPerformed
@@ -880,7 +869,12 @@ public final class TransformPanelTopComponent extends TopComponent {
                     JOptionPane.showMessageDialog(null, "'Lat' attribute has been added, please edit in the Data laboratory ", 
                             "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
                }
-            transformer.distance(inputLayer);
+            //transformer.distance(inputLayer);
+            try {
+                transformer.flightFlow(inputLayer, baseLayer);
+            } catch (NotConvergedException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
         else
             JOptionPane.showMessageDialog(null, "Please select geo-coordinates as input type", 
@@ -976,7 +970,6 @@ public final class TransformPanelTopComponent extends TopComponent {
     private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField9;
-    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JToggleButton jToggleButton3;
     private javax.swing.JToggleButton jToggleButton4;

@@ -121,7 +121,8 @@ public class Geocoder {
 			while ((line = cityBuffer.readLine()) != null) { //Read each row
 				rowCount++;
 			    Matcher m = p.matcher(line);
-			    m.find();m.find();//full address
+			    m.find();//full address
+			    m.find();
 			    m.find();//Latitude
 			    if (!m.group().equals(",")) {
 				    coordinates[0] = Double.parseDouble(m.group());
@@ -137,17 +138,23 @@ public class Geocoder {
 			    else  //if no geocoding
 			        coordinates[1] = 500;
 			    m.find();//standard name
-			    word = m.group();
+			    word = m.group().replace("\"", "");
 			    m.find();
 			    m.find();//country
-			    word2 = m.group();
+			    word2 = m.group().replace("\"", "");
+			    if (word2.equals("USA"))
+			    	word2 = "United States"; //Alias for USA
+			    if (word2.equals("Peoples R China")) 
+			    	word2 = "China"; //Alias for China
+			    if (word2.equals("England")||word2.equals("Scotland")||word2.equals("Wales")||word2.equals("North Ireland")) 
+			    	word2 = "United Kingdom"; //Alias for United Kingdom
 			    m.find();
 			    m.find();m.find();//number of affiliations
 			    m.find();m.find();//merged city IDs
 			    m.find();//merged city List
 			    word3 = m.group();
 			    City newCity = new City(word, word2, coordinates);
-			    String matchStrings[] = word3.split("\\|"); //all cities for each author
+			    String matchStrings[] = word3.replace("\"", "").split("\\|"); //all cities for each author
 			    for (int i=0; i<matchStrings.length; i++)
 			    	newCity.matchName.add(matchStrings[i]);
 			    cityList.add(newCity);
