@@ -17,9 +17,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
-import no.uib.cipr.matrix.DenseMatrix;
-import no.uib.cipr.matrix.EVD;
-import no.uib.cipr.matrix.Matrix;
 import no.uib.cipr.matrix.NotConvergedException;
 import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.OpenMapRealMatrix;
@@ -281,13 +278,15 @@ public class Transformer {
                             double reweigh = 0;
                             int source = invIndicies.get(s2);
                             int target = invIndicies.get(t2);
-                            if (flowMat.getEntry(source, target)>0) 
+                            if (newGraph.getEdge(s2, t2)!=null) 
+                                //reweigh = newGraph.getEdge(s2, t2).getWeight();
+                            //if (flowMat.getEntry(source, target)>0) 
                                 reweigh = flowMat.getEntry(source, target);
                             //edgeList[i].setWeight((float) (edgeList[i].getWeight() * reweigh));
                             edgeList[i].setWeight((float) reweigh);
                         }
                         else // defualt to 0 for exponential regression
-                            edgeList[i].setWeight((float) 0);
+                            edgeList[i].setWeight((float) -0.1);
                     }
                 }
             break;
@@ -314,7 +313,7 @@ public class Transformer {
                             iter2 = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(s);
                         
                         for (Edge e2 : iter2) {
-                            if ("interEdge".equalsIgnoreCase(e2.getEdgeData().getLabel())) {
+                            if ("interCoaffiliate".equalsIgnoreCase(e2.getEdgeData().getLabel())) {
                                 map = true;
                                 s2 = e2.getTarget();
                             }
@@ -327,7 +326,7 @@ public class Transformer {
                                 iter2 = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(t);
 
                             for (Edge e2 : iter2) {
-                                if ("interEdge".equalsIgnoreCase(e2.getEdgeData().getLabel())) {
+                                if ("interCoaffiliate".equalsIgnoreCase(e2.getEdgeData().getLabel())) {
                                     map = true;
                                     t2 = e2.getTarget();
                                 }
@@ -337,7 +336,7 @@ public class Transformer {
                         if (map == true) { // if there is a complete multi-affliate map
                             double reweigh = 0;
                             if (newGraph.getEdge(s2, t2)!=null) {
-                                if ("multiAffli".equalsIgnoreCase(newGraph.getEdge(s2, t2).getEdgeData().getLabel())) { // get the multi-affliate edge\
+                                if ("MultiAffiliate".equalsIgnoreCase(newGraph.getEdge(s2, t2).getEdgeData().getLabel())) { // get the multi-affliate edge\
                                     /*if (s2.getId() == t2.getId())
                                         reweigh = 10; //same geolicaion boost
                                     else {
@@ -392,9 +391,9 @@ public class Transformer {
                         if (newGraph.getEdge(s, t)!=null){
                             flowMat.setEntry(i, j, newGraph.getEdge(s, t).getWeight());
                             
-                            AttributeRow edgeRow = (AttributeRow) newGraph.getEdge(s, t).getEdgeData().getAttributes();
-                            double geoDist = Double.parseDouble(edgeRow.getValue(Distance).toString());
-                            flowMat.setEntry(i, j, flowMat.getEntry(i, j));
+                            //AttributeRow edgeRow = (AttributeRow) newGraph.getEdge(s, t).getEdgeData().getAttributes();
+                            //double geoDist = Double.parseDouble(edgeRow.getValue(Distance).toString());
+                            //flowMat.setEntry(i, j, flowMat.getEntry(i, j)); 
                             //newGraph.getEdge(s, t).setWeight((float) flowMat.getEntry(i, j));
                         }
                     }
@@ -402,7 +401,7 @@ public class Transformer {
             }
         }
         
-       
+        
         int size = flowMat.getColumnDimension();
         double[] eVector = new double[size];
         double[][] stochastic = new double[size][size];
@@ -425,6 +424,13 @@ public class Transformer {
                     stochastic[j][i] = stochastic[j][i]/sum[i]; //column stochastic matrix
         }
         for (int i=0; i<size; i++) {
+            for (int j=0; j<size; j++){
+                flowMat.setEntry(i, j, stochastic[i][j]); 
+            }
+        }
+        
+        /*
+        for (int i=0; i<size; i++) {
             eVector[i] = sum[i]/tsum;
         }
         
@@ -439,11 +445,13 @@ public class Transformer {
         for (int i=0; i<size; i++) 
             for (int j=0; j<size; j++) 
                 flowMat.setEntry(i, j, (fundMat.getEntry(j, j)-fundMat.getEntry(i, j))/ sum[j]);
-                        
-        /*
-        RealMatrix flow2Mat = flowMat.multiply(flowMat).scalarMultiply(0.5);
-        flowMat = flowMat.add(flow2Mat).add(flow2Mat.multiply(flowMat).scalarMultiply(0.5));
+          */              
         
+        RealMatrix flow2Mat = flowMat.multiply(flowMat);
+        flowMat = (OpenMapRealMatrix) flowMat.scalarMultiply(0.5).add(flow2Mat.scalarMultiply(0.25))
+                .add(flow2Mat.multiply(flowMat).scalarMultiply(0.15)).add(flow2Mat.multiply(flow2Mat).scalarMultiply(0.1));
+        
+        /*
         for (int i=0; i<newGraph.getNodeCount(); i++){
             Node s = indicies.get(i); //picking a source node
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();
