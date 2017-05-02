@@ -219,7 +219,7 @@ public class Geocoder {
             
             for (int i=0; i<indicies.size(); i++){
                 Node s = indicies.get(i); //picking a source node
-                String matchName = s.getNodeData().getLabel().replace(" ", "");
+                String matchName = s.getNodeData().getLabel().replace("\"", "").replace(" ", "");
                 AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
                 int layer = Integer.parseInt(row.getValue(Layer).toString());
                 boolean match =false;

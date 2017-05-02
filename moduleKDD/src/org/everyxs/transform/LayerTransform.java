@@ -155,19 +155,22 @@ public class LayerTransform {
                 for (int i=0; i<newGraph.getNodeCount(); i++){
                     Node s = indicies.get(i); //picking a source node
                     String name = s.getNodeData().getLabel();
-                    name.replace(".", "");
+                    name.replace("\"", "");
                     AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
                     int layer = Integer.parseInt(row.getValue(Layer).toString());
+                    AttributeColumn wDegree = nodeTable.getColumn("Weighted Degree");
+                    double degree = Double.parseDouble(row.getValue(wDegree).toString());
 
                     for (int j=0; j<newGraph.getNodeCount(); j++){
                         Node t = indicies.get(j); //picking a source node
-                        if (name.equals(t.getNodeData().getLabel().replace(".", ""))) { //only diagsonal entries are considered     
+                        if (name.equals(t.getNodeData().getLabel().replace("\"", ""))) { //only diagsonal entries are considered     
                             //System.out.println(name + t.getNodeData().getLabel());
                             AttributeRow row2 = (AttributeRow) t.getNodeData().getAttributes();   
                             int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
                             if ((layer==inputLayer && layer2==baseLayer)||(layer2==inputLayer && layer==baseLayer)) {
                                 //System.out.println(layer + layer2 - baseLayer - inputLayer);
-                                Edge e = graphModel.factory().newEdge(s, t, (float) 3.1415926, false);
+                                double weight = degree*0.2;
+                                Edge e = graphModel.factory().newEdge(s, t, (float) weight, false);
                                 e.getEdgeData().setLabel("interEdge");
                                 newGraph.addEdge(e);
                             }
