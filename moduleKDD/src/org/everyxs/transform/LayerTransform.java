@@ -16,6 +16,7 @@ import org.gephi.data.attributes.api.AttributeOrigin;
 import org.gephi.data.attributes.api.AttributeRow;
 import org.gephi.data.attributes.api.AttributeTable;
 import org.gephi.data.attributes.api.AttributeType;
+import org.gephi.data.attributes.api.AttributeValue;
 import org.gephi.datalab.api.GraphElementsController;
 import org.gephi.datalab.spi.rows.merge.AttributeRowsMergeStrategy;
 import org.gephi.graph.api.Edge;
@@ -86,7 +87,7 @@ public class LayerTransform {
         AttributeColumn Layer = nodeTable.getColumn("Layer[Z]");
         
         switch (interType) {
-            case 3:
+            case 2: //geo proximity
                 AttributeColumn Longitude = nodeTable.getColumn("Lng");
                 AttributeColumn Latitude = nodeTable.getColumn("Lat");
                 AttributeColumn dist2Air = nodeTable.getColumn("Dist2Air");
@@ -105,7 +106,7 @@ public class LayerTransform {
                     boolean main = false;
                     AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
                     int layer = Integer.parseInt(row.getValue(Layer).toString());
-                    if (layer == 0) {
+                    if (layer == baseLayer) {
                         double[] tempDist = new double[2];
                         tempDist[0] = Double.MAX_VALUE;
                         tempDist[1] = Double.MAX_VALUE;
@@ -114,7 +115,7 @@ public class LayerTransform {
                             Node t = indicies.get(j); //picking a target node
                             AttributeRow row2 = (AttributeRow) t.getNodeData().getAttributes();   
                             int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
-                            if (layer2 == 2) {
+                            if (layer2 == inputLayer) {
                                 double long1 = Double.parseDouble(row.getValue(Longitude).toString());
                                 double long2 = Double.parseDouble(row2.getValue(Longitude).toString());
                                 double lati1 = Double.parseDouble(row.getValue(Latitude).toString());
@@ -133,7 +134,13 @@ public class LayerTransform {
                                 if (dist < tempDist[0]){
                                     tempDist[0] = dist;
                                     tempNodes[0] = t;
-                                }
+                                }/*
+                                if (dist < 10){
+                                    Edge e2 = graphModel.factory().newEdge(s, t, (float) dist, false);
+                                    e2.getEdgeData().setLabel("interEdge");
+                                    newGraph.addEdge(e2);
+                                    row.setValue(dist2Air, tempDist[0]);
+                                }*/
                             }
                             /*
                             if (layer2 == 1) {
@@ -144,23 +151,25 @@ public class LayerTransform {
                                 }
                             }*/
                         }
+                        /**/
                         Edge e2 = graphModel.factory().newEdge(s, tempNodes[0], (float) tempDist[0], false);
                         e2.getEdgeData().setLabel("interEdge");
                         newGraph.addEdge(e2);
                         row.setValue(dist2Air, tempDist[0]);
+                        
                     }
                 }
             break;
-            case 1:
+            case 1: //label match
                 for (int i=0; i<newGraph.getNodeCount(); i++){
                     Node s = indicies.get(i); //picking a source node
                     String name = s.getNodeData().getLabel();
                     name.replace("\"", "");
                     AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
                     int layer = Integer.parseInt(row.getValue(Layer).toString());
-                    AttributeColumn wDegree = nodeTable.getColumn("Weighted Degree");
-                    double degree = Double.parseDouble(row.getValue(wDegree).toString());
-
+                    //AttributeColumn wDegree = nodeTable.getColumn("Weighted Degree");
+                    //double degree = Double.parseDouble(row.getValue(wDegree).toString());
+                    double degree = 3.1415926;
                     for (int j=0; j<newGraph.getNodeCount(); j++){
                         Node t = indicies.get(j); //picking a source node
                         if (name.equals(t.getNodeData().getLabel().replace("\"", ""))) { //only diagsonal entries are considered     
@@ -175,6 +184,68 @@ public class LayerTransform {
                                 newGraph.addEdge(e);
                             }
                         }
+                    }
+                }
+            break;
+            case 4: //node label copy
+                Longitude = nodeTable.getColumn("Lng");
+                Latitude = nodeTable.getColumn("Lat");
+                for (int i=0; i<newGraph.getNodeCount(); i++){
+                    Node s = indicies.get(i); //picking a source node
+                    AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
+                    int layer = Integer.parseInt(row.getValue(Layer).toString());
+                    if (layer == baseLayer) {
+                        ArrayList<Node> tempNodes = new ArrayList<Node>(); //list for node lookup
+                        AttributeRow row2; 
+                        /**/
+                        for (int j=0; j<newGraph.getNodeCount(); j++){
+                            Node t = indicies.get(j); //picking a target node
+                            row2 = (AttributeRow) t.getNodeData().getAttributes();   
+                            int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
+                            if (layer2 == inputLayer) {
+                                double long1 = Double.parseDouble(row.getValue(Longitude).toString());
+                                double long2 = Double.parseDouble(row2.getValue(Longitude).toString());
+                                double lati1 = Double.parseDouble(row.getValue(Latitude).toString());
+                                double lati2 = Double.parseDouble(row2.getValue(Latitude).toString());
+
+                                double theta = long1 - long2;
+                                double dist = Math.sin(deg2rad(lati1)) * Math.sin(deg2rad(lati2)) 
+                                        + Math.cos(deg2rad(lati1)) * Math.cos(deg2rad(lati2)) * Math.cos(deg2rad(theta));
+                                dist = Math.acos(dist);
+                                dist = rad2deg(dist);
+                                dist = dist * 60 * 1.1515;
+                                if (dist > 20000) //check if the distance is over half quator length
+                                    dist = 20000;
+                                if (dist < 10){ //if within 30 km
+                                    tempNodes.add(t);
+                                }
+                            }
+                        }
+                        /*
+                        String name = s.getNodeData().getLabel();
+                        for (int j=0; j<newGraph.getNodeCount(); j++){
+                            Node t = indicies.get(j); //picking a source node
+                            if (name.replace("\"", "").replace(" ", "").equalsIgnoreCase(t.getNodeData().getLabel().replace("\"", "").replace(" ", ""))) {     
+                                row2 = (AttributeRow) t.getNodeData().getAttributes();   
+                                int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
+                                if (layer2==inputLayer) {  //only diagsonal entries are considered
+                                    AttributeValue[] attValues = row2.getValues();
+                                    for (int k = 5; k < 10; k++) 
+                                        row.setValue(k,attValues[k].getValue());
+                                }
+                            }
+                        }
+                        */
+                        int sum = 0;
+                        String name = "";
+                        for (Node n:tempNodes) {
+                            row2 = (AttributeRow) n.getNodeData().getAttributes();   
+                            AttributeValue[] attValues = row2.getValues();
+                            sum += Integer.parseInt(attValues[5].getValue().toString());
+                            name +=  "@"+attValues[6].getValue().toString();
+                        }
+                        row.setValue(5,sum);
+                        row.setValue(6,name);
                     }
                 }
             break;

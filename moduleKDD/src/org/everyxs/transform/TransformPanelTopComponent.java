@@ -123,6 +123,7 @@ public final class TransformPanelTopComponent extends TopComponent {
         jLabel16 = new javax.swing.JLabel();
         jRadioButton15 = new javax.swing.JRadioButton();
         jRadioButton16 = new javax.swing.JRadioButton();
+        jRadioButton17 = new javax.swing.JRadioButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         jRadioButton4 = new javax.swing.JRadioButton();
@@ -150,6 +151,7 @@ public final class TransformPanelTopComponent extends TopComponent {
         jRadioButton7 = new javax.swing.JRadioButton();
         jRadioButton8 = new javax.swing.JRadioButton();
         jRadioButton9 = new javax.swing.JRadioButton();
+        jRadioButton14 = new javax.swing.JRadioButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
@@ -239,6 +241,14 @@ public final class TransformPanelTopComponent extends TopComponent {
             }
         });
 
+        buttonGroup1.add(jRadioButton17);
+        org.openide.awt.Mnemonics.setLocalizedText(jRadioButton17, org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jRadioButton17.text")); // NOI18N
+        jRadioButton17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton17ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -263,7 +273,8 @@ public final class TransformPanelTopComponent extends TopComponent {
                             .addComponent(jRadioButton13)
                             .addComponent(jLabel16)
                             .addComponent(jRadioButton15)
-                            .addComponent(jRadioButton16))
+                            .addComponent(jRadioButton16)
+                            .addComponent(jRadioButton17))
                         .addGap(0, 41, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -292,6 +303,8 @@ public final class TransformPanelTopComponent extends TopComponent {
                 .addComponent(jRadioButton15)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jRadioButton16)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jRadioButton17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton5)
@@ -392,7 +405,7 @@ public final class TransformPanelTopComponent extends TopComponent {
                             .addComponent(jRadioButton3)
                             .addComponent(jRadioButton4)
                             .addComponent(jRadioButton5))
-                        .addContainerGap(50, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(jButton10)
@@ -425,7 +438,7 @@ public final class TransformPanelTopComponent extends TopComponent {
                     .addComponent(jButton11))
                 .addGap(62, 62, 62)
                 .addComponent(jButton6)
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(76, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
@@ -497,7 +510,7 @@ public final class TransformPanelTopComponent extends TopComponent {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jButton4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jToggleButton4))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -533,7 +546,7 @@ public final class TransformPanelTopComponent extends TopComponent {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton8)
                     .addComponent(jButton9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 201, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton4)
                     .addComponent(jToggleButton4))
@@ -568,6 +581,14 @@ public final class TransformPanelTopComponent extends TopComponent {
             }
         });
 
+        buttonGroup2.add(jRadioButton14);
+        org.openide.awt.Mnemonics.setLocalizedText(jRadioButton14, org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jRadioButton14.text")); // NOI18N
+        jRadioButton14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton14ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -578,7 +599,8 @@ public final class TransformPanelTopComponent extends TopComponent {
                     .addComponent(jRadioButton9)
                     .addComponent(jRadioButton8)
                     .addComponent(jRadioButton7)
-                    .addComponent(jLabel15))
+                    .addComponent(jLabel15)
+                    .addComponent(jRadioButton14))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -592,7 +614,9 @@ public final class TransformPanelTopComponent extends TopComponent {
                 .addComponent(jRadioButton8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jRadioButton9)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jRadioButton14)
+                .addContainerGap())
         );
 
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(TransformPanelTopComponent.class, "TransformPanelTopComponent.jButton1.text")); // NOI18N
@@ -627,7 +651,6 @@ public final class TransformPanelTopComponent extends TopComponent {
         );
         topComponent1Layout.setVerticalGroup(
             topComponent1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 416, Short.MAX_VALUE)
             .addGroup(topComponent1Layout.createSequentialGroup()
                 .addGap(32, 32, 32)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -635,7 +658,8 @@ public final class TransformPanelTopComponent extends TopComponent {
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(139, Short.MAX_VALUE))
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -650,7 +674,7 @@ public final class TransformPanelTopComponent extends TopComponent {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 440, Short.MAX_VALUE)
+            .addGap(0, 461, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -687,11 +711,11 @@ public final class TransformPanelTopComponent extends TopComponent {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jRadioButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton9ActionPerformed
-        interType = -1;
+        interType = 3;
     }//GEN-LAST:event_jRadioButton9ActionPerformed
 
     private void jRadioButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton8ActionPerformed
-        interType = 3;        // TODO add your handling code here:
+        interType = 2;        // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButton8ActionPerformed
 
     private void jRadioButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton7ActionPerformed
@@ -893,7 +917,7 @@ public final class TransformPanelTopComponent extends TopComponent {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        String geoFile = "/home/everyan/Dropbox/slides/WoSdata/cityListMerged.csv";
+        String geoFile = "/home/everyan/Dropbox/slides/WoSdata/cityListMerged2.csv";
         GraphController gc = Lookup.getDefault().lookup(GraphController.class);
         graphModel = gc.getModel(); 
         cityMap = new Geocoder(graphModel, geoFile);
@@ -923,6 +947,14 @@ public final class TransformPanelTopComponent extends TopComponent {
         transformer = new Transformer(graphModel);
         transformer.portMerge(mergeMap);        // TODO add your handling code here:
     }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jRadioButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton14ActionPerformed
+        interType = 4;
+    }//GEN-LAST:event_jRadioButton14ActionPerformed
+
+    private void jRadioButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton17ActionPerformed
+        transformType = 33;  
+    }//GEN-LAST:event_jRadioButton17ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
@@ -956,8 +988,10 @@ public final class TransformPanelTopComponent extends TopComponent {
     private javax.swing.JRadioButton jRadioButton11;
     private javax.swing.JRadioButton jRadioButton12;
     private javax.swing.JRadioButton jRadioButton13;
+    private javax.swing.JRadioButton jRadioButton14;
     private javax.swing.JRadioButton jRadioButton15;
     private javax.swing.JRadioButton jRadioButton16;
+    private javax.swing.JRadioButton jRadioButton17;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;

@@ -55,6 +55,7 @@ public class Transformer {
     HashMap<Integer, Node> indicies = new HashMap<Integer, Node>();
     HashMap<Node, Integer> invIndicies = new HashMap<Node, Integer>();
     OpenMapRealMatrix flowMat;
+    //double[][] stochastic; 
     
     Transformer(GraphModel gModel) {
         graphModel = gModel;
@@ -71,6 +72,7 @@ public class Transformer {
             invIndicies.put(u, count);
             count++;
         }
+        //stochastic = new double[count][count];
     }
     /**
      * Global transformations for smaller graphs. 
@@ -92,79 +94,115 @@ public class Transformer {
                 }
         
         switch (type) {
-            case 10:
+            case 10: //delay transformation using degree
                 for (int i=0; i<newGraph.getNodeCount(); i++){
                     Node s = indicies.get(i); //picking a source node
-                    double degree = 0;
-                    EdgeIterable iter;
-                    if (directed) {
-                            iter = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(s);
-                        } else {
-                            iter = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(s);
+                    AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
+                    int layer = Integer.parseInt(row.getValue(Layer).toString());
+                    if (layer == baseLayer) {
+                        double degree = 0;
+                        EdgeIterable iter;
+                        if (directed) {
+                                iter = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(s);
+                            } else {
+                                iter = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(s);
+                            }
+                        for (Edge e : iter) {
+                            degree += e.getWeight();
                         }
-                    for (Edge e : iter) {
-                        degree += e.getWeight();
-                    }
 
-                    if (degree-1.0>0) {
-                        double loop = (degree-1.0)*degree;
-                        Edge e0 = graphModel.factory().newEdge(s, s, (float) (loop), false);
-                        newGraph.addEdge(e0);
+                        if (degree-1.0>0) {
+                            double loop = (degree-1.0)*degree;
+                            Edge e0 = graphModel.factory().newEdge(s, s, (float) (loop), false);
+                            e0.getEdgeData().setLabel("delayLoop");
+                            newGraph.addEdge(e0);
+                        }
                     }
             }
             break;
-            case 11: AttributeColumn Delay = nodeTable.getColumn("Delay");
+            case 11: AttributeColumn Delay = nodeTable.getColumn("Delay"); //delay transformation using node attributes (mass for gravity models)
                 if (Delay == null) {
                         Delay = nodeTable.addColumn("Delay", "Delay", AttributeType.DOUBLE, AttributeOrigin.DATA, new Double(1.0));
                         JOptionPane.showMessageDialog(null, "'Delay' attribute has been added, please edit in the Data laboratory ", 
                                 "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
                    }
+                AttributeColumnsController impl = Lookup.getDefault().lookup(AttributeColumnsController.class);
+                AttributeColumn Weight = edgeTable.getColumn("Weight");
+                impl.duplicateColumn(edgeTable, Weight, "Mass", DOUBLE);
+                JOptionPane.showMessageDialog(null, "'Mass' attribute has been copied to the edges, please edit in the Data laboratory ", 
+                "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+                AttributeColumn mass = edgeTable.getColumn("Mass");
                 for (int i=0; i<newGraph.getNodeCount(); i++){
                     Node s = indicies.get(i); //picking a source node
-                    double degree = 0;
-                    EdgeIterable iter;
-                    if (directed) {
-                            iter = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(s);
-                        } else {
-                            iter = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(s);
+                    AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();//get custom delay input         
+                    
+                    int layer = Integer.parseInt(row.getValue(Layer).toString());
+                    if (layer == baseLayer) {  
+                        double delay = Double.parseDouble(row.getValue(Delay).toString()); 
+                        double degree = 0;
+                        EdgeIterable iter;
+                        if (directed) {
+                                iter = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(s);
+                            } else {
+                                iter = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(s);
+                            }
+                        for (Edge e : iter) {
+                            degree += e.getWeight();//for delay transformations
+                            AttributeRow rowEdge = (AttributeRow) e.getEdgeData().getAttributes();
+                            rowEdge.setValue(mass, Double.parseDouble(rowEdge.getValue(mass).toString())*delay);
                         }
-                    for (Edge e : iter) {
-                        degree += e.getWeight();
-                    }
-                    AttributeRow row = (AttributeRow) s.getNodeData().getAttributes(); //get custom delay input    
-                    double delay = Double.parseDouble(row.getValue(Delay).toString());
-                    if (delay-1.0>0) {
-                        double loop = (delay-1.0)*degree;
-                        Edge e0 = graphModel.factory().newEdge(s, s, (float) (loop), false);
-                        newGraph.addEdge(e0);
+                        /*//directed edge mixture problems in edge iterator
+                        if (delay-1.0>0) {
+                            double loop = (delay-1.0)*degree;
+                            Edge e0 = graphModel.factory().newEdge(s, s, (float) (loop), false);
+                            e0.getEdgeData().setLabel("delayLoop");
+                            newGraph.addEdge(e0);
+                        }
+                        */
                     }
             }
             break;
             case 20:
                 for (int i=0; i<newGraph.getNodeCount(); i++){
                     Node s = indicies.get(i); //picking a source node
-                    double degree = 0;
-                    EdgeIterable iter;
-                    if (directed) {
-                            iter = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(s);
-                        } else {
-                            iter = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(s);
-                        }
-                    for (Edge e : iter) {
-                        degree += e.getWeight();
+                    AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();//get custom delay input         
+                    int layer = Integer.parseInt(row.getValue(Layer).toString());
+                    if (layer == baseLayer) { 
+                        AttributeColumn degreeC = nodeTable.getColumn("Weighted degree");
+                        if (degreeC == null) {
+                                degreeC = nodeTable.addColumn("Weighted degree", "Weighted degree", AttributeType.DOUBLE, AttributeOrigin.DATA, new Double(0));
+                                JOptionPane.showMessageDialog(null, "'Weighted degree' attribute has been added, please edit in the Data laboratory ", 
+                                        "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+                           }
+                        EdgeIterable iter;
+                        if (directed) {
+                                iter = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(s);
+                            } else {
+                                iter = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(s);
+                            }
+                        double degree = 1; //raising to the biasSource power
+                        if (directed) {
+                                iter = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(s);
+                                for (Edge e : iter) {
+                                    s = e.getSource();
+                                    row = (AttributeRow) s.getNodeData().getAttributes();  
+                                    AttributeRow row2 = (AttributeRow) e.getTarget().getNodeData().getAttributes();          
+                                    degree = Double.parseDouble(row.getValue(degreeC).toString());
+                                    degree = degree * Double.parseDouble(row2.getValue(degreeC).toString());
+                                    e.setWeight((float) (e.getWeight() * degree));
+                                }
+                            } else {
+                                iter = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(s);
+                                for (Edge e : iter) {
+                                    s = e.getSource();
+                                    row = (AttributeRow) s.getNodeData().getAttributes();  
+                                    AttributeRow row2 = (AttributeRow) e.getTarget().getNodeData().getAttributes();          
+                                    degree = Double.parseDouble(row.getValue(degreeC).toString());
+                                    degree = degree * Double.parseDouble(row2.getValue(degreeC).toString());
+                                    e.setWeight((float) (e.getWeight() * degree));
+                                }
+                            }
                     }
-                    degree = Math.pow(degree, power); //raising to the biasSource power
-                    if (directed) {
-                            iter = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(s);
-                            for (Edge e : iter) {
-                                e.setWeight((float) (e.getWeight() * degree));
-                            }
-                        } else {
-                            iter = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(s);
-                            for (Edge e : iter) {
-                                e.setWeight((float) (e.getWeight() * degree));
-                            }
-                        }
                 }
             break;
             case 21: AttributeColumn Bias = nodeTable.getColumn("Bias");
@@ -175,27 +213,28 @@ public class Transformer {
                 }
                 for (int i=0; i<newGraph.getNodeCount(); i++){
                     Node s = indicies.get(i); //picking a source node
-                    AttributeRow row = (AttributeRow) s.getNodeData().getAttributes(); //get biasSource delay input    
-                    double bias = Math.pow(Double.parseDouble(row.getValue(Bias).toString()), power); //raising to the biasSource power
-                    
-                    EdgeIterable iter;
-                    if (directed) {
-                            iter = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(s);
-                            for (Edge e : iter) {
-                                e.setWeight((float) (e.getWeight() * bias));
+                    AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();//get custom delay input         
+                    int layer = Integer.parseInt(row.getValue(Layer).toString());
+                    if (layer == baseLayer) {
+                        double bias = Math.pow(Double.parseDouble(row.getValue(Bias).toString()), power); //raising to the biasSource power
+                        EdgeIterable iter;
+                        if (directed) {
+                                iter = ((HierarchicalDirectedGraph) newGraph).getInEdgesAndMetaInEdges(s);
+                                for (Edge e : iter) {
+                                    e.setWeight((float) (e.getWeight() * bias));
+                                }
+                            } else {
+                                iter = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(s);
+                                for (Edge e : iter) {
+                                    e.setWeight((float) (e.getWeight() * bias));
+                                }
                             }
-                        } else {
-                            iter = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges(s);
-                            for (Edge e : iter) {
-                                e.setWeight((float) (e.getWeight() * bias));
-                            }
-                        }
-                    
+                    }
                 }
             break;
             case 22: AttributeColumn DistAir = nodeTable.getColumn("Dist2Air");
-                AttributeColumnsController impl = Lookup.getDefault().lookup(AttributeColumnsController.class);
-                AttributeColumn Weight = edgeTable.getColumn("Weight");
+                impl = Lookup.getDefault().lookup(AttributeColumnsController.class);
+                Weight = edgeTable.getColumn("Weight");
                 AttributeColumn Seats = impl.duplicateColumn(edgeTable, Weight, "Seats", DOUBLE);
                 JOptionPane.showMessageDialog(null, "'Seats' attribute has been copied to the edges, 'Weight' now is Dist2AirEdge(sum of endpoints)", 
                     "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
@@ -239,6 +278,8 @@ public class Transformer {
                     iter = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges();
                 edgeList = iter.toArray();
                 flightFlow(inputLayer, baseLayer);
+                //int check = 0;
+                //int check2 = 0;
                 for (int i=0; i<edgeList.length; i++){
                     if (edgeList[i].getEdgeData().getLabel().equalsIgnoreCase("Coauthor")) {
                         Node s = edgeList[i].getSource();
@@ -275,18 +316,20 @@ public class Transformer {
                         }
                         
                         if (map == true) { // if there is a complete flight map
-                            double reweigh = 0;
+                            double reweigh = 1;
                             int source = invIndicies.get(s2);
                             int target = invIndicies.get(t2);
-                            if (newGraph.getEdge(s2, t2)!=null) 
+                            //if (newGraph.getEdge(s2, t2)!=null) 
                                 //reweigh = newGraph.getEdge(s2, t2).getWeight();
-                            //if (flowMat.getEntry(source, target)>0) 
+                            if (source!=target) 
                                 reweigh = flowMat.getEntry(source, target);
+                            else
+                                reweigh = -1;
                             //edgeList[i].setWeight((float) (edgeList[i].getWeight() * reweigh));
                             edgeList[i].setWeight((float) reweigh);
                         }
                         else // defualt to 0 for exponential regression
-                            edgeList[i].setWeight((float) -0.1);
+                            edgeList[i].setWeight((float) -2);
                     }
                 }
             break;
@@ -356,6 +399,26 @@ public class Transformer {
                     }
                 }
             break;
+            case 33: //reweighing coauthor by functions of dist and flightFlow
+                if (directed)
+                    iter = ((HierarchicalDirectedGraph) newGraph).getEdgesAndMetaEdges();
+                else 
+                    iter = ((HierarchicalUndirectedGraph) newGraph).getEdgesAndMetaEdges();
+                edgeList = iter.toArray();
+                for (int i=0; i<edgeList.length; i++){
+                    if (edgeList[i].getEdgeData().getLabel().equalsIgnoreCase("Coauthor")) {
+                        AttributeColumn FlightFlow = edgeTable.getColumn("FlightFlow");
+                        AttributeColumn Dist = edgeTable.getColumn("Distance");
+                        AttributeRow rowEdge = (AttributeRow) edgeList[i].getEdgeData().getAttributes();
+                        double dist = Double.parseDouble(rowEdge.getValue(Dist).toString());
+                        double reweigh = Math.log(Double.parseDouble(rowEdge.getValue(FlightFlow).toString())+Math.E);
+                        if (dist <50||reweigh < 1)
+                            reweigh = 1;
+                        //edgeList[i].setWeight((float) (edgeList[i].getWeight() * reweigh));
+                        edgeList[i].setWeight((float) (dist/reweigh));
+                    }
+                }
+            break;
         }
     }
     
@@ -376,81 +439,114 @@ public class Transformer {
            }
         //AttributeColumn Flag = nodeTable.getColumn("check");
         AttributeColumn Distance = edgeTable.getColumn("Distance");
-        
+        HashMap<Integer, Node> formap = new HashMap<Integer, Node>();
+        int idx = 0;
         for (int i=0; i<newGraph.getNodeCount(); i++){
             Node s = indicies.get(i); //picking a source node
             AttributeRow row = (AttributeRow) s.getNodeData().getAttributes();         
             int layer = Integer.parseInt(row.getValue(Layer).toString());
-                    
-            if (layer == inputLayer) { //only input layer pairs are considered    
-                for (int j=0; j<newGraph.getNodeCount(); j++){
+            if (layer == inputLayer) { //only input layer pairs are considered  
+                
+                if (!formap.containsValue(s)) {
+                    formap.put(idx, s);
+                    idx++;
+                }
+                
+                for (int j=i+1; j<newGraph.getNodeCount(); j++){
                     Node t = indicies.get(j); //picking a target node
                     AttributeRow row2 = (AttributeRow) t.getNodeData().getAttributes();   
                     int layer2 = Integer.parseInt(row2.getValue(Layer).toString());
-                    if (layer2 == inputLayer) { //only input layer pairs are considered   
+                    if (layer2 == inputLayer) { //only input layer pairs are considered 
                         if (newGraph.getEdge(s, t)!=null){
                             flowMat.setEntry(i, j, newGraph.getEdge(s, t).getWeight());
-                            
+                            flowMat.setEntry(j, i, newGraph.getEdge(s, t).getWeight());
+                            //stochastic[i][j] = newGraph.getEdge(s, t).getWeight();
+                            //stochastic[j][i] = newGraph.getEdge(t, s).getWeight();
+                            //check++;
                             //AttributeRow edgeRow = (AttributeRow) newGraph.getEdge(s, t).getEdgeData().getAttributes();
                             //double geoDist = Double.parseDouble(edgeRow.getValue(Distance).toString());
                             //flowMat.setEntry(i, j, flowMat.getEntry(i, j)); 
                             //newGraph.getEdge(s, t).setWeight((float) flowMat.getEntry(i, j));
                         }
                     }
+                }/**/
+            }
+        }               
+        /* 
+        double[][] stochastic = new double[idx][idx];
+        for (int i=0; i<idx; i++) {
+            for (int j=i+1; j<idx; j++){
+                Node s = formap.get(i);
+                Node t = formap.get(j);
+                if (newGraph.getEdge(s, t)!=null) {
+                    stochastic[i][j] = newGraph.getEdge(s, t).getWeight();
+                    stochastic[j][i] = newGraph.getEdge(t, s).getWeight();
                 }
             }
         }
-        
-        
-        int size = flowMat.getColumnDimension();
-        double[] eVector = new double[size];
-        double[][] stochastic = new double[size][size];
-        for (int i=0; i<size; i++) {
-            for (int j=0; j<size; j++){
-                stochastic[i][j] = flowMat.getEntry(i, j);
-            }
-        }
-        double[] sum = new double[size];
+      
+        double[] sum = new double[idx];
         double tsum = 0;
-        for (int i=0; i<size; i++) {
+        for (int i=0; i<idx; i++) {
             sum[i] = 0;
-            for (int j=0; j<size; j++)
-                sum[i] += stochastic[j][i];
+            for (int j=0; j<idx; j++)
+                sum[i] += stochastic[i][j];
         }
-        for (int i=0; i<size; i++) {
+        for (int i=0; i<idx; i++) {
             tsum += sum[i];
-            if (sum[i]>1)
-                for (int j=0; j<size; j++)
-                    stochastic[j][i] = stochastic[j][i]/sum[i]; //column stochastic matrix
+            for (int j=0; j<idx; j++)
+                stochastic[i][j] = stochastic[i][j]/sum[i]; //column stochastic matrix
         }
-        for (int i=0; i<size; i++) {
-            for (int j=0; j<size; j++){
-                flowMat.setEntry(i, j, stochastic[i][j]); 
-            }
-        }
-        
-        /*
-        for (int i=0; i<size; i++) {
+        double[] eVector = new double[idx];
+        for (int i=0; i<idx; i++) {
             eVector[i] = sum[i]/tsum;
         }
         
-        RealMatrix fundMat = new OpenMapRealMatrix(size,size);
-        for (int i=0; i<size; i++) 
-            for (int j=0; j<size; j++) {
+        RealMatrix fundMat = new OpenMapRealMatrix(idx,idx);
+        for (int i=0; i<idx; i++) 
+            for (int j=0; j<idx; j++) {
                 fundMat.setEntry(i, j, eVector[i] - stochastic[i][j]);
                 if (i==j)
                     fundMat.addToEntry(i, j, 1);
             }
         fundMat = new LUDecomposition(fundMat).getSolver().getInverse();
-        for (int i=0; i<size; i++) 
-            for (int j=0; j<size; j++) 
-                flowMat.setEntry(i, j, (fundMat.getEntry(j, j)-fundMat.getEntry(i, j))/ sum[j]);
-          */              
+        for (int i=0; i<idx; i++) 
+            for (int j=i+1; j<idx; j++) {
+                double meanPassage = (fundMat.getEntry(j, j)-fundMat.getEntry(i, j));
+                meanPassage +=  (fundMat.getEntry(i, i)-fundMat.getEntry(j, i));
+                meanPassage = meanPassage * 0.5/ sum[j] /sum[i];
+                Node s = formap.get(i);
+                Node t = formap.get(j);
+                int io = invIndicies.get(s);
+                int jo = invIndicies.get(t);
+                flowMat.setEntry(io, jo, meanPassage);
+                flowMat.setEntry(jo, io, meanPassage);
+            }*/
         
-        RealMatrix flow2Mat = flowMat.multiply(flowMat);
-        flowMat = (OpenMapRealMatrix) flowMat.scalarMultiply(0.5).add(flow2Mat.scalarMultiply(0.25))
-                .add(flow2Mat.multiply(flowMat).scalarMultiply(0.15)).add(flow2Mat.multiply(flow2Mat).scalarMultiply(0.1));
-        
+        RealMatrix flow2Mat = flowMat.power(2);
+        for (int i=0; i<flowMat.getColumnDimension(); i++)
+              for (int j=i+1; j<flowMat.getColumnDimension(); j++) 
+                  if (flow2Mat.getEntry(i, j)>0){
+                      flow2Mat.setEntry(i,j,Math.sqrt(flow2Mat.getEntry(i, j)));
+                      flow2Mat.setEntry(j,i,Math.sqrt(flow2Mat.getEntry(i, j)));
+                  }
+        RealMatrix flow3Mat = flowMat.power(3);
+        for (int i=0; i<flowMat.getColumnDimension(); i++)
+              for (int j=i+1; j<flowMat.getColumnDimension(); j++) 
+                  if (flow3Mat.getEntry(i, j)>0){
+                      flow3Mat.setEntry(i,j,Math.pow(flow3Mat.getEntry(i, j),1/3));
+                      flow3Mat.setEntry(j,i,Math.pow(flow3Mat.getEntry(i, j),1/3));
+                  }
+        RealMatrix flow4Mat = flow2Mat.power(2);
+        for (int i=0; i<flowMat.getColumnDimension(); i++)
+              for (int j=i+1; j<flowMat.getColumnDimension(); j++) 
+                  if (flow4Mat.getEntry(i, j)>0) {
+                      flow4Mat.setEntry(i,j,Math.sqrt(flow4Mat.getEntry(i, j)));
+                      flow4Mat.setEntry(j,i,Math.sqrt(flow4Mat.getEntry(i, j)));
+                  }
+              
+        flowMat = (OpenMapRealMatrix) flowMat.add(flow2Mat.scalarMultiply(1))
+                                .add(flow3Mat.scalarMultiply(1)).add(flow4Mat.scalarMultiply(1));
         /*
         for (int i=0; i<newGraph.getNodeCount(); i++){
             Node s = indicies.get(i); //picking a source node
@@ -758,5 +854,34 @@ public class Transformer {
         catch (IOException ex) {
                 ex.printStackTrace();
         }
+    }
+    
+    public static double[][] multiplicar(double[][] A, double[][] B) {
+
+        int aRows = A.length;
+        int aColumns = A[0].length;
+        int bRows = B.length;
+        int bColumns = B[0].length;
+
+        if (aColumns != bRows) {
+            throw new IllegalArgumentException("A:Rows: " + aColumns + " did not match B:Columns " + bRows + ".");
+        }
+
+        double[][] C = new double[aRows][bColumns];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                C[i][j] = 0.00000;
+            }
+        }
+
+        for (int i = 0; i < aRows; i++) { // aRow
+            for (int j = 0; j < bColumns; j++) { // bColumn
+                for (int k = 0; k < aColumns; k++) { // aColumn
+                    C[i][j] += A[i][k] * B[k][j];
+                }
+            }
+        }
+
+        return C;
     }
 }
